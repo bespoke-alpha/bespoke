@@ -1,0 +1,12 @@
+{
+	"name": "search-on-youtube",
+	"entries": {
+		"js": "index.js",
+		"css": false,
+		"mixin": false
+	},
+	"dependencies": {
+		"std": "*",
+		"delulib": "*"
+	}
+}

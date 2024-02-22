@@ -1,0 +1,12 @@
+{
+	"name": "show-the-genres",
+	"entries": {
+		"js": "index.js",
+		"css": "index.css",
+		"mixin": false
+	},
+	"dependencies": {
+		"std": "*",
+		"delulib": "*"
+	}
+}

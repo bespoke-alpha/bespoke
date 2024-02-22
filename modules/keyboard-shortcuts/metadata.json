@@ -1,0 +1,12 @@
+{
+	"name": "keyboard-shortcuts",
+	"entries": {
+		"js": "index.js",
+		"css": false,
+		"mixin": false
+	},
+	"dependencies": {
+		"std": "*",
+		"delulib": "*"
+	}
+}

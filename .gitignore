@@ -1,0 +1,11 @@
+.DS_Store
+
+node_modules/
+bun.lockb
+
+cli/bespoke*
+
+apps/
+modules/vault.json
+# TODO: use git submodules for all modules
+#modules/*/

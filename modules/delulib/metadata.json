@@ -1,0 +1,11 @@
+{
+	"name": "delulib",
+	"entries": {
+		"js": false,
+		"css": false,
+		"mixin": false
+	},
+	"dependencies": {
+		"std": "*"
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"name": "spoqify-radios",
+	"entries": {
+		"js": "index.js",
+		"css": false,
+		"mixin": false
+	},
+	"dependencies": {
+		"std": "*",
+		"delulib": "*"
+	}
+}

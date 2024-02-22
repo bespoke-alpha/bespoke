@@ -1,0 +1,12 @@
+{
+	"name": "sort-plus",
+	"entries": {
+		"js": "index.js",
+		"css": false,
+		"mixin": false
+	},
+	"dependencies": {
+		"std": "*",
+		"delulib": "*"
+	}
+}

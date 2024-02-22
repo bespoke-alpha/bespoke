@@ -1,0 +1,18 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "paths": {
+            "/*": ["../*"],
+            "https://esm.sh/@fostertheweb/spotify-web-api-ts-sdk": [
+                "../node_modules/@fostertheweb/spotify-web-api-ts-sdk/dist/mjs/index"
+            ],
+            "https://esm.sh/lit": ["../node_modules/lit/index"],
+            "https://esm.sh/lit/*": ["../node_modules/lit/*"],
+            "https://esm.sh/dexie": ["../node_modules/dexie"],
+            "https://esm.sh/v135/@fostertheweb/spotify-web-api-ts-sdk/*": [
+                "../node_modules/@fostertheweb/spotify-web-api-ts-sdk/*"
+            ]
+        }
+    },
+    "exclude": ["*.ts"]
+}
