@@ -12,15 +12,6 @@ const PlayerAPI = S.Platform.getPlayerAPI();
 export let lastFetchedUri;
 export let lastSortAction;
 globalThis.lastSortedQueue = [];
-let invertOrder = 0;
-addEventListener("keydown", event => {
-    if (!event.repeat && event.key === "Shift")
-        invertOrder = 1;
-});
-addEventListener("keyup", event => {
-    if (!event.repeat && event.key === "Shift")
-        invertOrder = 0;
-});
 const populateTracks = _.cond([
     [fp.startsWith("Spotify"), fillTracksFromSpotify],
     [fp.startsWith("LastFM"), () => fillTracksFromLastFM],
@@ -35,9 +26,8 @@ const setQueue = (tracks) => {
     return _setQueue(queue, isLikedTracks ? undefined : lastFetchedUri);
 };
 // Menu
-const sortTracksBy = (sortAction, sortFn) => async (uri) => {
+const sortTracksBy = (sortAction, sortFn, descending) => async (uri) => {
     lastSortAction = sortAction;
-    const descending = invertOrder ^ Number(CONFIG.descending);
     lastFetchedUri = uri;
     const tracks = await getTracksFromUri(uri);
     let sortedTracks = await sortFn(tracks);
@@ -47,7 +37,7 @@ const sortTracksBy = (sortAction, sortFn) => async (uri) => {
     descending && sortedTracks.reverse();
     return await setQueue(sortedTracks);
 };
-const createSubMenuForSortProp = ({ sortAction }) => {
+const GenericSortBySubMenuItem = ({ descending, sortAction }) => {
     const { props } = useMenuItem();
     const uri = props.uri;
     return (S.React.createElement(S.ReactComponents.MenuItem, { disabled: false, onClick: () => {
@@ -57,27 +47,28 @@ const createSubMenuForSortProp = ({ sortAction }) => {
                 const filteredTracks = filledTracks.filter(track => track[sortActionProp] != null);
                 return _.sortBy(filteredTracks, sortActionProp);
             };
-            sortTracksBy(sortAction, sortFn)(uri);
+            sortTracksBy(sortAction, sortFn, descending)(uri);
         }, leadingIcon: createIconComponent({ icon: SVGIcons[SortActionIcon[sortAction]] }) }, sortAction));
 };
-const sortTracksByShuffle = sortTracksBy("True Shuffle", _.shuffle);
-const sortTracksByStars = sortTracksBy("Stars", fp.sortBy((track) => globalThis.tracksRatings[track.uri] ?? 0));
-const SubMenuItems = Object.values(SortAction).map(sortAction => S.React.createElement(createSubMenuForSortProp, { sortAction }));
+const SubMenuItems = Object.values(SortAction).map(sortAction => (props) => S.React.createElement(GenericSortBySubMenuItem, {
+    ...props,
+    sortAction,
+}));
 import { createIconComponent } from "../std/api/createIconComponent.js";
 import { useMenuItem } from "../std/registers/menu.js";
-const SubMenuItemShuffle = () => {
+const SortByShuffleSubMenuItem = ({ descending }) => {
     const { props } = useMenuItem();
     const uri = props.uri;
-    return (S.React.createElement(S.ReactComponents.MenuItem, { disabled: false, onClick: () => sortTracksByShuffle(uri), leadingIcon: createIconComponent({ icon: SVGIcons.shuffle }) }, "True shuffle"));
+    return (S.React.createElement(S.ReactComponents.MenuItem, { disabled: false, onClick: () => sortTracksBy("True Shuffle", _.shuffle, descending)(uri), leadingIcon: createIconComponent({ icon: SVGIcons.shuffle }) }, "True shuffle"));
 };
-const SubMenuItemStars = () => {
+const SortByStarsSubMenuItem = ({ descending }) => {
     if (!globalThis.tracksRatings)
         return;
     const { props } = useMenuItem();
     const uri = props.uri;
-    return (S.React.createElement(S.ReactComponents.MenuItem, { disabled: false, onClick: () => sortTracksByStars(uri), leadingIcon: createIconComponent({ icon: SVGIcons["heart-active"] }) }, "Stars"));
+    return (S.React.createElement(S.ReactComponents.MenuItem, { disabled: false, onClick: () => sortTracksBy("Stars", fp.sortBy((track) => globalThis.tracksRatings[track.uri] ?? 0), descending)(uri), leadingIcon: createIconComponent({ icon: SVGIcons["heart-active"] }) }, "Stars"));
 };
-SubMenuItems.push(S.React.createElement(SubMenuItemShuffle, null), S.React.createElement(SubMenuItemStars, null));
+SubMenuItems.push(SortByShuffleSubMenuItem, SortByStarsSubMenuItem);
 export default function (_module) {
     const module = extend(_module);
     const { registrar } = module;
@@ -90,10 +81,16 @@ export default function (_module) {
     }), ({ props }) => {
         return URI.is.Folder(props?.reference?.uri);
     });
-    registrar.register("menu", S.React.createElement(S.ReactComponents.MenuItemSubMenu, { displayText: "Sort by", depth: 1, placement: "right-start", disabled: false }, SubMenuItems), ({ props }) => {
+    const SortBySubMenu = () => {
+        const { modifierKeyHeld } = S.useContextMenuState();
+        const descending = modifierKeyHeld ^ Number(CONFIG.descending);
+        const leadingIcon = createIconComponent({ icon: SVGIcons[descending ? "chart-down" : "chart-up"] });
+        return (S.React.createElement(S.ReactComponents.MenuItemSubMenu, { leadingIcon: leadingIcon, displayText: "Sort by", depth: 1, placement: "right-start", disabled: false }, SubMenuItems.map(SubMenuItem => (S.React.createElement(SubMenuItem, { descending: descending })))));
+    };
+    registrar.register("menu", S.React.createElement(SortBySubMenu, null), ({ props }) => {
         const uri = props?.uri;
         return uri && [URI.is.Album, URI.is.Artist, URI_is_LikedTracks, URI.is.Track, URI.is.PlaylistV1OrV2].some(f => f(uri));
     });
-    registrar.register("topbarLeftButton", S.React.createElement(Button, { label: "Create a Playlist from Sorted Queue", icon: SVGIcons.plus2px, onClick: createPlaylistFromLastSortedQueue }));
-    registrar.register("topbarLeftButton", S.React.createElement(Button, { label: "Reorder Playlist from Sorted Queue", icon: SVGIcons["chart-down"], onClick: reordedPlaylistLikeSortedQueue }));
+    registrar.register("topbarLeftButton", S.React.createElement(Button, { label: "Create a Playlist from Sorted Queue", icon: SVGIcons.playlist, onClick: createPlaylistFromLastSortedQueue }));
+    registrar.register("topbarLeftButton", S.React.createElement(Button, { label: "Reorder Playlist from Sorted Queue", icon: SVGIcons.shuffle, onClick: reordedPlaylistLikeSortedQueue }));
 }

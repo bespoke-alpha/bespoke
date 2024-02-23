@@ -22,15 +22,6 @@ export let lastFetchedUri: string;
 export let lastSortAction: SortAction | "True Shuffle" | "Stars";
 globalThis.lastSortedQueue = [];
 
-let invertOrder = 0;
-addEventListener("keydown", event => {
-	if (!event.repeat && event.key === "Shift") invertOrder = 1;
-});
-
-addEventListener("keyup", event => {
-	if (!event.repeat && event.key === "Shift") invertOrder = 0;
-});
-
 const populateTracks: (sortProp: SortAction) => AsyncTracksOperation = _.cond([
 	[fp.startsWith("Spotify"), fillTracksFromSpotify],
 	[fp.startsWith("LastFM"), () => fillTracksFromLastFM],
@@ -52,9 +43,8 @@ const setQueue = (tracks: TrackData[]) => {
 
 // Menu
 
-const sortTracksBy = (sortAction: typeof lastSortAction, sortFn: AsyncTracksOperation) => async (uri: string) => {
+const sortTracksBy = (sortAction: typeof lastSortAction, sortFn: AsyncTracksOperation, descending: boolean) => async (uri: string) => {
 	lastSortAction = sortAction;
-	const descending = invertOrder ^ Number(CONFIG.descending);
 	lastFetchedUri = uri;
 	const tracks = await getTracksFromUri(uri);
 	let sortedTracks = await sortFn(tracks);
@@ -65,7 +55,9 @@ const sortTracksBy = (sortAction: typeof lastSortAction, sortFn: AsyncTracksOper
 	return await setQueue(sortedTracks);
 };
 
-const createSubMenuForSortProp = ({ sortAction }: { sortAction: SortAction }) => {
+type SortBySubMenuItemProps = { descending: boolean };
+type GenericSortBySubMenuItemProps = SortBySubMenuItemProps & { sortAction: SortAction };
+const GenericSortBySubMenuItem = ({ descending, sortAction }: GenericSortBySubMenuItemProps) => {
 	const { props } = useMenuItem();
 	const uri = props.uri;
 
@@ -79,7 +71,7 @@ const createSubMenuForSortProp = ({ sortAction }: { sortAction: SortAction }) =>
 					const filteredTracks = filledTracks.filter(track => track[sortActionProp] != null);
 					return _.sortBy(filteredTracks, sortActionProp);
 				};
-				sortTracksBy(sortAction, sortFn)(uri);
+				sortTracksBy(sortAction, sortFn, descending)(uri);
 			}}
 			leadingIcon={createIconComponent({ icon: SVGIcons[SortActionIcon[sortAction]] })}
 		>
@@ -88,26 +80,26 @@ const createSubMenuForSortProp = ({ sortAction }: { sortAction: SortAction }) =>
 	);
 };
 
-const sortTracksByShuffle = sortTracksBy("True Shuffle", _.shuffle);
-const sortTracksByStars = sortTracksBy(
-	"Stars",
-	fp.sortBy((track: TrackData) => globalThis.tracksRatings[track.uri] ?? 0),
+const SubMenuItems = Object.values(SortAction).map(
+	sortAction => (props: SortBySubMenuItemProps) =>
+		S.React.createElement(GenericSortBySubMenuItem, {
+			...props,
+			sortAction,
+		}),
 );
-
-const SubMenuItems = Object.values(SortAction).map(sortAction => S.React.createElement(createSubMenuForSortProp, { sortAction }));
 
 import { createIconComponent } from "../std/api/createIconComponent.js";
 import { Module } from "/hooks/module.js";
 import { useMenuItem } from "../std/registers/menu.js";
 
-const SubMenuItemShuffle = () => {
+const SortByShuffleSubMenuItem = ({ descending }: SortBySubMenuItemProps) => {
 	const { props } = useMenuItem();
 	const uri = props.uri;
 
 	return (
 		<S.ReactComponents.MenuItem
 			disabled={false}
-			onClick={() => sortTracksByShuffle(uri)}
+			onClick={() => sortTracksBy("True Shuffle", _.shuffle, descending)(uri)}
 			leadingIcon={createIconComponent({ icon: SVGIcons.shuffle })}
 		>
 			True shuffle
@@ -115,7 +107,7 @@ const SubMenuItemShuffle = () => {
 	);
 };
 
-const SubMenuItemStars = () => {
+const SortByStarsSubMenuItem = ({ descending }: SortBySubMenuItemProps) => {
 	if (!globalThis.tracksRatings) return;
 	const { props } = useMenuItem();
 	const uri = props.uri;
@@ -123,7 +115,13 @@ const SubMenuItemStars = () => {
 	return (
 		<S.ReactComponents.MenuItem
 			disabled={false}
-			onClick={() => sortTracksByStars(uri)}
+			onClick={() =>
+				sortTracksBy(
+					"Stars",
+					fp.sortBy((track: TrackData) => globalThis.tracksRatings[track.uri] ?? 0),
+					descending,
+				)(uri)
+			}
 			leadingIcon={createIconComponent({ icon: SVGIcons["heart-active"] })}
 		>
 			Stars
@@ -131,7 +129,7 @@ const SubMenuItemStars = () => {
 	);
 };
 
-SubMenuItems.push(<SubMenuItemShuffle />, <SubMenuItemStars />);
+SubMenuItems.push(SortByShuffleSubMenuItem, SortByStarsSubMenuItem);
 
 export default function (_module: Module) {
 	const module = extend(_module);
@@ -159,22 +157,31 @@ export default function (_module: Module) {
 		},
 	);
 
+	const SortBySubMenu = () => {
+		const { modifierKeyHeld } = S.useContextMenuState();
+		const descending = modifierKeyHeld ^ Number(CONFIG.descending);
+
+		const leadingIcon = createIconComponent({ icon: SVGIcons[descending ? "chart-down" : "chart-up"] });
+
+		return (
+			<S.ReactComponents.MenuItemSubMenu leadingIcon={leadingIcon} displayText="Sort by" depth={1} placement="right-start" disabled={false}>
+				{SubMenuItems.map(SubMenuItem => (
+					<SubMenuItem descending={descending as unknown as boolean} />
+				))}
+			</S.ReactComponents.MenuItemSubMenu>
+		);
+	};
+
+	registrar.register("menu", <SortBySubMenu />, ({ props }) => {
+		const uri = props?.uri;
+		return uri && [URI.is.Album, URI.is.Artist, URI_is_LikedTracks, URI.is.Track, URI.is.PlaylistV1OrV2].some(f => f(uri));
+	});
 	registrar.register(
-		"menu",
-		<S.ReactComponents.MenuItemSubMenu displayText="Sort by" depth={1} placement="right-start" disabled={false}>
-			{SubMenuItems}
-		</S.ReactComponents.MenuItemSubMenu>,
-		({ props }) => {
-			const uri = props?.uri;
-			return uri && [URI.is.Album, URI.is.Artist, URI_is_LikedTracks, URI.is.Track, URI.is.PlaylistV1OrV2].some(f => f(uri));
-		},
+		"topbarLeftButton",
+		<Button label="Create a Playlist from Sorted Queue" icon={SVGIcons.playlist} onClick={createPlaylistFromLastSortedQueue} />,
 	);
 	registrar.register(
 		"topbarLeftButton",
-		<Button label="Create a Playlist from Sorted Queue" icon={SVGIcons.plus2px} onClick={createPlaylistFromLastSortedQueue} />,
-	);
-	registrar.register(
-		"topbarLeftButton",
-		<Button label="Reorder Playlist from Sorted Queue" icon={SVGIcons["chart-down"]} onClick={reordedPlaylistLikeSortedQueue} />,
+		<Button label="Reorder Playlist from Sorted Queue" icon={SVGIcons.shuffle} onClick={reordedPlaylistLikeSortedQueue} />,
 	);
 }

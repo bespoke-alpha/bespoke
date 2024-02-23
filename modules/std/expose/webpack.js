@@ -31,6 +31,7 @@ export function expose({ Snackbar, Platform }) {
         exportedForwardRefs,
         exportedMemos,
     };
+    const useContextMenuState = findBy("useContextMenuState")(exportedFunctions);
     const menus = Object.fromEntries(exportedMemos.flatMap(m => {
         const str = m.type.toString();
         const match = str.match(/value:"([\w-]+)"/);
@@ -189,9 +190,9 @@ export function expose({ Snackbar, Platform }) {
         }
         return analysis;
     };
-    const requester = findBy("accessToken", "getInstance")(exportedFunctions);
     return {
         webpack,
+        useContextMenuState,
         enqueueCustomSnackbar,
         React,
         ReactJSX,
@@ -212,6 +213,5 @@ export function expose({ Snackbar, Platform }) {
         Snackbar,
         URI,
         extractColorPreset,
-        requester,
     };
 }

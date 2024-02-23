@@ -134,6 +134,8 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 		exportedMemos,
 	};
 
+	const useContextMenuState = findBy("useContextMenuState")(exportedFunctions);
+
 	const menus = Object.fromEntries(
 		exportedMemos.flatMap(m => {
 			const str = (m as any).type.toString();
@@ -378,10 +380,9 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 		return analysis;
 	};
 
-	const requester = findBy("accessToken", "getInstance")(exportedFunctions);
-
 	return {
 		webpack,
+		useContextMenuState,
 		enqueueCustomSnackbar,
 		React,
 		ReactJSX,
@@ -402,6 +403,5 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 		Snackbar,
 		URI,
 		extractColorPreset,
-		requester,
 	};
 }

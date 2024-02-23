@@ -19,7 +19,7 @@ var SettingType;
     SettingType["SELECT"] = "select";
 })(SettingType || (SettingType = {}));
 export const getSettings = () => {
-    const SETTINGS_EL_SEL = `[id^="settings."],[id^="desktop."],[class^="network."]`;
+    const SETTINGS_EL_SEL = `[id^="settings."],[id^="desktop."],[class^="network."],[id^="global."]`;
     const settingsEls = Array.from(document.querySelectorAll(SETTINGS_EL_SEL));
     const settings = settingsEls.map(settingEl => {
         const id = settingEl.getAttribute("id");
