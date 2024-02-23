@@ -141,7 +141,7 @@ export default function (_module: Module) {
 		"menu",
 		S.React.createElement(() => {
 			const { props } = useMenuItem();
-			const uri = props.uri;
+			const { uri } = props.reference;
 			return (
 				<S.ReactComponents.MenuItem
 					disabled={false}

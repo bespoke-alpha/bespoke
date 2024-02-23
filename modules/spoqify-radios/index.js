@@ -32,7 +32,7 @@ export default function (_module) {
     });
     registrar.register("menu", S.React.createElement(() => {
         const { props } = useMenuItem();
-        const uri = props.uri;
+        const { uri } = props.reference;
         return (S.React.createElement(S.ReactComponents.MenuItem, { disabled: false, onClick: () => {
                 CONFIG.anonymizedRadiosFolderUri = uri;
             }, leadingIcon: createIconComponent({
