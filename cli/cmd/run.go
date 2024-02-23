@@ -17,7 +17,7 @@ var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "launch Spotify with your favorite addons",
 	Run: func(cmd *cobra.Command, args []string) {
-		runRunCmd(args)
+		execRun(args)
 	},
 }
 
@@ -25,7 +25,7 @@ func prepend[Type any](slice []Type, elems ...Type) []Type {
 	return append(elems, slice...)
 }
 
-func runRunCmd(args []string) {
+func execRun(args []string) {
 	args = prepend(args, "--disable-web-security")
 	var execPath string
 	if mirror {

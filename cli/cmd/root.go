@@ -12,8 +12,6 @@ import (
 
 	"bespoke/paths"
 
-	"github.com/go-git/go-git/v5"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -29,28 +27,8 @@ var rootCmd = &cobra.Command{
 	Short: "Make Spotify your own",
 	Long:  `Bespoke is a CLI utility that empowers Spotify with custom themes and extensions`,
 	Run: func(cmd *cobra.Command, args []string) {
-		log.Println("Opening bespoke local repo at", paths.ConfigPath)
-		if rep, err := git.PlainOpen(paths.ConfigPath); err != nil {
-			log.Println("Cloning remote bespoke repo at", paths.ConfigPath)
-			_, err = git.PlainClone(paths.ConfigPath, false, &git.CloneOptions{
-				URL:      "https://github.com/Delusoire/bespoke",
-				Progress: os.Stdout,
-			})
-			if err != nil {
-				log.Fatalln(err.Error())
-			}
-		} else {
-			w, err := rep.Worktree()
-			if err != nil {
-				log.Fatalln(err.Error())
-			}
-
-			log.Println("Pulling remote bespoke repo at", paths.ConfigPath)
-			err = w.Pull(&git.PullOptions{RemoteName: "origin"})
-			if err != nil {
-				log.Fatalln(err.Error())
-			}
-		}
+		execSync()
+		execInit()
 
 		// Are we run as spotify?
 		execPath, err := os.Executable()
@@ -59,7 +37,7 @@ var rootCmd = &cobra.Command{
 		}
 		execName := strings.ToLower(filepath.Base(execPath))
 		if strings.HasPrefix(execName, "spotify") {
-			runRunCmd(args)
+			execRun(args)
 			os.Exit(0)
 		}
 	},
