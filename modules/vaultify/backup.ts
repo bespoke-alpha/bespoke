@@ -39,16 +39,20 @@ export const getLibrary = async () => {
 		lib[item.type] ??= [];
 		lib[item.type].push(item.uri);
 	}
-	return lib;
+	return _.omit(lib, ["playlist", "folder"]);
 };
 
 const Prefs = S.Platform.getPlayerAPI()._prefs;
 const ProductState = S.Platform.getUserAPI()._product_state_service;
 
+BigInt.prototype.toJSON = function () {
+	return `${this.toString()}n`;
+};
+
 export const getSettings = async () => {
 	const { entries } = await Prefs.getAll();
-	const prefs = entries as Prefs;
 	const { pairs } = await ProductState.getValues();
+	const prefs = entries as Prefs;
 	const productState = _.pick(pairs, [
 		"filter-explicit-content",
 		"publish-playlist",

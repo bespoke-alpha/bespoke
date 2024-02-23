@@ -1,7 +1,8 @@
 import { addPlaylist, createFolder, createPlaylistFromTracks } from "../delulib/platformApi.js";
-import { REACT_PROPS, SpotifyLoc } from "../delulib/util.js";
+import { SpotifyLoc } from "../delulib/util.js";
 import { isContentOfPersonalPlaylist } from "./util.js";
 import { S } from "../std/index.js";
+import { _ } from "/hooks/deps.js";
 const LocalStorageAPI = S.Platform.getLocalStorageAPI();
 export const restoreLibrary = async (data, silent = true) => {
     await Promise.all(Object.values(data.library).map(uris => S.Platform.getLibraryAPI().add(...uris)));
@@ -15,22 +16,16 @@ export const restoreLocalStorage = (vault, silent = true) => {
         LocalStorageAPI.setItem(k, v);
     !silent && S.Snackbar.enqueueSnackbar("Restored LocalStorage");
 };
-export const restoreSettings = (data, silent = true) => {
-    data.settings.map(([id, type, value]) => {
-        const setting = document.querySelector(`[id="${id}"]`);
-        if (!setting)
-            return console.warn(`Setting for ${id} wasn't found`);
-        if (type === "text")
-            setting.value = value;
-        else if (type === "checkbox")
-            setting.checked = value;
-        else if (type === "select")
-            setting.value = value;
-        else
-            return;
-        const settingReactProps = setting[REACT_PROPS];
-        settingReactProps.onChange({ target: setting });
+const Prefs = S.Platform.getPlayerAPI()._prefs;
+const ProductState = S.Platform.getUserAPI()._product_state_service;
+export const restoreSettings = async (data, silent = true) => {
+    const entries = _.mapValues(data.prefs, value => {
+        value.number = eval(value.number);
+        return value;
     });
+    const pairs = data.productState;
+    await Prefs.set({ entries });
+    await ProductState.putValues({ pairs });
     !silent && S.Snackbar.enqueueSnackbar("Restored Settings");
 };
 const restoreRootlistRecur = async (leaf, folder = "") => await Promise.all(Object.keys(leaf).map(async (name) => {

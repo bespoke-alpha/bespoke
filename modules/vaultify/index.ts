@@ -21,7 +21,7 @@ export const backup = async (silent = false) => {
 	const playlists = await fetchRootFolder().then(extractLikedPlaylistTreeRecur);
 	const localStore = getLocalStorage();
 	const localStoreAPI = getLocalStoreAPI();
-	const settings = getSettings();
+	const settings = await getSettings();
 
 	await ClipboardAPI.copy(
 		JSON.stringify({
@@ -36,7 +36,7 @@ export const backup = async (silent = false) => {
 	!silent && S.Snackbar.enqueueSnackbar("Backed up Playlists, Extensions and Settings");
 };
 
-type Vault = LibraryBackup & LocalStorageBackup & SettingBackup;
+type Vault = LibraryBackup & LocalStorageBackup & { settings: SettingBackup };
 export enum RestoreScope {
 	LIBRARY = "library",
 	LOCALSTORAGE = "localstorage",
@@ -52,7 +52,7 @@ export const restoreFactory = (mode: RestoreScope) => async () => {
 		case RestoreScope.LOCALSTORAGE:
 			return restoreLocalStorage(vault, true);
 		case RestoreScope.SETTINGS:
-			return restoreSettings(vault, true);
+			return restoreSettings(vault.settings, true);
 	}
 };
 

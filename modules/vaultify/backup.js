@@ -10,35 +10,30 @@ export const getLibrary = async () => {
         lib[item.type] ??= [];
         lib[item.type].push(item.uri);
     }
-    return lib;
+    return _.omit(lib, ["playlist", "folder"]);
 };
-var SettingType;
-(function (SettingType) {
-    SettingType["CHECKBOX"] = "checkbox";
-    SettingType["TEXT"] = "text";
-    SettingType["SELECT"] = "select";
-})(SettingType || (SettingType = {}));
-export const getSettings = () => {
-    const SETTINGS_EL_SEL = `[id^="settings."],[id^="desktop."],[class^="network."],[id^="global."]`;
-    const settingsEls = Array.from(document.querySelectorAll(SETTINGS_EL_SEL));
-    const settings = settingsEls.map(settingEl => {
-        const id = settingEl.getAttribute("id");
-        if (!id)
-            return null;
-        if (settingEl instanceof HTMLInputElement) {
-            switch (settingEl.getAttribute("type")) {
-                case "checkbox":
-                    return [id, SettingType.CHECKBOX, settingEl.checked];
-                case "text":
-                    return [id, SettingType.TEXT, settingEl.value];
-            }
-        }
-        else if (settingEl instanceof HTMLSelectElement) {
-            return [id, SettingType.SELECT, settingEl.value];
-        }
-        return null;
-    });
-    return _.compact(settings);
+const Prefs = S.Platform.getPlayerAPI()._prefs;
+const ProductState = S.Platform.getUserAPI()._product_state_service;
+BigInt.prototype.toJSON = function () {
+    return `${this.toString()}n`;
+};
+export const getSettings = async () => {
+    const { entries } = await Prefs.getAll();
+    const { pairs } = await ProductState.getValues();
+    const prefs = entries;
+    const productState = _.pick(pairs, [
+        "filter-explicit-content",
+        "publish-playlist",
+        "publish-activity",
+        "public-toplist",
+        "autoplay",
+        "dsa-mode-enabled",
+        "dsa-mode-available",
+    ]);
+    return {
+        prefs,
+        productState,
+    };
 };
 export const getLocalStorage = () => Object.entries(localStorage).filter(([key]) => key.startsWith("module:"));
 export const getLocalStoreAPI = () => {

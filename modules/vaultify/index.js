@@ -8,7 +8,7 @@ export const backup = async (silent = false) => {
     const playlists = await fetchRootFolder().then(extractLikedPlaylistTreeRecur);
     const localStore = getLocalStorage();
     const localStoreAPI = getLocalStoreAPI();
-    const settings = getSettings();
+    const settings = await getSettings();
     await ClipboardAPI.copy(JSON.stringify({
         library,
         playlists,
@@ -32,7 +32,7 @@ export const restoreFactory = (mode) => async () => {
         case RestoreScope.LOCALSTORAGE:
             return restoreLocalStorage(vault, true);
         case RestoreScope.SETTINGS:
-            return restoreSettings(vault, true);
+            return restoreSettings(vault.settings, true);
     }
 };
 import("./settings.js");

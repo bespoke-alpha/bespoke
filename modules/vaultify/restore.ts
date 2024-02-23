@@ -1,10 +1,11 @@
-import { addPlaylist, createFolder, createPlaylistFromTracks, setInLibrary } from "../delulib/platformApi.js";
-import { REACT_PROPS, SpotifyLoc } from "../delulib/util.js";
+import { addPlaylist, createFolder, createPlaylistFromTracks } from "../delulib/platformApi.js";
+import { SpotifyLoc } from "../delulib/util.js";
 
 import { LibraryBackup, LocalStorageBackup, SettingBackup } from "./backup.js";
 import { LikedPlaylist, PersonalFolder, PersonalPlaylist, isContentOfPersonalPlaylist } from "./util.js";
 
 import { S } from "../std/index.js";
+import { _ } from "/hooks/deps.js";
 
 const LocalStorageAPI = S.Platform.getLocalStorageAPI();
 
@@ -24,8 +25,13 @@ const Prefs = S.Platform.getPlayerAPI()._prefs;
 const ProductState = S.Platform.getUserAPI()._product_state_service;
 
 export const restoreSettings = async (data: SettingBackup, silent = true) => {
-	await Prefs.set({ entries: data.prefs });
-	await ProductState.putValues({ pairs: data.productState });
+	const entries = _.mapValues(data.prefs, value => {
+		value.number = eval(value.number);
+		return value;
+	});
+	const pairs = data.productState;
+	await Prefs.set({ entries });
+	await ProductState.putValues({ pairs });
 	!silent && S.Snackbar.enqueueSnackbar("Restored Settings");
 };
 
