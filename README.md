@@ -1,5 +1,5 @@
 ### Installation
-// TODO
+Install the latest release for your platform and run it (double-click it or execute it from the terminal with no arguments).
 
 ### Setup
 Note: All windows commands are to be run inside a windows' `Terminal` app (powershell) and not `cmd`!
