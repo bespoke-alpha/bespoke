@@ -7,14 +7,19 @@ import (
 	"bespoke/paths"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
 )
 
+var (
+	modules bool
+)
+
 var syncCmd = &cobra.Command{
 	Use:   "sync",
-	Short: "Pull latest bespoke version from github",
+	Short: "Update bespoke from GitHub",
 	Run: func(cmd *cobra.Command, args []string) {
 		execSync()
 	},
@@ -33,6 +38,15 @@ func execSync() {
 		}
 	}
 
+	if modules {
+		modulesPath := filepath.Join(paths.ConfigPath, "modules")
+		filepath.Walk(modulesPath, func(path string, info os.FileInfo, err error) error {
+			if info.IsDir() {
+				pull(path)
+			}
+			return nil
+		})
+	}
 }
 
 func pull(localRepo string) error {
@@ -53,4 +67,6 @@ func pull(localRepo string) error {
 
 func init() {
 	rootCmd.AddCommand(syncCmd)
+
+	syncCmd.Flags().BoolVar(&modules, "modules", false, "Update modules too")
 }
