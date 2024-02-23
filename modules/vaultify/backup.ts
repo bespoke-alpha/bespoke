@@ -37,6 +37,15 @@ enum SettingType {
 	SELECT = "select",
 }
 
+/*
+const Prefs = S.Platform.getPlayerAPI()._prefs
+const ProductState = S.Platform.getUserAPI()._product_state_service
+
+Prefs.getAll()
+["filter-explicit-content", "publish-playlist", "publish-activity", "public-toplist", "autoplay", "dsa-mode-enabled", "dsa-mode-available"]
+ProductState.getValues()
+*/
+
 type Setting = [string, SettingType.CHECKBOX, boolean] | [string, SettingType.TEXT, string] | [string, SettingType.SELECT, string];
 export const getSettings = () => {
 	const SETTINGS_EL_SEL = `[id^="settings."],[id^="desktop."],[class^="network."],[id^="global."]`;
