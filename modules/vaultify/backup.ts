@@ -17,8 +17,19 @@ export type LocalStorageBackup = {
 	localStoreAPI: Array<[string, string]>;
 };
 
+type Prefs = Record<
+	string,
+	{
+		number?: number;
+		bool?: boolean;
+		string?: string;
+	}
+>;
+type ProductState = Record<string, string>;
+
 export type SettingBackup = {
-	settings: Array<[string, string, any]>;
+	prefs: Prefs;
+	productState: ProductState;
 };
 
 export const getLibrary = async () => {
@@ -31,43 +42,27 @@ export const getLibrary = async () => {
 	return lib;
 };
 
-enum SettingType {
-	CHECKBOX = "checkbox",
-	TEXT = "text",
-	SELECT = "select",
-}
+const Prefs = S.Platform.getPlayerAPI()._prefs;
+const ProductState = S.Platform.getUserAPI()._product_state_service;
 
-/*
-const Prefs = S.Platform.getPlayerAPI()._prefs
-const ProductState = S.Platform.getUserAPI()._product_state_service
+export const getSettings = async () => {
+	const { entries } = await Prefs.getAll();
+	const prefs = entries as Prefs;
+	const { pairs } = await ProductState.getValues();
+	const productState = _.pick(pairs, [
+		"filter-explicit-content",
+		"publish-playlist",
+		"publish-activity",
+		"public-toplist",
+		"autoplay",
+		"dsa-mode-enabled",
+		"dsa-mode-available",
+	]) as ProductState;
 
-Prefs.getAll()
-["filter-explicit-content", "publish-playlist", "publish-activity", "public-toplist", "autoplay", "dsa-mode-enabled", "dsa-mode-available"]
-ProductState.getValues()
-*/
-
-type Setting = [string, SettingType.CHECKBOX, boolean] | [string, SettingType.TEXT, string] | [string, SettingType.SELECT, string];
-export const getSettings = () => {
-	const SETTINGS_EL_SEL = `[id^="settings."],[id^="desktop."],[class^="network."],[id^="global."]`;
-	const settingsEls = Array.from(document.querySelectorAll(SETTINGS_EL_SEL) as NodeListOf<HTMLElement>);
-	const settings = settingsEls.map(settingEl => {
-		const id = settingEl.getAttribute("id");
-
-		if (!id) return null;
-
-		if (settingEl instanceof HTMLInputElement) {
-			switch (settingEl.getAttribute("type")) {
-				case "checkbox":
-					return [id, SettingType.CHECKBOX, settingEl.checked] as const;
-				case "text":
-					return [id, SettingType.TEXT, settingEl.value] as const;
-			}
-		} else if (settingEl instanceof HTMLSelectElement) {
-			return [id, SettingType.SELECT, settingEl.value] as const;
-		}
-		return null;
-	});
-	return _.compact(settings) as Setting[];
+	return {
+		prefs,
+		productState,
+	} as SettingBackup;
 };
 
 export const getLocalStorage = () => Object.entries(localStorage).filter(([key]) => key.startsWith("module:"));

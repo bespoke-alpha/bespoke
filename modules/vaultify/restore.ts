@@ -20,19 +20,12 @@ export const restoreLocalStorage = (vault: LocalStorageBackup, silent = true) =>
 	!silent && S.Snackbar.enqueueSnackbar("Restored LocalStorage");
 };
 
-export const restoreSettings = (data: SettingBackup, silent = true) => {
-	data.settings.map(([id, type, value]) => {
-		const setting = document.querySelector<any>(`[id="${id}"]`);
-		if (!setting) return console.warn(`Setting for ${id} wasn't found`);
+const Prefs = S.Platform.getPlayerAPI()._prefs;
+const ProductState = S.Platform.getUserAPI()._product_state_service;
 
-		if (type === "text") setting.value = value;
-		else if (type === "checkbox") setting.checked = value;
-		else if (type === "select") setting.value = value;
-		else return;
-
-		const settingReactProps = setting[REACT_PROPS];
-		settingReactProps.onChange({ target: setting });
-	});
+export const restoreSettings = async (data: SettingBackup, silent = true) => {
+	await Prefs.set({ entries: data.prefs });
+	await ProductState.putValues({ pairs: data.productState });
 	!silent && S.Snackbar.enqueueSnackbar("Restored Settings");
 };
 
