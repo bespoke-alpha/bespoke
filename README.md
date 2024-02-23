@@ -20,7 +20,7 @@ Note: All windows commands are to be run inside a windows' `Terminal` app (power
 
 You can always restore your Spotify installation by running `bespoke fix`.
 
-### Caviats
+### Caveats 
 If your Spotify installation is somewhat unusual, then you have to specify the paths to the Spotify data and Spotify config folders manually.
 You can do that by creating a `config.yaml` file and adding a `spotify-data: path/to/spotify/data/`
 (and optionally a `spotify-config: path/to/spotify/config/` for more advanced dev workflows)
