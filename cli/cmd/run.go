@@ -4,7 +4,6 @@ Copyright © 2024 Delusoire <deluso7re@outlook.com>
 package cmd
 
 import (
-	"log"
 	"os/exec"
 	"path/filepath"
 
@@ -22,12 +21,16 @@ var runCmd = &cobra.Command{
 	},
 }
 
+func prepend[Type any](slice []Type, elems ...Type) []Type {
+	return append(elems, slice...)
+}
+
 func runRunCmd(args []string) {
-	log.Println()
+	args = prepend(args, "--disable-web-security")
 	var execPath string
 	if mirror {
 		execPath = filepath.Join(xdg.ConfigHome, "Microsoft", "WindowsApps", "Spotify.exe")
-		args = append([]string{`--app-directory=` + filepath.Join(paths.ConfigPath, "apps")}, args...)
+		args = prepend(args, "--app-directory="+filepath.Join(paths.ConfigPath, "apps"))
 	} else {
 		execPath = paths.GetSpotifyExecPath(spotifyDataPath)
 	}

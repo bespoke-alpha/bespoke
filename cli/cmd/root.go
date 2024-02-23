@@ -31,7 +31,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if rep, err := git.PlainOpen(paths.ConfigPath); err != nil {
 			_, err = git.PlainClone(paths.ConfigPath, false, &git.CloneOptions{
-				URL:      "https://github.com/Delusoire/spicetify-cli",
+				URL:      "https://github.com/Delusoire/bespoke",
 				Progress: os.Stdout,
 			})
 			if err != nil {
@@ -42,12 +42,14 @@ var rootCmd = &cobra.Command{
 			if err != nil {
 				log.Fatalln(err.Error())
 			}
+
 			err = w.Pull(&git.PullOptions{RemoteName: "origin"})
 			if err != nil {
 				log.Fatalln(err.Error())
 			}
 		}
 
+		// Are we run as spotify?
 		execPath, err := os.Executable()
 		if err != nil {
 			log.Fatalln(err.Error())
