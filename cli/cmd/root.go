@@ -29,7 +29,9 @@ var rootCmd = &cobra.Command{
 	Short: "Make Spotify your own",
 	Long:  `Bespoke is a CLI utility that empowers Spotify with custom themes and extensions`,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.Println("Opening bespoke local repo at", paths.ConfigPath)
 		if rep, err := git.PlainOpen(paths.ConfigPath); err != nil {
+			log.Println("Cloning remote bespoke repo at", paths.ConfigPath)
 			_, err = git.PlainClone(paths.ConfigPath, false, &git.CloneOptions{
 				URL:      "https://github.com/Delusoire/bespoke",
 				Progress: os.Stdout,
@@ -43,6 +45,7 @@ var rootCmd = &cobra.Command{
 				log.Fatalln(err.Error())
 			}
 
+			log.Println("Pulling remote bespoke repo at", paths.ConfigPath)
 			err = w.Pull(&git.PullOptions{RemoteName: "origin"})
 			if err != nil {
 				log.Fatalln(err.Error())
