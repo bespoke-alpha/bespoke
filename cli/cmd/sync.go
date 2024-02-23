@@ -21,8 +21,7 @@ var syncCmd = &cobra.Command{
 }
 
 func execSync() {
-	log.Println("Opening bespoke local repo at", paths.ConfigPath)
-	if rep, err := git.PlainOpen(paths.ConfigPath); err != nil {
+	if err := pull(paths.ConfigPath); err != nil {
 		log.Println("Cloning remote bespoke repo to", paths.ConfigPath)
 		_, err = git.PlainClone(paths.ConfigPath, false, &git.CloneOptions{
 			URL:      "https://github.com/Delusoire/bespoke",
@@ -32,18 +31,24 @@ func execSync() {
 		if err != nil {
 			log.Fatalln(err.Error())
 		}
-	} else {
-		w, err := rep.Worktree()
-		if err != nil {
-			log.Fatalln(err.Error())
-		}
-
-		log.Println("Pulling remote bespoke repo in", paths.ConfigPath)
-		err = w.Pull(&git.PullOptions{RemoteName: "origin"})
-		if err != nil {
-			log.Fatalln(err.Error())
-		}
 	}
+
+}
+
+func pull(localRepo string) error {
+	log.Println("Opening repo at", localRepo)
+	rep, err := git.PlainOpen(localRepo)
+	if err != nil {
+		return err
+	}
+
+	w, err := rep.Worktree()
+	if err != nil {
+		return err
+	}
+
+	log.Println("Pulling from origin in", paths.ConfigPath)
+	return w.Pull(&git.PullOptions{RemoteName: "origin"})
 }
 
 func init() {

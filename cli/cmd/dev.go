@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -40,7 +41,7 @@ var devCmd = &cobra.Command{
 
 		file.WriteAt([]byte{50}, firstPatchLocation)
 		file.WriteAt([]byte{50}, secondPatchLocation)
-		log.Println("Mode app-developer enabled for next launch")
+		fmt.Println("Mode app-developer enabled for next launch")
 	},
 }
 

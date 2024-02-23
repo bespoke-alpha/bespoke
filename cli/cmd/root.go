@@ -18,6 +18,7 @@ import (
 
 var (
 	mirror          bool
+	autoUpdate      bool
 	spotifyDataPath string
 	cfgFile         string
 )
@@ -25,22 +26,25 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "bespoke",
 	Short: "Make Spotify your own",
-	Long:  `Bespoke is a CLI utility that empowers Spotify with custom themes and extensions`,
+	Long:  `Bespoke is a CLI utility that empowers the desktop Spotify client with custom themes and extensions`,
 	Run: func(cmd *cobra.Command, args []string) {
-		execSync()
-		execInit()
-
-		// Are we run as spotify?
-		execPath, err := os.Executable()
-		if err != nil {
-			log.Fatalln(err.Error())
+		if autoUpdate {
+			execSync()
 		}
-		execName := strings.ToLower(filepath.Base(execPath))
-		if strings.HasPrefix(execName, "spotify") {
+		execInit()
+		if isRanAsSpotify() {
 			execRun(args)
-			os.Exit(0)
 		}
 	},
+}
+
+func isRanAsSpotify() bool {
+	execPath, err := os.Executable()
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	execName := strings.ToLower(filepath.Base(execPath))
+	return strings.HasPrefix(execName, "spotify")
 }
 
 func Execute() {
@@ -52,6 +56,8 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+
+	rootCmd.Flags().BoolVar(&autoUpdate, "auto-update", false, "Toggle auto updates for bespoke")
 
 	rootCmd.PersistentFlags().BoolVarP(&mirror, "mirror", "m", false, "Mirror Spotify files instead of patching them directly")
 	rootCmd.PersistentFlags().StringVar(&spotifyDataPath, "spotify-data", paths.GetSpotifyPath(), "Override Spotify data folder (containing the spotify executable)")
