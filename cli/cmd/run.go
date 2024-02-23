@@ -29,7 +29,7 @@ func runRunCmd(args []string) {
 		execPath = filepath.Join(xdg.ConfigHome, "Microsoft", "WindowsApps", "Spotify.exe")
 		args = append([]string{`--app-directory=` + filepath.Join(paths.ConfigPath, "apps")}, args...)
 	} else {
-		execPath = paths.GetSpotifyExecPath(spotify)
+		execPath = paths.GetSpotifyExecPath(spotifyDataPath)
 	}
 	exec.Command(execPath, args...).Start()
 }

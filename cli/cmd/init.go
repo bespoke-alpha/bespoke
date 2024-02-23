@@ -21,7 +21,7 @@ var initCmd = &cobra.Command{
 	Short: "initialize bespoke for Spotify",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Initializing bespoke")
-		src := paths.GetSpotifyAppsPath(spotify)
+		src := paths.GetSpotifyAppsPath(spotifyDataPath)
 		var dest string
 		if mirror {
 			dest = filepath.Join(paths.ConfigPath, "apps")

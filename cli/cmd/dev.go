@@ -14,14 +14,14 @@ import (
 )
 
 var (
-	spotifyConfig string
+	spotifyConfigPath string
 )
 
 var devCmd = &cobra.Command{
 	Use:   "dev",
 	Short: "Patch Spotify to open in app-developer mode next time it launches",
 	Run: func(cmd *cobra.Command, args []string) {
-		offlineBnkPath := filepath.Join(spotifyConfig, "offline.bnk")
+		offlineBnkPath := filepath.Join(spotifyConfigPath, "offline.bnk")
 
 		file, err := os.OpenFile(offlineBnkPath, os.O_RDWR, 0644)
 		if err != nil {

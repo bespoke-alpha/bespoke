@@ -19,9 +19,9 @@ import (
 )
 
 var (
-	mirror  bool
-	spotify string
-	cfgFile string
+	mirror          bool
+	spotifyDataPath string
+	cfgFile         string
 )
 
 var rootCmd = &cobra.Command{
@@ -71,8 +71,8 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().BoolVarP(&mirror, "mirror", "m", false, "Mirror Spotify files instead of patching them directly")
-	rootCmd.PersistentFlags().StringVar(&spotify, "spotify", paths.GetSpotifyPath(), "Override path for Spotify folder (containing the spotify executable)")
-	rootCmd.PersistentFlags().StringVar(&spotifyConfig, "spotify-config", paths.GetSpotifyConfigPath(), "Override path for Spotify config folder")
+	rootCmd.PersistentFlags().StringVar(&spotifyDataPath, "spotify-data", paths.GetSpotifyPath(), "Override Spotify data folder (containing the spotify executable)")
+	rootCmd.PersistentFlags().StringVar(&spotifyConfigPath, "spotify-config", paths.GetSpotifyConfigPath(), "Override Spotify config folder (containing prefs & offline.bnk)")
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $XDG_CONFIG_HOME/bespoke/config.yaml)")
 }
 

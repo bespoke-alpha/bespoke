@@ -2,6 +2,7 @@
 
 node_modules/
 bun.lockb
+config.yaml
 
 cli/bespoke*
 

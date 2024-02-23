@@ -24,7 +24,7 @@ var pathCmd = &cobra.Command{
 			showConfig = true
 		}
 		if showSpotiy {
-			log.Println("Spotify:", spotify)
+			log.Println("Spotify:", spotifyDataPath)
 		}
 		if showConfig {
 			log.Println("config:", paths.ConfigPath)

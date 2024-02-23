@@ -20,7 +20,7 @@ var fixCmd = &cobra.Command{
 		if mirror {
 			os.RemoveAll(filepath.Join(paths.ConfigPath, "apps"))
 		} else {
-			spaBakGlob := filepath.Join(paths.GetSpotifyAppsPath(spotify), "*.spa.bak")
+			spaBakGlob := filepath.Join(paths.GetSpotifyAppsPath(spotifyDataPath), "*.spa.bak")
 			spaBaks, err := filepath.Glob(spaBakGlob)
 
 			if err != nil {
