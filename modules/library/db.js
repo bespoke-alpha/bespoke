@@ -17,6 +17,36 @@ export const db = new (class extends Dexie {
         });
     }
 })();
+// export const getMainUrisForIsrcs = async (isrcs: string[]) => {
+//     const tracks = await db.isrcs.bulkGet(isrcs)
+//     const missedTracks = tracks.reduce((missed, track, i) => {
+//         track || missed.push(i)
+//         return missed
+//     }, [] as number[])
+//     if (missedTracks.length) {
+//         const missedIsrcs = missedTracks.map(i => isrcs[i])
+//         const resultsIsrcs = await Promise.allSettled(missedIsrcs.map(isrc => searchTracks(`isrc:${isrc}`, 0, 1)))
+//         const filledTracks = _.compact(
+//             resultsIsrcs.map((resultsIsrc, i) => {
+//                 const isrc = isrcs[i]
+//                 if (resultsIsrc.status === "fulfilled") {
+//                     const uri = resultsIsrc.value[0]?.item.data.uri
+//                     if (!uri) {
+//                         console.error("Couldn't get matching track for isrc:", isrc)
+//                         return
+//                     }
+//                     return { isrc, uri }
+//                 }
+//                 console.error("Failed searching track for isrc:", isrc)
+//             }),
+//         )
+//         db.isrcs.bulkAdd(filledTracks)
+//         missedTracks.forEach((missedTrack, i) => {
+//             tracks[missedTrack] = filledTracks[i]
+//         })
+//     }
+//     return tracks.map(track => track?.uri)
+// }
 export const getISRCsForUris = async (uris) => {
     const tracks = await db.tracks.bulkGet(uris);
     const missedTracks = tracks.reduce((missed, track, i) => {
