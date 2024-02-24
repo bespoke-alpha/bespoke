@@ -14,10 +14,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	spotifyConfigPath string
-)
-
 var devCmd = &cobra.Command{
 	Use:   "dev",
 	Short: "Patch Spotify to open in app-developer mode next time it launches",

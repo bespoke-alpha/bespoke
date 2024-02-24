@@ -17,10 +17,12 @@ import (
 )
 
 var (
-	mirror          bool
-	autoUpdate      bool
-	spotifyDataPath string
-	cfgFile         string
+	autoUpdate bool
+
+	mirror            bool
+	spotifyDataPath   string
+	spotifyConfigPath string
+	cfgFile           string
 )
 
 var rootCmd = &cobra.Command{
@@ -62,6 +64,10 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&mirror, "mirror", "m", false, "Mirror Spotify files instead of patching them directly")
 	rootCmd.PersistentFlags().StringVar(&spotifyDataPath, "spotify-data", paths.GetSpotifyPath(), "Override Spotify data folder (containing the spotify executable)")
 	rootCmd.PersistentFlags().StringVar(&spotifyConfigPath, "spotify-config", paths.GetSpotifyConfigPath(), "Override Spotify config folder (containing prefs & offline.bnk)")
+	viper.BindPFlag("mirror", rootCmd.PersistentFlags().Lookup("mirror"))
+	viper.BindPFlag("spotify-data", rootCmd.PersistentFlags().Lookup("spotify-data"))
+	viper.BindPFlag("spotify-config", rootCmd.PersistentFlags().Lookup("spotify-config"))
+
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $XDG_CONFIG_HOME/bespoke/config.yaml)")
 }
 
@@ -70,13 +76,14 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		viper.AddConfigPath(paths.ConfigPath)
-		viper.SetConfigType("yaml")
-		viper.SetConfigName("config")
 	}
 
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+		mirror = viper.GetBool("mirror")
+		spotifyDataPath = viper.GetString("spotify-data")
+		spotifyConfigPath = viper.GetString("spotify-config")
 	}
 }

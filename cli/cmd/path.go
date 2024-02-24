@@ -5,29 +5,35 @@ package cmd
 
 import (
 	"bespoke/paths"
-	"log"
+	"fmt"
 
 	"github.com/spf13/cobra"
 )
 
 var (
-	showSpotiy bool
-	showConfig bool
+	showSpotiyData    bool
+	showSpotifyConfig bool
+	showConfig        bool
 )
 
 var pathCmd = &cobra.Command{
 	Use:   "path",
 	Short: "Print bespoke paths",
 	Run: func(cmd *cobra.Command, args []string) {
-		if !showSpotiy && !showConfig {
-			showSpotiy = true
+		if !showSpotiyData && !showSpotifyConfig && !showConfig {
+			showSpotiyData = true
+			showSpotifyConfig = true
 			showConfig = true
 		}
-		if showSpotiy {
-			log.Println("Spotify:", spotifyDataPath)
+		fmt.Println("mirror:", mirror)
+		if showSpotiyData {
+			fmt.Println("Spotify data:", spotifyDataPath)
+		}
+		if showSpotifyConfig {
+			fmt.Println("Spotify config:", spotifyConfigPath)
 		}
 		if showConfig {
-			log.Println("config:", paths.ConfigPath)
+			fmt.Println("config:", paths.ConfigPath)
 		}
 	},
 }
@@ -35,6 +41,7 @@ var pathCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(pathCmd)
 
-	pathCmd.Flags().BoolVar(&showSpotiy, "spotify", false, "show Spotify path")
-	pathCmd.Flags().BoolVar(&showConfig, "config", false, "show config path")
+	pathCmd.Flags().BoolVar(&showSpotiyData, "spotify-data", false, "Show Spotify data path")
+	pathCmd.Flags().BoolVar(&showSpotiyData, "spotify-config", false, "Show Spotify config path")
+	pathCmd.Flags().BoolVar(&showConfig, "config", false, "Show config path")
 }
