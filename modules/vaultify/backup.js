@@ -1,5 +1,5 @@
 import { _ } from "/hooks/deps.js";
-import { fetchPlaylistContents } from "../delulib/platformApi.js";
+import { fetchPlaylistContents, fetchRootFolder } from "../delulib/platformApi.js";
 import { S } from "../std/index.js";
 const LibraryAPI = S.Platform.getLibraryAPI();
 const LocalStorageAPI = S.Platform.getLocalStorageAPI();
@@ -10,7 +10,10 @@ export const getLibrary = async () => {
         lib[item.type] ??= [];
         lib[item.type].push(item.uri);
     }
-    return _.omit(lib, ["playlist", "folder"]);
+    const rootlist = await fetchRootFolder().then(extractLikedPlaylistTreeRecur);
+    return Object.assign(_.omit(lib, ["playlist", "folder"]), {
+        rootlist,
+    });
 };
 const Prefs = S.Platform.getPlayerAPI()._prefs;
 const ProductState = S.Platform.getUserAPI()._product_state_service;

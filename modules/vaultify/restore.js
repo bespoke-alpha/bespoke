@@ -4,9 +4,15 @@ import { isContentOfPersonalPlaylist } from "./util.js";
 import { S } from "../std/index.js";
 import { _ } from "/hooks/deps.js";
 const LocalStorageAPI = S.Platform.getLocalStorageAPI();
-export const restoreLibrary = async (data, silent = true) => {
-    await Promise.all(Object.values(data.library).map(uris => S.Platform.getLibraryAPI().add(...uris)));
-    await restoreRootlistRecur(data.playlists);
+export const restoreLibrary = async (library, silent = true) => {
+    for await (const [k, v] of Object.entries(library)) {
+        if (k === "rootlist") {
+            await restoreRootlistRecur(v);
+        }
+        else {
+            S.Platform.getLibraryAPI().add(...v);
+        }
+    }
     !silent && S.Snackbar.enqueueSnackbar("Restored Library");
 };
 export const restoreLocalStorage = (vault, silent = true) => {

@@ -9,9 +9,15 @@ import { _ } from "/hooks/deps.js";
 
 const LocalStorageAPI = S.Platform.getLocalStorageAPI();
 
-export const restoreLibrary = async (data: LibraryBackup, silent = true) => {
-	await Promise.all(Object.values(data.library).map(uris => S.Platform.getLibraryAPI().add(...uris)));
-	await restoreRootlistRecur(data.playlists);
+export const restoreLibrary = async (library: LibraryBackup, silent = true) => {
+	for await (const [k, v] of Object.entries(library)) {
+		if (k === "rootlist") {
+			await restoreRootlistRecur(v as PersonalFolder);
+		} else {
+			S.Platform.getLibraryAPI().add(...(v as string[]));
+		}
+	}
+
 	!silent && S.Snackbar.enqueueSnackbar("Restored Library");
 };
 

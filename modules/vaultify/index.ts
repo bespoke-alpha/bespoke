@@ -1,15 +1,4 @@
-import { fetchRootFolder } from "../delulib/platformApi.js";
-
-import {
-	LibraryBackup,
-	LocalStorageBackup,
-	SettingBackup,
-	extractLikedPlaylistTreeRecur,
-	getLibrary,
-	getLocalStorage,
-	getLocalStoreAPI,
-	getSettings,
-} from "./backup.js";
+import { LibraryBackup, LocalStorageBackup, SettingBackup, getLibrary, getLocalStorage, getLocalStoreAPI, getSettings } from "./backup.js";
 import { restoreLocalStorage, restoreLibrary, restoreSettings } from "./restore.js";
 
 import { S } from "../std/index.js";
@@ -18,25 +7,24 @@ const ClipboardAPI = S.Platform.getClipboardAPI();
 
 export const backup = async (silent = false) => {
 	const library = await getLibrary();
-	const playlists = await fetchRootFolder().then(extractLikedPlaylistTreeRecur);
+	const settings = await getSettings();
 	const localStore = getLocalStorage();
 	const localStoreAPI = getLocalStoreAPI();
-	const settings = await getSettings();
 
 	await ClipboardAPI.copy(
 		JSON.stringify({
 			library,
+			settings,
 			playlists,
 			localStore,
 			localStoreAPI,
-			settings,
 		} as Vault),
 	);
 
 	!silent && S.Snackbar.enqueueSnackbar("Backed up Playlists, Extensions and Settings");
 };
 
-type Vault = LibraryBackup & LocalStorageBackup & { settings: SettingBackup };
+type Vault = { library: LibraryBackup; settings: SettingBackup } & LocalStorageBackup;
 export enum RestoreScope {
 	LIBRARY = "library",
 	LOCALSTORAGE = "localstorage",
@@ -48,11 +36,11 @@ export const restoreFactory = (mode: RestoreScope) => async () => {
 
 	switch (mode) {
 		case RestoreScope.LIBRARY:
-			return restoreLibrary(vault, true);
-		case RestoreScope.LOCALSTORAGE:
-			return restoreLocalStorage(vault, true);
+			return restoreLibrary(vault.library, true);
 		case RestoreScope.SETTINGS:
 			return restoreSettings(vault.settings, true);
+		case RestoreScope.LOCALSTORAGE:
+			return restoreLocalStorage(vault, true);
 	}
 };
 
