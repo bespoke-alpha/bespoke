@@ -1,7 +1,7 @@
 {
 	"modules": [
 		"std",
-		"hazy",
+
 		"delulib",
 		"keyboard-shortcuts",
 		"search-on-youtube",
