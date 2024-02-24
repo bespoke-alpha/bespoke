@@ -10,7 +10,6 @@ export const backup = async (silent = false) => {
     await ClipboardAPI.copy(JSON.stringify({
         library,
         settings,
-        playlists,
         localStore,
         localStoreAPI,
     }));

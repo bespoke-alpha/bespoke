@@ -15,7 +15,6 @@ export const backup = async (silent = false) => {
 		JSON.stringify({
 			library,
 			settings,
-			playlists,
 			localStore,
 			localStoreAPI,
 		} as Vault),

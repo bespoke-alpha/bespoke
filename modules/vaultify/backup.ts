@@ -39,10 +39,19 @@ export const getLibrary = async () => {
 		lib[item.type] ??= [];
 		lib[item.type].push(item.uri);
 	}
+	const extractUris = ({ items }) => items.map(item => item.uri);
+	const track = await LibraryAPI.getTracks({ limit: 50000, sort: { field: "ADDED_AT", order: "ASC" } }).then(extractUris);
+	const episode = await LibraryAPI.getEpisodes({ limit: 50000, sort: { field: "ADDED_AT", order: "ASC" } }).then(extractUris);
+	// const book =
 	const rootlist = await fetchRootFolder().then(extractLikedPlaylistTreeRecur);
-	return Object.assign(_.omit(lib, ["playlist", "folder"]), {
-		rootlist,
-	}) as LibraryBackup;
+	return Object.assign(
+		{
+			track,
+			episode,
+			rootlist,
+		},
+		_.omit(lib, ["playlist", "folder"]),
+	) as LibraryBackup;
 };
 
 const Prefs = S.Platform.getPlayerAPI()._prefs;
