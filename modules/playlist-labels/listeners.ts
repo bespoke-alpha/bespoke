@@ -4,8 +4,6 @@ import { getPlaylistsFromURIs, getTracksFromURIs } from "./db.js";
 const RootlistAPI = S.Platform.getRootlistAPI();
 const PlaylistAPI = S.Platform.getPlaylistAPI();
 
-const extractItemsUris = ({ items }: any) => items.map(item => item.uri);
-
 const extractPlaylists = (leaf: any): string[] => {
 	switch (leaf.type) {
 		case "playlist": {
@@ -16,6 +14,9 @@ const extractPlaylists = (leaf: any): string[] => {
 		}
 	}
 };
+
+const extractItemsUris = ({ items }: any) => items.map(item => item.uri);
+const getPlaylistTracks = playlist => PlaylistAPI.getContents(playlist).then(extractItemsUris);
 
 export const mapAssocs = (uris: string[], fn: (assocs: Set<string>) => void) => {
 	for (const uri of uris) {
@@ -28,43 +29,48 @@ export const mapAssocs = (uris: string[], fn: (assocs: Set<string>) => void) => 
 const onPlaylistsAdded = async (playlists: string[]) => {
 	for (const playlist of playlists) {
 		SavedPlaylists.add(playlist);
+		onTracksAddedToPlaylist(playlist, await getPlaylistTracks(playlist));
 	}
 	await getPlaylistsFromURIs(playlists);
 };
 
-const onPlaylistsRemoved = (playlists: string[]) => {
+const onPlaylistsRemoved = async (playlists: string[]) => {
 	for (const playlist of playlists) {
 		SavedPlaylists.delete(playlist);
+		onTracksRemovedFromPlaylist(playlist, await getPlaylistTracks(playlist));
+	}
+};
+
+const triggerUpdate = (uris: string[]) => {
+	for (const uri of uris) {
+		for (const update of listeners.get(uri)?.keys() ?? []) {
+			update();
+		}
 	}
 };
 
 const onTracksAddedToPlaylist = async (playlist: string, uris: string[]) => {
 	mapAssocs(uris, o => o.add(playlist));
 	await getTracksFromURIs(uris);
+	triggerUpdate(uris);
 };
 
 const onTracksRemovedFromPlaylist = (playlist: string, uris: string[]) => {
 	mapAssocs(uris, o => o.delete(playlist));
+	triggerUpdate(uris);
 };
 
-export const SavedPlaylists = new Set(await RootlistAPI.getContents({ limit: 50000 }).then(extractPlaylists));
+export const SavedPlaylists = new Set<string>();
+
+RootlistAPI.getContents({ limit: 50000 }).then(extractPlaylists).then(onPlaylistsAdded);
 RootlistAPI.getEvents().addListener("operation_complete", async ({ data }) => {
-	const getUris = playlist => PlaylistAPI.getContents(playlist).then(extractItemsUris);
 	const playlists = data.items;
 	switch (data.operation) {
 		case "add": {
-			onPlaylistsAdded(playlists);
-			for (const playlist of playlists) {
-				onTracksAddedToPlaylist(playlist, await getUris(playlist));
-			}
-			return;
+			return void onPlaylistsAdded(playlists);
 		}
 		case "remove": {
-			onPlaylistsRemoved(playlists);
-			for (const playlist of playlists) {
-				onTracksRemovedFromPlaylist(playlist, await getUris(playlist));
-			}
-			return;
+			return void onPlaylistsRemoved(playlists);
 		}
 	}
 });
@@ -83,8 +89,34 @@ PlaylistAPI.getEvents().addListener("operation_complete", ({ data }) => {
 			return;
 		}
 		case "remove": {
-			onTracksRemovedFromPlaylist(data.uri, data.uris);
+			onTracksRemovedFromPlaylist(
+				data.uri,
+				data.items.map(item => item.uri),
+			);
 			return;
 		}
 	}
 });
+
+const { React } = S;
+
+const listeners = new Map<string, Set<() => void>>();
+
+const useUpdate = () => React.useReducer(x => x + 1, 0)[1];
+export const useLivePlaylistItems = (uri: string) => {
+	const update = useUpdate();
+
+	React.useEffect(() => {
+		let ls = listeners.get(uri);
+		if (!ls) {
+			ls = new Set();
+			listeners.set(uri, ls);
+		}
+		ls.add(update);
+		return () => {
+			ls.delete(update);
+		};
+	}, []);
+
+	return PlaylistItems.get(uri);
+};

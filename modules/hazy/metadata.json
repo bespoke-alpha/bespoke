@@ -1,11 +1,10 @@
 {
 	"name": "hazy",
+	"authors": ["Delusoire", "Astromations"],
 	"entries": {
 		"js": "index.js",
 		"css": "index.css",
 		"mixin": false
 	},
-	"dependencies": {
-		"std": "*"
-	}
+	"dependencies": ["Delusoire/std"]
 }

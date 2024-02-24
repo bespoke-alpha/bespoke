@@ -1,8 +1,9 @@
 {
 	"name": "playlist-labels",
+	"authors": ["Delusoire", "duffey"],
 	"entries": {
 		"js": "index.js",
-		"css": false,
+		"css": "index.css",
 		"mixin": false
 	},
 	"dependencies": ["Delusoire/std", "Delusoire/delulib"]

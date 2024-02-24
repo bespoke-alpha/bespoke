@@ -10,6 +10,7 @@
 		"spoqify-radios",
 		"star-ratings",
 		"vaultify",
-		"grey-duplicates"
+		"dexie-react-query",
+		"playlist-labels"
 	]
 }

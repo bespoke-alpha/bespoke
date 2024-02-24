@@ -1,0 +1,10 @@
+{
+	"name": "dexie-react-query",
+	"authors": ["Delusoire", "Dexie"],
+	"entries": {
+		"js": "index.js",
+		"css": false,
+		"mixin": false
+	},
+	"dependencies": []
+}

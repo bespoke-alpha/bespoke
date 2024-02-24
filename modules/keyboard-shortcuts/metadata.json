@@ -1,12 +1,10 @@
 {
 	"name": "keyboard-shortcuts",
+	"authors": ["Delusoire"],
 	"entries": {
 		"js": "index.js",
 		"css": false,
 		"mixin": false
 	},
-	"dependencies": {
-		"std": "*",
-		"delulib": "*"
-	}
+	"dependencies": ["Delusoire/std", "Delusoire/delulib"]
 }

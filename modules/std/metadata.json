@@ -1,11 +1,9 @@
 {
 	"name": "std",
+	"authors": ["Delusoire"],
 	"entries": {
 		"js": false,
 		"css": false,
 		"mixin": "mixin.js"
-	},
-	"dependencies": {
-		"std": "*"
 	}
 }

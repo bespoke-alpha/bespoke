@@ -15,7 +15,7 @@ export const db = new (class extends Dexie {
 		super("library-data");
 		this.version(1).stores({
 			tracks: "&uri, external_ids.isrc",
-			playlists: "&uri",
+			playlists: "&metadata.uri",
 		});
 	}
 })();

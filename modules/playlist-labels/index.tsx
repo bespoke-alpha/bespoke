@@ -1,19 +1,19 @@
 import { S } from "../std/index.js";
 import { _ } from "/hooks/deps.js";
 import { onTrackListMutationListeners } from "../delulib/listeners.js";
-import { PlaylistItems } from "../grey-duplicates/listeners.js";
+import { PlaylistItems, useLivePlaylistItems } from "./listeners.js";
 import { createIconComponent } from "../std/api/createIconComponent.js";
-import { useLiveQuery } from "https://esm.sh/dexie-react-hooks";
-import { db } from "../grey-duplicates/db.js";
+import { useLiveQuery } from "../dexie-react-query/index.js";
+import { db } from "./db.js";
 
 const { ReactDOM, URI } = S;
 
 onTrackListMutationListeners.push(async (tracklist, tracks) => {
 	tracks.map(async (track, i) => {
-		if (track.querySelector(".playlist-label-container")) return;
+		if (track.querySelector(".playlist-labels-container")) return;
 		const lastColumn = track.querySelector(".main-trackList-rowSectionEnd");
 		const labelContainer = document.createElement("div");
-		labelContainer.classList.add("playlist-label-container");
+		labelContainer.classList.add("playlist-labels-container");
 
 		const { uri } = track.props;
 
@@ -24,17 +24,29 @@ onTrackListMutationListeners.push(async (tracklist, tracks) => {
 });
 
 const PlaylistLabels = ({ uri }) => {
-	const playlists = PlaylistItems.get(uri);
-	return Array.from(playlists.keys()).map(playlist => <PlaylistLabel uri={uri} playlistUri={playlist} />);
+	const playlistItems = useLivePlaylistItems(uri);
+	const playlists = playlistItems?.keys() ?? [];
+	return (
+		<div className="playlist-labels-labels-container">
+			{Array.from(playlists).map(playlist => (
+				<PlaylistLabel uri={uri} playlistUri={playlist} />
+			))}
+		</div>
+	);
 };
 
-const PlaylistLabel = ({ uri, playlistUri }) => {
-	const { metadata } = useLiveQuery(() => {
-		return db.playlists.get(playlistUri);
-	}, [playlistUri]);
+const History = S.Platform.getHistory();
+const PlaylistAPI = S.Platform.getPlaylistAPI();
 
-	const name = metadata.name;
-	const image = metadata.images[0]?.url ?? "";
+const PlaylistLabel = ({ uri, playlistUri }) => {
+	const { metadata } =
+		useLiveQuery(async () => {
+			const t = await db.playlists.get(playlistUri);
+			return t;
+		}, [playlistUri]) ?? {};
+
+	const name = metadata?.name ?? "Playlist";
+	const image = metadata?.images[0]?.url ?? "";
 
 	return (
 		<S.ReactComponents.Tooltip label={name} placement="top">
@@ -49,7 +61,7 @@ const PlaylistLabel = ({ uri, playlistUri }) => {
 								})}
 								onClick={(e: MouseEvent) => {
 									e.stopPropagation();
-									// TODO: handle removal
+									PlaylistAPI.remove(playlistUri, [{ uri, uid: "" }]);
 								}}
 							>
 								Remove from {name}
@@ -58,6 +70,7 @@ const PlaylistLabel = ({ uri, playlistUri }) => {
 					}
 				>
 					<div
+						className="playlist-labels-label-container"
 						style={{
 							cursor: "pointer",
 						}}
@@ -65,7 +78,7 @@ const PlaylistLabel = ({ uri, playlistUri }) => {
 							e.stopPropagation();
 							const pathname = URI.fromString(uri)?.toURLPath(true);
 							pathname &&
-								S.Platform.History.push({
+								History.push({
 									pathname,
 									search: `?uri=${uri}`,
 								});
@@ -78,3 +91,35 @@ const PlaylistLabel = ({ uri, playlistUri }) => {
 		</S.ReactComponents.Tooltip>
 	);
 };
+
+/*
+import { _ } from "/hooks/deps.js";
+import { onTrackListMutationListeners } from "../delulib/listeners.js";
+import { db, getTracksFromURIs } from "./db.js";
+import { PlaylistItems } from "./listeners.js";
+
+const setTrackGreyed = (track: HTMLDivElement, greyed: boolean) => {
+	track.style.backgroundColor = greyed ? "gray" : undefined;
+	track.style.opacity = greyed ? "0.3" : "1";
+};
+
+onTrackListMutationListeners.push(async (tracklist, tracks) => {
+	const uris = tracks.map(track => track.props.uri);
+	const trackObjs = await getTracksFromURIs(uris);
+	const isrcs = trackObjs.map(track => track?.external_ids.isrc);
+
+	const playlistItems = Array.from(PlaylistItems.entries())
+		.map(([k, v]) => v.size > 0 && k)
+		.filter(Boolean);
+
+	tracks.map(async (track, i) => {
+		const uri = uris[i];
+		const isrc = isrcs[i];
+		if (!isrc) return;
+
+		const urisForIsrc = await db.tracks.where("external_ids.isrc").equals(isrc).primaryKeys();
+		const urisForIsrcInPlaylists = _.intersection(urisForIsrc, playlistItems);
+		setTrackGreyed(track, urisForIsrcInPlaylists.length > 1 && urisForIsrcInPlaylists.includes(uri));
+	});
+});
+*/

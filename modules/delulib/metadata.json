@@ -1,11 +1,10 @@
 {
 	"name": "delulib",
+	"authors": ["Delusoire"],
 	"entries": {
 		"js": false,
 		"css": false,
 		"mixin": false
 	},
-	"dependencies": {
-		"std": "*"
-	}
+	"dependencies": ["Delusoire/std"]
 }

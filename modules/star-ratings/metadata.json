@@ -1,12 +1,10 @@
 {
 	"name": "star-ratings",
+	"authors": ["Delusoire"],
 	"entries": {
 		"js": "index.js",
 		"css": "index.css",
 		"mixin": false
 	},
-	"dependencies": {
-		"std": "*",
-		"delulib": "*"
-	}
+	"dependencies": ["Delusoire/std", "Delusoire/delulib"]
 }
