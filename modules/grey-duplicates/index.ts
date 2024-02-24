@@ -1,6 +1,6 @@
 import { _ } from "/hooks/deps.js";
 import { onTrackListMutationListeners } from "../delulib/listeners.js";
-import { db, getISRCsForUris } from "./db.js";
+import { db, getTracksFromURIs } from "./db.js";
 import { PlaylistItems } from "./listeners.js";
 
 const setTrackGreyed = (track: HTMLDivElement, greyed: boolean) => {
@@ -10,7 +10,8 @@ const setTrackGreyed = (track: HTMLDivElement, greyed: boolean) => {
 
 onTrackListMutationListeners.push(async (tracklist, tracks) => {
 	const uris = tracks.map(track => track.props.uri);
-	const isrcs = await getISRCsForUris(uris);
+	const trackObjs = await getTracksFromURIs(uris);
+	const isrcs = trackObjs.map(track => track?.external_ids.isrc);
 
 	const playlistItems = Array.from(PlaylistItems.entries())
 		.map(([k, v]) => v.size > 0 && k)

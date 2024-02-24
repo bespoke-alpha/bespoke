@@ -4,14 +4,17 @@
         "paths": {
             "/*": ["../*"],
             "https://esm.sh/@fostertheweb/spotify-web-api-ts-sdk": [
-                "../node_modules/@fostertheweb/spotify-web-api-ts-sdk/dist/mjs/index"
+                "../node_modules/@fostertheweb/spotify-web-api-ts-sdk/dist/mjs"
             ],
-            "https://esm.sh/lit": ["../node_modules/lit/index"],
+            "https://esm.sh/lit": ["../node_modules/lit"],
             "https://esm.sh/lit/*": ["../node_modules/lit/*"],
             "https://esm.sh/dexie": ["../node_modules/dexie"],
             "https://esm.sh/v135/@fostertheweb/spotify-web-api-ts-sdk/*": [
                 "../node_modules/@fostertheweb/spotify-web-api-ts-sdk/*"
-            ]
+            ],
+            "https://esm.sh/dexie-react-hooks": ["../node_modules/dexie-react-hooks"],
+            "https://esm.sh/lodash": ["../node_modules/@types/lodash"],
+            "https://esm.sh/lodash/*": ["../node_modules/@types/lodash/*"]
         }
     },
     "exclude": ["*.ts"]

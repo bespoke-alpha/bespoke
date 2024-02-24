@@ -1,77 +1,50 @@
 import Dexie, { Table } from "https://esm.sh/dexie";
-import type { Track } from "https://esm.sh/v135/@fostertheweb/spotify-web-api-ts-sdk@1.2.1/dist/mjs/types.js";
+import type { Track } from "https://esm.sh/v135/@fostertheweb/spotify-web-api-ts-sdk/dist/mjs/types.js";
 import { chunkify50 } from "../delulib/fp.js";
 import { spotifyApi } from "../delulib/api.js";
 import { S } from "../std/index.js";
+import { _ } from "/hooks/deps.js";
 
 const { URI } = S;
 
-// interface IsrcObject {
-// 	isrc: string;
-// 	uri: string;
-// }
-
 export const db = new (class extends Dexie {
 	tracks!: Table<Track>;
-	// isrcs!: Table<IsrcObject>;
+	playlists!: Table;
 
 	constructor() {
 		super("library-data");
 		this.version(1).stores({
 			tracks: "&uri, external_ids.isrc",
-			// isrcs: "&isrc, uri",
+			playlists: "&uri",
 		});
 	}
 })();
 
-// export const getMainUrisForIsrcs = async (isrcs: string[]) => {
-//     const tracks = await db.isrcs.bulkGet(isrcs)
-//     const missedTracks = tracks.reduce((missed, track, i) => {
-//         track || missed.push(i)
-//         return missed
-//     }, [] as number[])
+const fetchOrPopulateDB =
+	<A, B>(table: Table<A, B>, fetcher: (primaryKeys: B[]) => Promise<A[]>) =>
+	async (primaryKeys: B[]) => {
+		const objs = await table.bulkGet(primaryKeys);
+		const missed = objs.reduce((missed, obj, i) => {
+			obj ?? missed.push(i);
+			return missed;
+		}, [] as number[]);
 
-//     if (missedTracks.length) {
-//         const missedIsrcs = missedTracks.map(i => isrcs[i])
-//         const resultsIsrcs = await Promise.allSettled(missedIsrcs.map(isrc => searchTracks(`isrc:${isrc}`, 0, 1)))
-//         const filledTracks = _.compact(
-//             resultsIsrcs.map((resultsIsrc, i) => {
-//                 const isrc = isrcs[i]
-//                 if (resultsIsrc.status === "fulfilled") {
-//                     const uri = resultsIsrc.value[0]?.item.data.uri
-//                     if (!uri) {
-//                         console.error("Couldn't get matching track for isrc:", isrc)
-//                         return
-//                     }
-//                     return { isrc, uri }
-//                 }
-//                 console.error("Failed searching track for isrc:", isrc)
-//             }),
-//         )
-//         db.isrcs.bulkAdd(filledTracks)
-//         missedTracks.forEach((missedTrack, i) => {
-//             tracks[missedTrack] = filledTracks[i]
-//         })
-//     }
+		if (missed.length) {
+			const fillers = await fetcher(missed.map(i => primaryKeys[i]));
+			table.bulkAdd(fillers);
+			missed.forEach((i, j) => {
+				objs[i] = fillers[j];
+			});
+		}
 
-//     return tracks.map(track => track?.uri)
-// }
+		return objs;
+	};
 
-export const getISRCsForUris = async (uris: string[]) => {
-	const tracks = await db.tracks.bulkGet(uris);
-	const missedTracks = tracks.reduce<number[]>((missed, track, i) => {
-		track ?? missed.push(i);
-		return missed;
-	}, [] as number[]);
+export const getTracksFromURIs = fetchOrPopulateDB(db.tracks, (uris: string[]) => {
+	const ids = uris.map(uri => URI.fromString(uri).id);
+	return chunkify50(is => spotifyApi.tracks.get(is))(ids);
+});
 
-	if (missedTracks.length) {
-		const missedIds = missedTracks.map(i => URI.fromString(uris[i]).id);
-		const filledTracks = await chunkify50(is => spotifyApi.tracks.get(is))(missedIds);
-		db.tracks.bulkAdd(filledTracks);
-		missedTracks.forEach((missedTrack, i) => {
-			tracks[missedTrack] = filledTracks[i];
-		});
-	}
+const PlaylistAPI = S.Platform.getPlaylistAPI();
 
-	return tracks.map(track => track?.external_ids.isrc);
-};
+export const getPlaylistsFromURIs = fetchOrPopulateDB(db.playlists, (uris: string[]) => Promise.all(uris.map(uri => PlaylistAPI.getPlaylist(uri))));

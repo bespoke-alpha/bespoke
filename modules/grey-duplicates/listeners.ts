@@ -1,30 +1,10 @@
 import { S } from "../std/index.js";
-import { getISRCsForUris } from "./db.js";
+import { getPlaylistsFromURIs, getTracksFromURIs } from "./db.js";
 
-const LibraryAPI = S.Platform.getLibraryAPI();
 const RootlistAPI = S.Platform.getRootlistAPI();
 const PlaylistAPI = S.Platform.getPlaylistAPI();
 
 const extractItemsUris = ({ items }: any) => items.map(item => item.uri);
-
-// Liked tracks, albums, episodes, artists ...
-export const Library = new Set(await LibraryAPI.getContents({ limit: 50000 }).then(extractItemsUris));
-LibraryAPI.getEvents().addListener("operation_complete", ({ data }) => {
-	switch (data.operation) {
-		case "add": {
-			for (const uri of data.uris) {
-				Library.add(uri);
-			}
-			return;
-		}
-		case "remove": {
-			for (const uri of data.uris) {
-				Library.delete(uri);
-			}
-			return;
-		}
-	}
-});
 
 const extractPlaylists = (leaf: any): string[] => {
 	switch (leaf.type) {
@@ -34,8 +14,6 @@ const extractPlaylists = (leaf: any): string[] => {
 		case "folder": {
 			return leaf.items.flatMap(extractPlaylists);
 		}
-		default:
-			throw "Unhandled type from RootlistAPI.getContents()";
 	}
 };
 
@@ -47,31 +25,44 @@ export const mapAssocs = (uris: string[], fn: (assocs: Set<string>) => void) => 
 	}
 };
 
-const onUrisAdded = async (playlist: string, uris: string[]) => {
-	mapAssocs(uris, o => o.add(playlist));
-	await getISRCsForUris(uris);
+const onPlaylistsAdded = async (playlists: string[]) => {
+	for (const playlist of playlists) {
+		SavedPlaylists.add(playlist);
+	}
+	await getPlaylistsFromURIs(playlists);
 };
 
-const onUrisRemoved = (playlist: string, uris: string[]) => {
+const onPlaylistsRemoved = (playlists: string[]) => {
+	for (const playlist of playlists) {
+		SavedPlaylists.delete(playlist);
+	}
+};
+
+const onTracksAddedToPlaylist = async (playlist: string, uris: string[]) => {
+	mapAssocs(uris, o => o.add(playlist));
+	await getTracksFromURIs(uris);
+};
+
+const onTracksRemovedFromPlaylist = (playlist: string, uris: string[]) => {
 	mapAssocs(uris, o => o.delete(playlist));
 };
 
 export const SavedPlaylists = new Set(await RootlistAPI.getContents({ limit: 50000 }).then(extractPlaylists));
 RootlistAPI.getEvents().addListener("operation_complete", async ({ data }) => {
+	const getUris = playlist => PlaylistAPI.getContents(playlist).then(extractItemsUris);
+	const playlists = data.items;
 	switch (data.operation) {
 		case "add": {
-			for (const playlist of data.items) {
-				SavedPlaylists.add(playlist);
-				const uris = await PlaylistAPI.getContents(playlist).then(extractItemsUris);
-				onUrisAdded(playlist, uris);
+			onPlaylistsAdded(playlists);
+			for (const playlist of playlists) {
+				onTracksAddedToPlaylist(playlist, await getUris(playlist));
 			}
 			return;
 		}
 		case "remove": {
-			for (const playlist of data.items) {
-				SavedPlaylists.delete(playlist);
-				const uris = await PlaylistAPI.getContents(playlist).then(extractItemsUris);
-				onUrisRemoved(playlist, uris);
+			onPlaylistsRemoved(playlists);
+			for (const playlist of playlists) {
+				onTracksRemovedFromPlaylist(playlist, await getUris(playlist));
 			}
 			return;
 		}
@@ -82,17 +73,17 @@ export const PlaylistItems = new Map<string, Set<string>>();
 
 for (const playlist of SavedPlaylists) {
 	const uris = await PlaylistAPI.getContents(playlist).then(extractItemsUris);
-	onUrisAdded(playlist, uris);
+	onTracksAddedToPlaylist(playlist, uris);
 }
 
 PlaylistAPI.getEvents().addListener("operation_complete", ({ data }) => {
 	switch (data.operation) {
 		case "add": {
-			onUrisAdded(data.uri, data.uris);
+			onTracksAddedToPlaylist(data.uri, data.uris);
 			return;
 		}
 		case "remove": {
-			onUrisRemoved(data.uri, data.uris);
+			onTracksRemovedFromPlaylist(data.uri, data.uris);
 			return;
 		}
 	}

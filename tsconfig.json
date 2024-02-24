@@ -1,9 +1,5 @@
 {
     "compilerOptions": {
-        "paths": {
-            "https://esm.sh/lodash": ["../node_modules/@types/lodash/index"],
-            "https://esm.sh/lodash/*": ["../node_modules/@types/lodash/*"]
-        },
         /* Visit https://aka.ms/tsconfig to read more about this file */
 
         /* Projects */

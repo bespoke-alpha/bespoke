@@ -1,36 +1,37 @@
 {
-	"name": "bespoke",
-	"scripts": {
-		"build:cli": "cd cli && go build .",
-		"build:hooks": "cd hooks && tsc --noResolve",
-		"build": "conc -n build-cli,build-hooks \"bun run build:cli\" \"bun run build:hooks\"",
-		"watch:js": "cd modules && bun tsc-watch.ts",
-		"watch:css": "cd modules && bun sass-watch.ts",
-		"watch": "conc -n watch-js,watch-css \"bun run watch:js\" \"bun run watch:css\"",
-		"dev": "./cli/bespoke dev && ./cli/bespoke run -- --remote-debugging-port=9222 --remote-allow-origins=* --disable-web-security"
-	},
-	"workspaces": [],
-	"dependencies": {},
-	"devDependencies": {
-		"@fostertheweb/spotify-web-api-ts-sdk": "^1.2.1",
-		"@types/bun": "latest",
-		"@types/classnames": "^2.3.1",
-		"@types/lodash": "^4.14.202",
-		"@types/mousetrap": "^1.6.15",
-		"@types/react": "^18.2.55",
-		"@types/react-dom": "^18.2.19",
-		"@types/react-query": "^1.2.9",
-		"@types/redux": "^3.6.0",
-		"concurrently": "^8.2.2",
-		"dexie": "^3.2.5",
-		"lit": "^3.1.2",
-		"lodash": "^4.17.21",
-		"notistack": "^3.0.1",
-		"react-flip-toolkit": "^7.1.0",
-		"strip-ansi": "^7.1.0",
-		"tippy.js": "^6.3.7"
-	},
-	"peerDependencies": {
-		"typescript": "^5.0.0"
-	}
+  "name": "bespoke",
+  "scripts": {
+    "build:cli": "cd cli && go build .",
+    "build:hooks": "cd hooks && tsc --noResolve",
+    "build": "conc -n build-cli,build-hooks \"bun run build:cli\" \"bun run build:hooks\"",
+    "watch:js": "cd modules && bun tsc-watch.ts",
+    "watch:css": "cd modules && bun sass-watch.ts",
+    "watch": "conc -n watch-js,watch-css \"bun run watch:js\" \"bun run watch:css\"",
+    "dev": "./cli/bespoke dev && ./cli/bespoke run -- --remote-debugging-port=9222 --remote-allow-origins=* --disable-web-security"
+  },
+  "workspaces": [],
+  "dependencies": {},
+  "devDependencies": {
+    "@fostertheweb/spotify-web-api-ts-sdk": "^1.2.1",
+    "@types/bun": "latest",
+    "@types/classnames": "^2.3.1",
+    "@types/lodash": "^4.14.202",
+    "@types/mousetrap": "^1.6.15",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@types/react-query": "^1.2.9",
+    "@types/redux": "^3.6.0",
+    "concurrently": "^8.2.2",
+    "dexie": "^3.2.5",
+    "dexie-react-hooks": "^1.1.7",
+    "lit": "^3.1.2",
+    "lodash": "^4.17.21",
+    "notistack": "^3.0.1",
+    "react-flip-toolkit": "^7.1.0",
+    "strip-ansi": "^7.1.0",
+    "tippy.js": "^6.3.7"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
 }
