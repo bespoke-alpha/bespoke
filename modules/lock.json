@@ -1,15 +1,15 @@
 {
-    "modules": [
-        "std",
-        "hazy",
-        "delulib",
-        "keyboard-shortcuts",
-        "search-on-youtube",
-        "show-the-genres",
-        "sort-plus",
-        "spoqify-radios",
-        "star-ratings",
-        "vaultify",
-		"library"
-    ]
+	"modules": [
+		"std",
+		"hazy",
+		"delulib",
+		"keyboard-shortcuts",
+		"search-on-youtube",
+		"show-the-genres",
+		"sort-plus",
+		"spoqify-radios",
+		"star-ratings",
+		"vaultify",
+		"grey-duplicates"
+	]
 }

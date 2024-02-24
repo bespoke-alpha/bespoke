@@ -1,5 +1,5 @@
 {
-	"name": "library",
+	"name": "grey-duplicates",
 	"entries": {
 		"js": "index.js",
 		"css": false,
