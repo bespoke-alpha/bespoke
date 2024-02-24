@@ -15,7 +15,6 @@ while (true) {
 			if (!match) continue;
 			const relfilepath = match[1];
 			await applyCssMapPerFile(relfilepath);
-			console.log(relfilepath);
 			sendReloadDocument();
 		}
 	}

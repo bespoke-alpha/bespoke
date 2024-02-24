@@ -50,19 +50,21 @@ type TrackListElement = HTMLDivElement & {
 };
 type TrackElement = HTMLDivElement & { props?: Record<string, any> };
 
-type TrackListMutationListener = (trackList: Required<TrackListElement>, tracks: Array<Required<TrackElement>>) => void;
+type TrackListMutationListener = (tracklist: Required<TrackListElement>, tracks: Array<Required<TrackElement>>) => void;
 export const onTrackListMutationListeners = new Array<TrackListMutationListener>();
 
 const _onTrackListMutation = (trackList: Required<TrackListElement>, record: MutationRecord[], observer: MutationObserver) => {
 	const tracks = getTrackListTracks(trackList[PRESENTATION_KEY]) as Array<Required<TrackElement>>;
 
-	const reactFiber = trackList[PRESENTATION_KEY][REACT_FIBER].alternate;
-	const reactTracks = reactFiber.pendingProps.children as any[];
-	const tracksProps = reactTracks.map((child: any) => child.props as Record<string, any>);
+	const recUp = fiber => {
+		const parent = fiber.return;
+		if (parent.pendingProps.role === "presentation") return fiber;
+		return recUp(parent);
+	};
 
-	tracks.forEach((track, i) => {
-		track.props = tracksProps[i];
-	});
+	for (const track of tracks) {
+		track.props ??= recUp(track[REACT_FIBER]).pendingProps;
+	}
 
 	const fullyRenderedTracks = tracks.filter(track => track.props?.uri);
 

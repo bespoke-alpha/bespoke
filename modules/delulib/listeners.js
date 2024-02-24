@@ -3,7 +3,7 @@ import { PermanentMutationObserver, REACT_FIBER } from "./util.js";
 const { URI } = S;
 const History = S.Platform.getHistory();
 export const getTrackLists = () => Array.from(document.querySelectorAll(".ShMHCGsT93epRGdxJp2w.Ss6hr6HYpN4wjHJ9GHmi"));
-export const getTrackListTracks = (trackList) => Array.from(trackList.querySelectorAll(".ShMHCGsT93epRGdxJp2wRow"));
+export const getTrackListTracks = (trackList) => Array.from(trackList.querySelectorAll(".h4HgbO_Uu1JYg5UGANeQ"));
 export const onHistoryChanged = (toMatchTo, callback, dropDuplicates = true) => {
     const createMatchFn = (toMatchTo) => {
         switch (typeof toMatchTo) {
@@ -33,12 +33,15 @@ const PRESENTATION_KEY = Symbol("presentation");
 export const onTrackListMutationListeners = new Array();
 const _onTrackListMutation = (trackList, record, observer) => {
     const tracks = getTrackListTracks(trackList[PRESENTATION_KEY]);
-    const reactFiber = trackList[PRESENTATION_KEY][REACT_FIBER].alternate;
-    const reactTracks = reactFiber.pendingProps.children;
-    const tracksProps = reactTracks.map((child) => child.props);
-    tracks.forEach((track, i) => {
-        track.props = tracksProps[i];
-    });
+    const recUp = fiber => {
+        const parent = fiber.return;
+        if (parent.pendingProps.role === "presentation")
+            return fiber;
+        return recUp(parent);
+    };
+    for (const track of tracks) {
+        track.props ??= recUp(track[REACT_FIBER]).pendingProps;
+    }
     const fullyRenderedTracks = tracks.filter(track => track.props?.uri);
     onTrackListMutationListeners.map(listener => listener(trackList, fullyRenderedTracks));
 };

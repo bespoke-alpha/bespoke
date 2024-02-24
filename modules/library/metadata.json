@@ -1,0 +1,9 @@
+{
+	"name": "library",
+	"entries": {
+		"js": "index.js",
+		"css": false,
+		"mixin": false
+	},
+	"dependencies": ["Delusoire/std", "Delusoire/delulib"]
+}

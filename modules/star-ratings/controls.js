@@ -48,20 +48,20 @@ const wrapDropdownInsidePlaylistButton = (pb, uri, forced = false) => {
             return { popper, onUpdate: () => undefined };
         },
         onShow(instance) {
-            instance.popper.firstChild.classList.add("X8yW2lJbFCQfV5GjoRwLEnter");
+            instance.popper.firstChild.classList.add("mph1R_QkS44EPi4lrhxd");
             const children = instance.reference.parentElement.children;
             const element = children.item(children.length - 1);
             element.style.marginRight = "0px";
         },
         onMount(instance) {
             requestAnimationFrame(() => {
-                instance.popper.firstChild.classList.remove("X8yW2lJbFCQfV5GjoRwLEnter");
-                instance.popper.firstChild.classList.add("X8yW2lJbFCQfV5GjoRwLEnterActive");
+                instance.popper.firstChild.classList.remove("mph1R_QkS44EPi4lrhxd");
+                instance.popper.firstChild.classList.add("v5IUMJNPJgol0273zQXD");
             });
         },
         onHide(instance) {
             requestAnimationFrame(() => {
-                instance.popper.firstChild.classList.remove("X8yW2lJbFCQfV5GjoRwLEnterActive");
+                instance.popper.firstChild.classList.remove("v5IUMJNPJgol0273zQXD");
                 const children = instance.reference.parentElement.children;
                 const element = children.item(children.length - 2);
                 element.style.marginRight = "unset";

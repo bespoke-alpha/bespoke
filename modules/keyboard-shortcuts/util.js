@@ -21,7 +21,7 @@ export const rotateSidebar = (offset) => {
     const navLinks = Array.from(Array.from(document.querySelectorAll(".UYeKN11KAw61rZoyjcgZ")).values());
     if (navLinks.length === 0)
         return;
-    const activeNavLink = document.querySelector(".UYeKN11KAw61rZoyjcgZActive");
+    const activeNavLink = document.querySelector(".DzWw3g4E_66wu9ktqn36");
     let activeNavLinkIndex = navLinks.findIndex(e => e === activeNavLink);
     if (activeNavLinkIndex === -1 && offset < 0)
         activeNavLinkIndex = navLinks.length;

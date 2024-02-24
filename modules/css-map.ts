@@ -1,13 +1,15 @@
 import { Glob } from "bun";
 import fs from "node:fs/promises";
+import escRegex from "lodash/escapeRegExp";
 
 import cssMap from "./css-map.json";
 
+const boundary = "([^\\w\\-])"
 export async function applyCssMapPerFile(file: string) {
 	console.log(file);
 	let content = (await fs.readFile(file)).toString();
 	for (const [v, k] of Object.entries(cssMap)) {
-		content = content.replaceAll(k, v);
+		content = content.replaceAll(new RegExp(boundary + escRegex(k) + boundary, "g"),"$1" + v + "$2");
 	}
 	await fs.writeFile(file, content);
 }

@@ -22,17 +22,17 @@ export const TippyProps = {
         };
     },
     onShow(instance) {
-        instance.popper.firstElementChild?.classList.add("X8yW2lJbFCQfV5GjoRwLEnter");
+        instance.popper.firstElementChild?.classList.add("mph1R_QkS44EPi4lrhxd");
     },
     onMount(instance) {
         requestAnimationFrame(() => {
-            instance.popper.firstElementChild?.classList.remove("X8yW2lJbFCQfV5GjoRwLEnter");
-            instance.popper.firstElementChild?.classList.add("X8yW2lJbFCQfV5GjoRwLEnterActive");
+            instance.popper.firstElementChild?.classList.remove("mph1R_QkS44EPi4lrhxd");
+            instance.popper.firstElementChild?.classList.add("v5IUMJNPJgol0273zQXD");
         });
     },
     onHide(instance) {
         requestAnimationFrame(() => {
-            instance.popper.firstElementChild?.classList.remove("X8yW2lJbFCQfV5GjoRwLEnterActive");
+            instance.popper.firstElementChild?.classList.remove("v5IUMJNPJgol0273zQXD");
             instance.unmount();
         });
     },

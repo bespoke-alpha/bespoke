@@ -16,7 +16,7 @@ internalRegisterTransform({
 export const PlaybarBarControl = ({ label, isActive = false, isActiveNoIndicator = false, disabled = false, icon, onClick, }) => {
     const [_isActive, _setIsActive] = S.React.useState(isActive);
     return (S.React.createElement(S.ReactComponents.Tooltip, { label: label },
-        S.React.createElement(S.ReactComponents.ButtonTertiary, { "aria-label": label, size: "small", className: `KAZD28usA1vPz5GVpm63 ${_isActive || isActiveNoIndicator ? "KAZD28usA1vPz5GVpm63Active" : ""} ${_isActive ? "KAZD28usA1vPz5GVpm63ActiveDot" : ""}`, disabled: disabled, iconOnly: icon && (() => createIconComponent({ icon })), onClick: () => {
+        S.React.createElement(S.ReactComponents.ButtonTertiary, { "aria-label": label, size: "small", className: `KAZD28usA1vPz5GVpm63 ${_isActive || isActiveNoIndicator ? "RK45o6dbvO1mb0wQtSwq" : ""} ${_isActive ? "EHxL6K_6WWDlTCZP6x5w" : ""}`, disabled: disabled, iconOnly: icon && (() => createIconComponent({ icon })), onClick: () => {
                 onClick();
                 _setIsActive(!_isActive);
             }, "data-active": _isActive.toString(), "aria-pressed": _isActive })));
