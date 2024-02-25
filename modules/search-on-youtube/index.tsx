@@ -17,8 +17,10 @@ const YTVidIDCache = new Map<string, string>();
 const showOnYouTube = async (uri: string) => {
 	const id = URI.fromString(uri)!.id!;
 	if (!YTVidIDCache.get(id)) {
-		const track = parseWebAPITrack(await spotifyApi.tracks.get(id));
-		const searchString = `${track.artistName} - ${track.name} music video`;
+		const track = await spotifyApi.tracks.get(id);
+		const artists = track.artists.map(artist => artist.name);
+		const nonFeatArtists = artists.filter(artist => !track.name.includes(artist));
+		const searchString = `${nonFeatArtists.join(", ")} - ${track.name} [Official Music Video]`;
 
 		try {
 			const videos = await searchYoutube(CONFIG.YouTubeApiKey, searchString).then(res => res.items);
