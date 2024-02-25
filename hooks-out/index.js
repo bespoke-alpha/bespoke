@@ -2,7 +2,6 @@ import { modules } from "./module.js";
 import { applyTransforms } from "./transforms/transforms.js";
 import "./transforms/devtools.js";
 import "./transforms/styledComponents.js";
-import "./transforms/themes.js";
 await modules.reduce((p, module) => p.then(() => module.loadMixin()), Promise.resolve());
 await Promise.all(["/vendor~xpui.js", "/xpui.js"].map(applyTransforms).map(async (p) => import(await p)));
 import { internalModule } from "./module.js";
