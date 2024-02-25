@@ -1,6 +1,5 @@
 import { searchYoutube, spotifyApi } from "../delulib/api.js";
 import { _ } from "/hooks/deps.js";
-import { parseWebAPITrack } from "../delulib/parse.js";
 import { normalizeStr } from "../delulib/util.js";
 
 import { CONFIG } from "./settings.js";
@@ -9,6 +8,14 @@ import { S, extendRegistrar } from "../std/index.js";
 import { useMenuItem } from "../std/registers/menu.js";
 import { createIconComponent } from "../std/api/createIconComponent.js";
 import type { Module } from "/hooks/module.js";
+
+// import { Innertube, UniversalCache } from "https://esm.sh/youtubei.js/web.bundle.min";
+// const yt = await Innertube.create({
+// 	cache: new UniversalCache(false),
+// 	fetch: (url, init) => {
+// 		return fetch(url, init);
+// 	},
+// });
 
 const { URI } = S;
 
@@ -30,6 +37,9 @@ const showOnYouTube = async (uri: string) => {
 				videos.find(video => {
 					normalizeStr(video.snippet.title).includes(normalizedTrackName);
 				}) ?? videos[0];
+
+			const ss = await yt.search(searchString, { type: "video", sort_by: "relevance" });
+			ss.videos[0].as;
 
 			YTVidIDCache.set(id, video.id.videoId);
 
