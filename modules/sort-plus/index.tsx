@@ -1,7 +1,7 @@
 import { TrackData } from "../delulib/parse.js";
 import { createQueueItem, setQueue as _setQueue } from "../delulib/util.js";
 import { _, fp } from "/hooks/deps.js";
-import { S, extend } from "../std/index.js";
+import { S, extendRegistrar } from "../std/index.js";
 import { Button } from "../std/registers/topbarLeftButton.js";
 
 import { createPlaylistFromLastSortedQueue, reordedPlaylistLikeSortedQueue } from "./playlistsInterop.js";
@@ -132,7 +132,7 @@ const SortByStarsSubMenuItem = ({ descending }: SortBySubMenuItemProps) => {
 SubMenuItems.push(SortByShuffleSubMenuItem, SortByStarsSubMenuItem);
 
 export default function (_module: Module) {
-	const module = extend(_module);
+	const module = extendRegistrar(_module);
 	const { registrar } = module;
 
 	registrar.register(

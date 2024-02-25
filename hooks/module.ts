@@ -19,30 +19,9 @@ type Metadata = {
 	spotifyVersions: string;
 };
 
-class NamespacedStorage {
-	constructor(public name: string) {}
-
-	private getNamespacedKey(key: string) {
-		return `module:${this.name}:${key}`;
-	}
-
-	getItem(keyName: string) {
-		return localStorage.getItem(this.getNamespacedKey(keyName));
-	}
-
-	setItem(keyName: string, keyValue: string) {
-		return localStorage.setItem(this.getNamespacedKey(keyName), keyValue);
-	}
-
-	removeItem(keyName: string) {
-		return localStorage.removeItem(this.getNamespacedKey(keyName));
-	}
-}
-
 export class Module {
 	public unloadJS: (() => Promise<void>) | undefined = undefined;
 	public unloadCSS: (() => void) | undefined = undefined;
-	public localStorage: NamespacedStorage;
 	public awaitedMixins = new Array<Promise<void>>();
 	private registerTransform = createRegisterTransform(this);
 	private priority = 0;
@@ -51,9 +30,7 @@ export class Module {
 	constructor(
 		public path: string,
 		public metadata: Metadata,
-	) {
-		this.localStorage = new NamespacedStorage(this.getIdentifier());
-	}
+	) {}
 
 	getPriority() {
 		return this.priority;
@@ -139,10 +116,11 @@ export class Module {
 export const internalModule = new Module(undefined, undefined);
 
 const lock = (await readJSON("/modules/lock.json")) as Lock;
-export const modules = await Promise.all(lock.modules.map(Module.fromRelPath)).then(modules => {
-	for (const module of modules) {
-		module.incPriority();
-	}
-	return modules.sort((a, b) => b.getPriority() - a.getPriority());
-});
+export const modules = await Promise.all(lock.modules.map(Module.fromRelPath));
 export const modulesMap = Object.fromEntries(modules.map(m => [m.getIdentifier(), m] as const));
+
+for (const module of modules) {
+	module.incPriority();
+}
+
+modules.sort((a, b) => b.getPriority() - a.getPriority());

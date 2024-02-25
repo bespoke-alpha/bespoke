@@ -4,7 +4,7 @@ import { CONFIG } from "./settings.js";
 
 import { _ } from "/hooks/deps.js";
 import { onHistoryChanged, onTrackListMutationListeners } from "../delulib/listeners.js";
-import { Events, SVGIcons, extend } from "../std/index.js";
+import { Events, SVGIcons, extendRegistrar } from "../std/index.js";
 import { S } from "../std/index.js";
 import { useMenuItem } from "../std/registers/menu.js";
 import { createIconComponent } from "../std/api/createIconComponent.js";
@@ -45,7 +45,7 @@ onTrackListMutationListeners.push(async (_, tracks) => {
 onHistoryChanged(_.overSome([URI.is.Album, URI.is.Artist, URI.is.PlaylistV1OrV2]), uri => updateCollectionControls(uri));
 
 export default function (_module: Module) {
-	const module = extend(_module);
+	const module = extendRegistrar(_module);
 	const { registrar } = module;
 
 	registrar.register(

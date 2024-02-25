@@ -5,7 +5,7 @@ import { normalizeStr } from "../delulib/util.js";
 
 import { CONFIG } from "./settings.js";
 
-import { S, extend } from "../std/index.js";
+import { S, extendRegistrar } from "../std/index.js";
 import { useMenuItem } from "../std/registers/menu.js";
 import { createIconComponent } from "../std/api/createIconComponent.js";
 import type { Module } from "/hooks/module.js";
@@ -39,7 +39,7 @@ const showOnYouTube = async (uri: string) => {
 };
 
 export default function (_module: Module) {
-	const module = extend(_module);
+	const module = extendRegistrar(_module);
 	const { registrar } = module;
 
 	registrar.register(

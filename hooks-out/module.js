@@ -1,23 +1,6 @@
 import { createRegisterTransform } from "./transforms/transform.js";
 import { readJSON } from "./util.js";
 import { _ } from "./deps.js";
-class NamespacedStorage {
-    constructor(name) {
-        this.name = name;
-    }
-    getNamespacedKey(key) {
-        return `module:${this.name}:${key}`;
-    }
-    getItem(keyName) {
-        return localStorage.getItem(this.getNamespacedKey(keyName));
-    }
-    setItem(keyName, keyValue) {
-        return localStorage.setItem(this.getNamespacedKey(keyName), keyValue);
-    }
-    removeItem(keyName) {
-        return localStorage.removeItem(this.getNamespacedKey(keyName));
-    }
-}
 export class Module {
     constructor(path, metadata) {
         this.path = path;
@@ -28,7 +11,6 @@ export class Module {
         this.registerTransform = createRegisterTransform(this);
         this.priority = 0;
         this.disabled = false;
-        this.localStorage = new NamespacedStorage(this.getIdentifier());
     }
     getPriority() {
         return this.priority;
@@ -106,10 +88,9 @@ export class Module {
 }
 export const internalModule = new Module(undefined, undefined);
 const lock = (await readJSON("/modules/lock.json"));
-export const modules = await Promise.all(lock.modules.map(Module.fromRelPath)).then(modules => {
-    for (const module of modules) {
-        module.incPriority();
-    }
-    return modules.sort((a, b) => b.getPriority() - a.getPriority());
-});
+export const modules = await Promise.all(lock.modules.map(Module.fromRelPath));
 export const modulesMap = Object.fromEntries(modules.map(m => [m.getIdentifier(), m]));
+for (const module of modules) {
+    module.incPriority();
+}
+modules.sort((a, b) => b.getPriority() - a.getPriority());

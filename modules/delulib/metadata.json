@@ -1,6 +1,7 @@
 {
 	"name": "delulib",
 	"authors": ["Delusoire"],
+	"tags": ["lib"],
 	"entries": {
 		"js": false,
 		"css": false,
