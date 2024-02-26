@@ -1,4 +1,4 @@
-import type { RegisterTransformFN } from "/hooksSrc/transforms/transform.js";
+import type { RegisterTransformFN } from "/hooks/transforms/transform.js";
 
 import type { ExposedPlatform, Platform } from "./platform.js";
 import type { ExposedWebpack, Snackbar } from "./webpack.js";

@@ -1,5 +1,5 @@
 import { S } from "../std/index.js";
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 import { onTrackListMutationListeners } from "../delulib/listeners.js";
 import { PlaylistItems, useLivePlaylistItems } from "./listeners.js";
 import { createIconComponent } from "../std/api/createIconComponent.js";

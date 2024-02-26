@@ -1,5 +1,5 @@
 import { searchYoutube, spotifyApi } from "../delulib/api.js";
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 import { normalizeStr } from "../delulib/util.js";
 
 import { CONFIG } from "./settings.js";

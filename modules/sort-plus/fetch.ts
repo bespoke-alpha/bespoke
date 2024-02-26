@@ -2,7 +2,7 @@ import { fetchAlbum } from "../delulib/GraphQL/fetchAlbum.js";
 import { fetchArtistDiscography } from "../delulib/GraphQL/fetchArtistDiscography.js";
 import { fetchArtistOverview } from "../delulib/GraphQL/fetchArtistOveriew.js";
 import { ItemMin, ItemsReleases, ItemsReleasesWithCount, ItemsWithCount } from "../delulib/GraphQL/sharedTypes.js";
-import { _, fp } from "/hooks/deps.js";
+import { _, fp } from "../std/deps.js";
 import { pMchain } from "../delulib/fp.js";
 import {
 	TrackData,

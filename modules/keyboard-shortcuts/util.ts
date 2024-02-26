@@ -1,4 +1,4 @@
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 
 import { listeningToSneakBinds } from "./sneak.js";
 

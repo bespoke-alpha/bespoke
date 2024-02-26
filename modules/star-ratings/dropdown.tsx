@@ -1,7 +1,7 @@
 import { CheckedPlaylistButtonIcon, curationButtonClass } from "./modules.js";
 
 import { toggleRating } from "./ratings.js";
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 
 import { S } from "../std/index.js";
 

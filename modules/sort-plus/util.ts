@@ -1,4 +1,4 @@
-import { _, fp } from "/hooks/deps.js";
+import { _, fp } from "../std/deps.js";
 import { S } from "../std/index.js";
 import { spotifyApi } from "../delulib/api.js";
 import { TrackData } from "../delulib/parse.js";

@@ -6,7 +6,7 @@ import { CONFIG } from "./settings.js";
 import "./components.js";
 import { fetchArtistRelated } from "../delulib/GraphQL/fetchArtistRelated.js";
 import { onHistoryChanged } from "../delulib/listeners.js";
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 import { Events, S } from "../std/index.js";
 
 const { URI } = S;

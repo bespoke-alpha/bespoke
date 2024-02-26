@@ -1,5 +1,4 @@
 import { S } from "../expose/expose.js";
-import { _ } from "/hooks/deps.js";
 
 import RootRegistry from "../registers/root.js";
 
@@ -63,7 +62,7 @@ export function display({
 		);
 	};
 	ref = S.React.createElement(PopupModal);
-	RootRegistry.register(ref, _.stubTrue);
+	RootRegistry.register(ref, () => true);
 }
 
 export function hide() {

@@ -5,7 +5,7 @@ import { LibraryBackup, LocalStorageBackup, SettingBackup } from "./backup.js";
 import { LikedPlaylist, PersonalFolder, PersonalPlaylist, isContentOfPersonalPlaylist } from "./util.js";
 
 import { S } from "../std/index.js";
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 
 const LocalStorageAPI = S.Platform.getLocalStorageAPI();
 

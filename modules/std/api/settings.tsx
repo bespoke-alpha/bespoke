@@ -1,5 +1,5 @@
 import { S } from "../expose/expose.js";
-import { _ } from "/hooks/deps.js";
+import { kebabCase } from "../deps.js";
 
 type Task<A> = (() => Awaited<A>) | (() => Promise<Awaited<A>>);
 
@@ -50,11 +50,11 @@ export class SettingsSection<A = Record<string, never>> {
 	public sectionFields: { [key: string]: JSX.Element } = {};
 
 	constructor(public name: string) {
-		this.id = _.kebabCase(name);
+		this.id = kebabCase(name);
 	}
 
 	pushSettings = () => {
-		SettingsSectionRegistry.register(<this.SettingsSection />, _.stubTrue);
+		SettingsSectionRegistry.register(<this.SettingsSection />, () => true);
 	};
 
 	toObject = () =>

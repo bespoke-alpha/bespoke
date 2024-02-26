@@ -2,7 +2,7 @@ import { updateCollectionControls, updateNowPlayingControls, updateTrackControls
 import { loadRatings } from "./util.js";
 import { CONFIG } from "./settings.js";
 
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 import { onHistoryChanged, onTrackListMutationListeners } from "../delulib/listeners.js";
 import { Events, SVGIcons, extendRegistrar } from "../std/index.js";
 import { S } from "../std/index.js";

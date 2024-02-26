@@ -3,7 +3,7 @@ import type { Track } from "https://esm.sh/v135/@fostertheweb/spotify-web-api-ts
 import { chunkify50 } from "../delulib/fp.js";
 import { spotifyApi } from "../delulib/api.js";
 import { S } from "../std/index.js";
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 
 const { URI } = S;
 

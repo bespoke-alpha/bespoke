@@ -1,6 +1,5 @@
 import { createRegisterTransform } from "./transforms/transform.js";
 import { readJSON } from "./util.js";
-import { _ } from "./deps.js";
 
 type Lock = { modules: string[] };
 
@@ -97,7 +96,10 @@ export class Module {
 
 		const metadata = (await readJSON(`${path}/metadata.json`)) as Metadata;
 
-		const statDefaultOrUndefined = (def: string) => fetch(def).then(_.constant(def)).catch(_.constant(undefined));
+		const statDefaultOrUndefined = (def: string) =>
+			fetch(def)
+				.then(() => def)
+				.catch(() => undefined);
 
 		Object.assign(metadata.entries, {
 			js: metadata.entries.js ?? statDefaultOrUndefined("index.js"),

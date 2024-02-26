@@ -1,23 +1,52 @@
-import { fp } from "/hooks/deps.js";
+import { capitalize } from "../deps.js";
 import { findBy } from "/hooks/util.js";
 
-import type { EnqueueSnackbar, OptionsObject } from "notistack";
-import type { NamedExoticComponent, ForwardRefExoticComponent, Context } from "react";
-import type { Flipped, Flipper } from "react-flip-toolkit";
-import type { SnackbarProvider, useSnackbar } from "notistack";
-import type _Snackbar from "notistack";
-export type Snackbar = typeof _Snackbar;
-import type _React from "react";
-export type React = typeof _React;
-import type _ReactDOM from "react-dom";
-export type ReactDOM = typeof _ReactDOM;
-import type _ReactDOMServer from "react-dom/server";
-export type ReactDOMServer = typeof _ReactDOMServer;
-import type _classNames from "classnames";
-export type classNames = typeof _classNames;
-import type { QueryClient, QueryClientProvider, notifyManager, useMutation, useQuery, useQueryClient, useInfiniteQuery } from "react-query";
-import type _Mousetrap from "mousetrap";
-export type Mousetrap = typeof _Mousetrap;
+import type { EnqueueSnackbar as EnqueueSnackbarT, OptionsObject as OptionsObjectT } from "notistack";
+export type EnqueueSnackbar = EnqueueSnackbarT;
+export type OptionsObject = OptionsObjectT;
+import type {
+	NamedExoticComponent as NamedExoticComponentT,
+	ForwardRefExoticComponent as ForwardRefExoticComponentT,
+	Context as ContextT,
+} from "react";
+export type NamedExoticComponent = NamedExoticComponentT;
+export type ForwardRefExoticComponent<P> = ForwardRefExoticComponentT<P>;
+export type Context<T> = ContextT<T>;
+import type { Flipped as FlippedT, Flipper as FlipperT } from "react-flip-toolkit";
+export type Flipped = typeof FlippedT;
+export type Flipper = FlipperT;
+import type { SnackbarProvider as SnackbarProviderT, useSnackbar as useSnackbarT } from "notistack";
+export type SnackbarProvider = SnackbarProviderT;
+export type useSnackbar = typeof useSnackbarT;
+import type SnackbarT from "notistack";
+export type Snackbar = typeof SnackbarT;
+import type ReactT from "react";
+export type React = typeof ReactT;
+import type ReactDOMT from "react-dom";
+export type ReactDOM = typeof ReactDOMT;
+import type ReactDOMServerT from "react-dom/server";
+export type ReactDOMServer = typeof ReactDOMServerT;
+import type classNamesT from "classnames";
+export type classNames = typeof classNamesT;
+import type {
+	QueryClient as QueryClientT,
+	QueryClientProvider as QueryClientProviderT,
+	notifyManager as notifyManagerT,
+	useMutation as useMutationT,
+	useQuery as useQueryT,
+	useQueryClient as useQueryClientT,
+	useInfiniteQuery as useInfiniteQueryT,
+} from "react-query";
+export type QueryClient = QueryClientT;
+export type QueryClientProvider = typeof QueryClientProviderT;
+export type notifyManager = typeof notifyManagerT;
+export type useMutation = typeof useMutationT;
+export type useQuery = typeof useQueryT;
+export type useQueryClient = typeof useQueryClientT;
+export type useInfiniteQuery = typeof useInfiniteQueryT;
+import type MousetrapT from "mousetrap";
+export type Mousetrap = typeof MousetrapT;
+
 import type { Platform } from "./platform.js";
 
 type ParsableAsURI = any;
@@ -259,24 +288,24 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 	const ReactQuery = {
 		PersistQueryClientProvider: findBy("persistOptions")(exportedFunctions),
 		QueryClient: findBy("defaultMutationOptions")(exportedFunctions) as unknown as QueryClient,
-		QueryClientProvider: findBy("use QueryClientProvider")(exportedFunctions) as typeof QueryClientProvider,
-		notifyManager: modules.find(m => m.setBatchNotifyFunction) as typeof notifyManager,
-		useMutation: findBy("mutateAsync")(exportedFunctions) as typeof useMutation,
+		QueryClientProvider: findBy("use QueryClientProvider")(exportedFunctions) as QueryClientProvider,
+		notifyManager: modules.find(m => m.setBatchNotifyFunction) as notifyManager,
+		useMutation: findBy("mutateAsync")(exportedFunctions) as useMutation,
 		useQuery: findBy(/^function [\w_$]+\(([\w_$]+),([\w_$]+)\)\{return\(0,[\w_$]+\.[\w_$]+\)\(\1,[\w_$]+\.[\w_$]+,\2\)\}$/)(
 			exportedFunctions,
-		) as typeof useQuery,
-		useQueryClient: findBy("client", "Provider", "mount")(exportedFunctions) as typeof useQueryClient,
+		) as useQuery,
+		useQueryClient: findBy("client", "Provider", "mount")(exportedFunctions) as useQueryClient,
 		useSuspenseQuery: findBy("throwOnError", "suspense", "enabled")(exportedFunctions),
-		useInfiniteQuery: Object.values(require(infiniteQueryChunkID)).find(m => typeof m === "function") as typeof useInfiniteQuery,
+		useInfiniteQuery: Object.values(require(infiniteQueryChunkID)).find(m => typeof m === "function") as useInfiniteQuery,
 	};
 
 	const ReactFlipToolkit = {
 		Flipper: exportedFunctions.find(m => m.prototype?.getSnapshotBeforeUpdate) as unknown as Flipper,
-		Flipped: exportedFunctions.find(m => (m as any).displayName === "Flipped") as typeof Flipped,
+		Flipped: exportedFunctions.find(m => (m as any).displayName === "Flipped") as Flipped,
 	};
 
 	const SnackbarProvider = findBy("enqueueSnackbar called with invalid argument")(exportedFunctions) as unknown as SnackbarProvider;
-	const useSnackbar = findBy(/^function\(\)\{return\(0,[\w$]+\.useContext\)\([\w$]+\)\}$/)(exportedFunctions) as typeof useSnackbar;
+	const useSnackbar = findBy(/^function\(\)\{return\(0,[\w$]+\.useContext\)\([\w$]+\)\}$/)(exportedFunctions) as useSnackbar;
 
 	const _reservedPanelIds = exports.find(m => m.BuddyFeed) as Record<string, number>;
 	const Mousetrap = modules.find(m => m.addKeycodes) as Mousetrap;
@@ -292,7 +321,7 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 	const isTestFn = fn => TypesKeys.some(t => fn.toString().includes(`${t}}`));
 	const isCreateFn = fn => TypesKeys.some(t => fn.toString().includes(`${t},`));
 
-	const CaseLikeThis = s => s.split("_").map(fp.capitalize).join("");
+	const CaseLikeThis = s => s.split("_").map(capitalize).join("");
 
 	const fnsByType = Object.groupBy(vs, fn => (isTestFn(fn) ? "test" : isCreateFn(fn) ? "create" : undefined));
 	const is = Object.fromEntries(fnsByType.test.map(fn => [CaseLikeThis(fn.toString().match(/([\w_\d]{2,})\}/)[1]), fn])) as {

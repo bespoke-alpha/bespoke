@@ -1,6 +1,6 @@
 import { TrackData } from "../delulib/parse.js";
 import { createQueueItem, setQueue as _setQueue } from "../delulib/util.js";
-import { _, fp } from "/hooks/deps.js";
+import { _, fp } from "../std/deps.js";
 import { S, extendRegistrar } from "../std/index.js";
 import { Button } from "../std/registers/topbarLeftButton.js";
 

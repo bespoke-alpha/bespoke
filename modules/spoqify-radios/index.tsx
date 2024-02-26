@@ -1,4 +1,4 @@
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 import { SpotifyLoc } from "../delulib/util.js";
 
 import { CONFIG } from "./settings.js";

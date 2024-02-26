@@ -12,7 +12,6 @@ import topbarRightButton from "./topbarRightButton.js";
 const registers = { menu, root, route, navlink, playbarControl, playbarWidget, settingsSection, topbarLeftButton, topbarRightButton };
 type Registers = typeof registers;
 
-import { _ } from "/hooks/deps.js";
 import type { Predicate } from "./registry.js";
 
 export class Registrar {
@@ -20,7 +19,7 @@ export class Registrar {
 
 	ledger = new Map<Registers[keyof Registers]["_A"], keyof Registers>();
 
-	register<R extends keyof Registers>(type: R, item: Registers[R]["_A"], predicate: Predicate<Registers[R]["_B"]> = _.stubTrue) {
+	register<R extends keyof Registers>(type: R, item: Registers[R]["_A"], predicate: Predicate<Registers[R]["_B"]> = () => true) {
 		this.ledger.set(item, type);
 		registers[type].register(item, predicate);
 	}
