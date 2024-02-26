@@ -1,4 +1,4 @@
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 import { fetchPlaylistContents, fetchRootFolder } from "../delulib/platformApi.js";
 import { S } from "../std/index.js";
 const LibraryAPI = S.Platform.getLibraryAPI();

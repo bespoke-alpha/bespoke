@@ -1,7 +1,7 @@
 import { fetchAlbum } from "../delulib/GraphQL/fetchAlbum.js";
 import { fetchArtistDiscography } from "../delulib/GraphQL/fetchArtistDiscography.js";
 import { fetchArtistOverview } from "../delulib/GraphQL/fetchArtistOveriew.js";
-import { _, fp } from "/hooks/deps.js";
+import { _, fp } from "../std/deps.js";
 import { pMchain } from "../delulib/fp.js";
 import { parseAlbumTrack, parseArtistLikedTrack, parseLibraryAPILikedTracks, parsePlaylistAPITrack, parseTopTrackFromArtist, } from "../delulib/parse.js";
 import { fetchArtistLikedTracks, fetchLikedTracks, fetchPlaylistContents } from "../delulib/platformApi.js";

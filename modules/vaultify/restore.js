@@ -2,7 +2,7 @@ import { addPlaylist, createFolder, createPlaylistFromTracks } from "../delulib/
 import { SpotifyLoc } from "../delulib/util.js";
 import { isContentOfPersonalPlaylist } from "./util.js";
 import { S } from "../std/index.js";
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 const LocalStorageAPI = S.Platform.getLocalStorageAPI();
 export const restoreLibrary = async (library, silent = true) => {
     for await (const [k, v] of Object.entries(library)) {

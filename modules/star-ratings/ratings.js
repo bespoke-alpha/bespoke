@@ -3,7 +3,7 @@ import { SpotifyLoc } from "../delulib/util.js";
 import { updateCollectionControls, updateNowPlayingControls, updateTrackListControls } from "./controls.js";
 import { CONFIG } from "./settings.js";
 import { getNowPlayingBar } from "./util.js";
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 import { S } from "../std/index.js";
 const { URI } = S;
 const History = S.Platform.getHistory();

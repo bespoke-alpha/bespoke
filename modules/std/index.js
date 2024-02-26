@@ -2,15 +2,38 @@ export * from "./static.js";
 import { S as _S } from "./expose/expose.js";
 export const S = _S;
 import { Registrar } from "./registers/registers.js";
-export const extend = (_module) => {
+export const extendRegistrar = (_module) => {
     const module = Object.assign(_module, {
-        registrar: new Registrar(_module.name),
+        registrar: new Registrar(_module.getIdentifier()),
     });
     const unloadJS = module.unloadJS;
     module.unloadJS = () => {
         module.registrar.dispose();
         return unloadJS();
     };
+    return module;
+};
+class NamespacedStorage {
+    constructor(name) {
+        this.name = name;
+    }
+    getNamespacedKey(key) {
+        return `module:${this.name}:${key}`;
+    }
+    getItem(keyName) {
+        return localStorage.getItem(this.getNamespacedKey(keyName));
+    }
+    setItem(keyName, keyValue) {
+        return localStorage.setItem(this.getNamespacedKey(keyName), keyValue);
+    }
+    removeItem(keyName) {
+        return localStorage.removeItem(this.getNamespacedKey(keyName));
+    }
+}
+export const getLocalStorage = (_module) => {
+    const module = Object.assign(_module, {
+        localStorage: new NamespacedStorage(_module.getIdentifier()),
+    });
     return module;
 };
 class Event {

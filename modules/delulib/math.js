@@ -1,4 +1,4 @@
-import { _, fp } from "/hooks/deps.js";
+import { _, fp } from "../std/deps.js";
 export const oppositeVector = (u) => scalarMultVector(-1, u);
 export const vectorAddVector = (u, v) => _.zip(u, v).map(([uxi, vxi]) => uxi + vxi);
 export const vectorMultVector = (u, v) => _.zip(u, v).map(([uix, vix]) => uix * vix);

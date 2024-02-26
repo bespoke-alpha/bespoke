@@ -1,4 +1,4 @@
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 import { progressify } from "../delulib/fp.js";
 import { createPlaylistFromTracks, fetchFolder, fetchPlaylistContents, fetchRootFolder, movePlaylistTracks, setPlaylistVisibility, } from "../delulib/platformApi.js";
 import { SpotifyLoc } from "../delulib/util.js";

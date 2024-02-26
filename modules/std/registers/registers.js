@@ -9,13 +9,12 @@ import topbarLeftButton from "./topbarLeftButton.js";
 import topbarRightButton from "./topbarRightButton.js";
 // It's ugly, but we gotta do it statically to get type completions
 const registers = { menu, root, route, navlink, playbarControl, playbarWidget, settingsSection, topbarLeftButton, topbarRightButton };
-import { _ } from "/hooks/deps.js";
 export class Registrar {
     constructor(id) {
         this.id = id;
         this.ledger = new Map();
     }
-    register(type, item, predicate = _.stubTrue) {
+    register(type, item, predicate = () => true) {
         this.ledger.set(item, type);
         registers[type].register(item, predicate);
     }

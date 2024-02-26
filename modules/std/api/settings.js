@@ -1,5 +1,5 @@
 import { S } from "../expose/expose.js";
-import { _ } from "/hooks/deps.js";
+import { kebabCase } from "../deps.js";
 const { React } = S;
 const { ButtonSecondary } = S.ReactComponents;
 export var FieldType;
@@ -15,7 +15,7 @@ export class SettingsSection {
         this.name = name;
         this.sectionFields = {};
         this.pushSettings = () => {
-            SettingsSectionRegistry.register(S.React.createElement(this.SettingsSection, null), _.stubTrue);
+            SettingsSectionRegistry.register(S.React.createElement(this.SettingsSection, null), () => true);
         };
         this.toObject = () => new Proxy({}, {
             get: (target, prop) => SettingsSection.getFieldValue(this.getId(prop.toString())),
@@ -80,7 +80,7 @@ export class SettingsSection {
                         field.onChange?.(value);
                     } })));
         };
-        this.id = _.kebabCase(name);
+        this.id = kebabCase(name);
     }
     addField(type, opts, fieldComponent, defaultValue) {
         if (defaultValue !== undefined) {

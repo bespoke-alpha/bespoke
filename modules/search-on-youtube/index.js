@@ -1,23 +1,33 @@
 import { searchYoutube, spotifyApi } from "../delulib/api.js";
-import { parseWebAPITrack } from "../delulib/parse.js";
 import { normalizeStr } from "../delulib/util.js";
 import { CONFIG } from "./settings.js";
-import { S, extend } from "../std/index.js";
+import { S, extendRegistrar } from "../std/index.js";
 import { useMenuItem } from "../std/registers/menu.js";
 import { createIconComponent } from "../std/api/createIconComponent.js";
+// import { Innertube, UniversalCache } from "https://esm.sh/youtubei.js/web.bundle.min";
+// const yt = await Innertube.create({
+// 	cache: new UniversalCache(false),
+// 	fetch: (url, init) => {
+// 		return fetch(url, init);
+// 	},
+// });
 const { URI } = S;
 const YTVidIDCache = new Map();
 const showOnYouTube = async (uri) => {
     const id = URI.fromString(uri).id;
     if (!YTVidIDCache.get(id)) {
-        const track = parseWebAPITrack(await spotifyApi.tracks.get(id));
-        const searchString = `${track.artistName} - ${track.name} music video`;
+        const track = await spotifyApi.tracks.get(id);
+        const artists = track.artists.map(artist => artist.name);
+        const nonFeatArtists = artists.filter(artist => !track.name.includes(artist));
+        const searchString = `${nonFeatArtists.join(", ")} - ${track.name} [Official Music Video]`;
         try {
             const videos = await searchYoutube(CONFIG.YouTubeApiKey, searchString).then(res => res.items);
             const normalizedTrackName = normalizeStr(track.name);
             const video = videos.find(video => {
                 normalizeStr(video.snippet.title).includes(normalizedTrackName);
             }) ?? videos[0];
+            const ss = await yt.search(searchString, { type: "video", sort_by: "relevance" });
+            ss.videos[0].as;
             YTVidIDCache.set(id, video.id.videoId);
             window.open(`https://www.youtube.com/watch?v=${video.id.videoId}`);
         }
@@ -27,7 +37,7 @@ const showOnYouTube = async (uri) => {
     }
 };
 export default function (_module) {
-    const module = extend(_module);
+    const module = extendRegistrar(_module);
     const { registrar } = module;
     registrar.register("menu", S.React.createElement(() => {
         const { props } = useMenuItem();

@@ -1,6 +1,6 @@
 import { CheckedPlaylistButtonIcon, curationButtonClass } from "./modules.js";
 import { toggleRating } from "./ratings.js";
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 import { S } from "../std/index.js";
 const { ButtonTertiary } = S.ReactComponents;
 const RatingButton = ({ i, uri }) => (S.React.createElement(ButtonTertiary, { size: "small", className: `${curationButtonClass} rating-${i}`, "aria-checked": "true", "aria-label": "", condensed: "true", iconOnly: CheckedPlaylistButtonIcon, semanticColor: "textBrightAccent", 

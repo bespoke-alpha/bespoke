@@ -1,5 +1,4 @@
 import { S } from "../expose/expose.js";
-import { _ } from "/hooks/deps.js";
 import RootRegistry from "../registers/root.js";
 let close = undefined;
 let ref = undefined;
@@ -20,7 +19,7 @@ export function display({ title: contentLabel, content: children, isLarge: isEmb
             S.React.createElement("div", { className: isEmbedWidgetGeneratorOrTrackCreditsModal ? "IJHNf0vxPSbPE1egoG4N" : "Nw1INlIyra3LT1JjvoqH" }, children)));
     };
     ref = S.React.createElement(PopupModal);
-    RootRegistry.register(ref, _.stubTrue);
+    RootRegistry.register(ref, () => true);
 }
 export function hide() {
     close?.();

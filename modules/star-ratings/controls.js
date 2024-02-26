@@ -1,4 +1,4 @@
-import { _, fp } from "/hooks/deps.js";
+import { _, fp } from "../std/deps.js";
 import { getTracksFromUri } from "../sort-plus/util.js";
 import { Dropdown } from "./dropdown.js";
 import { getCollectionPlaylistButton, getNowPlayingBar, getPlaylistButton, getTrackListTrackUri, getTrackListTracks, getTrackLists } from "./util.js";

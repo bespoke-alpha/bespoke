@@ -1,5 +1,5 @@
 import { fetchLastFMTrack, spotifyApi } from "../delulib/api.js";
-import { _, fp } from "/hooks/deps.js";
+import { _, fp } from "../std/deps.js";
 import { S } from "../std/index.js";
 import { chunkify50, progressify } from "../delulib/fp.js";
 import { parseWebAPITrack } from "../delulib/parse.js";

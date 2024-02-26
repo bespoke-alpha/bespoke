@@ -1,4 +1,4 @@
-import { _ } from "/hooks/deps.js";
+import { _ } from "../std/deps.js";
 import { S } from "../std/index.js";
 const { Snackbar } = S;
 export const pMchain = (f) => async (fa) => f(await fa);

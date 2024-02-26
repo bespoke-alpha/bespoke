@@ -1,4 +1,4 @@
-import { fp } from "/hooks/deps.js";
+import { capitalize } from "../deps.js";
 import { findBy } from "/hooks/util.js";
 // TODO: extract functions
 export function expose({ Snackbar, Platform }) {
@@ -151,7 +151,7 @@ export function expose({ Snackbar, Platform }) {
     const TypesKeys = Object.keys(Types);
     const isTestFn = fn => TypesKeys.some(t => fn.toString().includes(`${t}}`));
     const isCreateFn = fn => TypesKeys.some(t => fn.toString().includes(`${t},`));
-    const CaseLikeThis = s => s.split("_").map(fp.capitalize).join("");
+    const CaseLikeThis = s => s.split("_").map(capitalize).join("");
     const fnsByType = Object.groupBy(vs, fn => (isTestFn(fn) ? "test" : isCreateFn(fn) ? "create" : undefined));
     const is = Object.fromEntries(fnsByType.test.map(fn => [CaseLikeThis(fn.toString().match(/([\w_\d]{2,})\}/)[1]), fn]));
     const create = Object.fromEntries(fnsByType.create.map(fn => [CaseLikeThis(fn.toString().match(/([\w_\d]{2,})\,/)[1]), fn]));
