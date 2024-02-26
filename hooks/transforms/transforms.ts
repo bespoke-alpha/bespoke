@@ -7,13 +7,13 @@ export const internalRegisterTransform = createRegisterTransform(internalModule)
 
 internalRegisterTransform({
 	transform: emit => str => {
-		str = str.replace(/(([\w_$][\w_$\d]*)=([\w_$][\w_$\d]*)\.p\+\3\.u\([\w_$][\w_$\d]*\))/, "$1,$2=await __applyTransforms($2)");
+		str = str.replace(/(([\w_\$][\w_\$\d]*)=([\w_\$][\w_\$\d]*)\.p\+\3\.u\([\w_\$][\w_\$\d]*\))/, "$1,$2=await __applyTransforms($2)");
 		const i = str.search('"Loading chunk "');
-		const { index } = matchLast(str.slice(0, i), /=\([\w_$][\w_$\d]*,[\w_$][\w_$\d]*\)=>\{/g);
+		const { index } = matchLast(str.slice(0, i), /=\([\w_\$][\w_\$\d]*,[\w_\$][\w_\$\d]*\)=>\{/g);
 		str = `${str.slice(0, index! + 1)}async${str.slice(index! + 1)}`;
 
 		str = str.replace(
-			/(new Promise\(\()(\([\w_$][\w_$\d]*,[\w_$][\w_$\d]*\)=>\{var ([\w_$][\w_$\d]*)=([\w_$][\w_$\d]*)\.miniCssF\([\w_$][\w_$\d]*\),([\w_$][\w_$\d]*)=\4\.p\+\3)/,
+			/(new Promise\(\()(\([\w_\$][\w_\$\d]*,[\w_\$][\w_\$\d]*\)=>\{var ([\w_\$][\w_\$\d]*)=([\w_\$][\w_\$\d]*)\.miniCssF\([\w_\$][\w_\$\d]*\),([\w_\$][\w_\$\d]*)=\4\.p\+\3)/,
 			"$1async$2,$5=await __applyTransforms($5)",
 		);
 

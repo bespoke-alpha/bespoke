@@ -33,7 +33,7 @@ internalRegisterTransform<React.Dispatch<SetStateAction<number>>>({
 		str = str.replace(/("top-bar-forward-button"[^\]]*)/g, "$1,...__renderTopbarLeftButtons()");
 
 		const croppedInput = str.match(/.*"top-bar-back-button"/)![0];
-		const react = matchLast(croppedInput, /([\w_$][\w_$\d]*)\.useCallback/g)[1];
+		const react = matchLast(croppedInput, /([\w_\$][\w_\$\d]*)\.useCallback/g)[1];
 		str = str.replace(/(hitUiNavigateForwardInHistory.*?)(return)/, `$1const[rand,setRand]=${react}.useState(0);__setNavButtonsRand=setRand;$2`);
 		Object.defineProperty(globalThis, "__setNavButtonsRand", {
 			set: emit,

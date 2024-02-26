@@ -291,9 +291,9 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 		QueryClientProvider: findBy("use QueryClientProvider")(exportedFunctions) as QueryClientProvider,
 		notifyManager: modules.find(m => m.setBatchNotifyFunction) as notifyManager,
 		useMutation: findBy("mutateAsync")(exportedFunctions) as useMutation,
-		useQuery: findBy(/^function [\w_$]+\(([\w_$]+),([\w_$]+)\)\{return\(0,[\w_$]+\.[\w_$]+\)\(\1,[\w_$]+\.[\w_$]+,\2\)\}$/)(
-			exportedFunctions,
-		) as useQuery,
+		useQuery: findBy(
+			/^function [\w_\$][\w_\$\d]*\(([\w_\$][\w_\$\d]*),([\w_\$][\w_\$\d]*)\)\{return\(0,[\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*\)\(\1,[\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*,\2\)\}$/,
+		)(exportedFunctions) as useQuery,
 		useQueryClient: findBy("client", "Provider", "mount")(exportedFunctions) as useQueryClient,
 		useSuspenseQuery: findBy("throwOnError", "suspense", "enabled")(exportedFunctions),
 		useInfiniteQuery: Object.values(require(infiniteQueryChunkID)).find(m => typeof m === "function") as useInfiniteQuery,

@@ -28,10 +28,10 @@ globalThis.__renderRootChildren = registry.getItems.bind(registry);
 internalRegisterTransform<React.Dispatch<SetStateAction<number>>>({
 	transform: emit => str => {
 		const croppedInput = str.match(/.*"data-right-sidebar-hidden"/)![0];
-		const children = matchLast(croppedInput, /children:([\w_$]+)/g)[1];
+		const children = matchLast(croppedInput, /children:([\w_\$][\w_\$\d]*)/g)[1];
 		str = str.replace(/("data-right-sidebar-hidden")/, `[(${children}=[${children},__renderRootChildren()].flat(),$1)]`);
 
-		const react = matchLast(croppedInput, /([\w_$][\w_$\d]*)\.useCallback/g)[1];
+		const react = matchLast(croppedInput, /([\w_\$][\w_\$\d]*)\.useCallback/g)[1];
 		const index = matchLast(croppedInput, /return/g).index;
 		str = `${str.slice(0, index)}const[rand,setRand]=${react}.useState(0);__setRootRand=setRand;${str.slice(index)}`;
 		Object.defineProperty(globalThis, "__setRootRand", {

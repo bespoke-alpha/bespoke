@@ -1,0 +1,89 @@
+.config-container {
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+
+.section-header {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  margin-block: 0px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--spice-text);
+}
+
+.col.description {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  margin-block: 0px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--spice-subtext);
+}
+
+  
+// Hide disabled toggle rows (i.e. the "Extensions" one)
+.disabled {
+  opacity: 0;
+  pointer-events: none;
+
+}
+
+.text-input {
+  background: rgba(var(--spice-rgb-selected-row),.1);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--spice-text);
+  font-family: inherit;
+  font-size: 14px;
+  height: 32px;
+  padding: 0 12px;
+  width: 100%;
+
+  &:focus {
+    background-color: var(--spice-tab-active);
+    border: 1px solid var(--spice-button-disabled);
+    outline: none;
+  }
+}
+
+.dropdown-input {
+  background-color: var(--spice-tab-active);
+  border: 0;
+  border-radius: 4px;
+  color: rgba(var(--spice-rgb-selected-row),.7);
+  font-size: 14px;
+  font-weight: 400;
+  height: 32px;
+  letter-spacing: .24px;
+  line-height: 20px;
+  padding: 0 32px 0 12px;
+  width: 100%;
+}
+
+.tooltip-icon {
+  float: right;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  height: 22px;
+  fill: var(--spice-subtext);
+
+  &:hover {
+    fill: var(--spice-text);
+  }
+}
+
+.tooltip {
+  text-align: center;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.playback-progressbar {
+  width: 200px;
+}
+}
