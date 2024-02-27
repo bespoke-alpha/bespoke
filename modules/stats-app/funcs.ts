@@ -1,5 +1,10 @@
 import { PLACEHOLDER, SPOTIFY } from "./endpoints";
 import { Album, ArtistCardProps } from "./types/stats_types";
+import { storage } from "./index.js";
+
+import { S } from "/modules/std/index.js";
+
+import { logger } from "./index.js";
 
 export function filter(str: string): string {
 	const normalizedStr = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -7,7 +12,7 @@ export function filter(str: string): string {
 }
 
 export const updatePageCache = (i: any, callback: Function, activeOption: string, lib: any = false) => {
-	const cacheInfo = Spicetify.LocalStorage.get("stats:cache-info");
+	const cacheInfo = storage.getItem("cache-info");
 	if (!cacheInfo) return;
 
 	const cacheInfoArray = JSON.parse(cacheInfo);
@@ -28,7 +33,7 @@ export const updatePageCache = (i: any, callback: Function, activeOption: string
 		}
 		callback(activeOption, true);
 		cacheInfoArray[i] = true;
-		Spicetify.LocalStorage.set("stats:cache-info", JSON.stringify(cacheInfoArray));
+		storage.setItem("cache-info", JSON.stringify(cacheInfoArray));
 	}
 };
 
@@ -37,18 +42,18 @@ type ApiResponse = Record<string, any> | null;
 export const apiRequest = async (name: string, url: string, timeout = 5, log = true): Promise<ApiResponse> => {
 	try {
 		const timeStart = window.performance.now();
-		const response = await Spicetify.CosmosAsync.get(url);
-		if (log) console.log("stats -", name, "fetch time:", window.performance.now() - timeStart);
+		const response = await S.Cosmos.get(url);
+		if (log) console.log(name, "fetch time:", window.performance.now() - timeStart);
 		return response;
 	} catch (e) {
 		if (timeout === 0) {
-			console.log("stats -", name, "all requests failed:", e);
-			console.log("stats -", name, "giving up");
+			console.log(name, "all requests failed:", e);
+			console.log(name, "giving up");
 			return null;
 		} else {
 			if (timeout === 5) {
-				console.log("stats -", name, "request failed:", e);
-				console.log("stats -", name, "retrying...");
+				logger.log(name, "request failed:", e);
+				logger.log(name, "retrying...");
 			}
 			await new Promise(resolve => setTimeout(resolve, 5000));
 			return apiRequest(name, url, timeout - 1);
@@ -270,7 +275,7 @@ export const checkLiked = async (tracks: string[]) => {
 		}
 	});
 
-	const apiResponse = await apiRequest("checkLiked", SPOTIFY.queryliked(tracks.filter(e => e).join(",")));
+	const apiResponse = await apiRequest("checkLiked", SPOTIFY.queryliked(tracks.filter(Boolean).join(",")));
 	if (!apiResponse) return;
 
 	const response = [];
@@ -289,43 +294,3 @@ export const checkLiked = async (tracks: string[]) => {
 
 	return response;
 };
-
-// taken from shuffle+ extension
-export async function queue(list: any, context = null) {
-	// Delimits the end of our list, as Spotify may add new context tracks to the queue
-	list.push("spotify:delimiter");
-
-	const { _queue, _client } = Spicetify.Platform.PlayerAPI._queue;
-	const { prevTracks, queueRevision } = _queue;
-
-	// Format tracks with default values
-	const nextTracks = list.map((uri: string) => ({
-		contextTrack: {
-			uri,
-			uid: "",
-			metadata: {
-				is_queued: "false",
-			},
-		},
-		removed: [],
-		blocked: [],
-		provider: "context",
-	}));
-
-	// Lowest level setQueue method from vendor~xpui.js
-	_client.setQueue({
-		nextTracks,
-		prevTracks,
-		queueRevision,
-	});
-
-	if (context) {
-		const { sessionId } = Spicetify.Platform.PlayerAPI.getState();
-		Spicetify.Platform.PlayerAPI.updateContext(sessionId, {
-			uri: `spotify:user:${Spicetify.Platform.LibraryAPI._currentUsername}:top:tracks`,
-			url: "",
-		});
-	}
-
-	Spicetify.Player.next();
-}

@@ -11,6 +11,7 @@ import { ArtistCardProps, ConfigWrapper, Track } from "../types/stats_types";
 import { LASTFM } from "../endpoints";
 import RefreshButton from "../components/buttons/refresh_button";
 import SettingsButton from "../shared/components/settings_button";
+import { storage } from "../index.js";
 
 const DropdownOptions = [
 	{ id: "artists", name: "Top Artists" },
@@ -23,7 +24,7 @@ const ChartsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 
 	async function fetchChartData(type: string, force?: boolean, set: boolean = true) {
 		if (!force) {
-			let storedData = Spicetify.LocalStorage.get(`stats:charts:${type}`);
+			const storedData = storage.getItem(`charts:${type}`);
 			if (storedData) return setChartData(JSON.parse(storedData));
 		}
 
@@ -34,7 +35,7 @@ const ChartsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 		if (!response) return setChartData(500);
 
 		const data = response[type].track || response[type].artist;
-		const cardData = await (type == "artists" ? convertArtistData(data) : convertTrackData(data));
+		const cardData = await (type === "artists" ? convertArtistData(data) : convertTrackData(data));
 
 		if (type === "tracks") {
 			const likedArray = await checkLiked(cardData.map(track => track.id));
@@ -47,7 +48,7 @@ const ChartsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 
 		if (set) setChartData(cardData);
 
-		Spicetify.LocalStorage.set(`stats:charts:${type}`, JSON.stringify(cardData));
+		storage.setItem(`charts:${type}`, JSON.stringify(cardData));
 	}
 
 	React.useEffect(() => {
@@ -99,26 +100,26 @@ const ChartsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 				<div className={`main-gridContainer-gridContainer grid`}>{artistCards}</div>
 			</PageContainer>
 		);
-	} else {
-		const date = new Date().toLocaleDateString("en-US", {
-			year: "numeric",
-			month: "2-digit",
-			day: "2-digit",
-		});
-		const infoToCreatePlaylist = {
-			playlistName: `Charts - Top Tracks - ${date}`,
-			itemsUris: chartData.map(track => track.uri),
-		};
-
-		const trackRows = chartData.map((track: any, index) => <TrackRow index={index + 1} {...track} uris={chartData.map(track => track.uri)} />);
-
-		props.title = `Charts - Top Tracks`;
-		return (
-			<PageContainer {...props} infoToCreatePlaylist={infoToCreatePlaylist}>
-				<Tracklist>{trackRows}</Tracklist>
-			</PageContainer>
-		);
 	}
+
+	const date = new Date().toLocaleDateString("en-US", {
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	});
+	const infoToCreatePlaylist = {
+		playlistName: `Charts - Top Tracks - ${date}`,
+		itemsUris: chartData.map(track => track.uri),
+	};
+
+	const trackRows = chartData.map((track: any, index) => <TrackRow index={index + 1} {...track} uris={chartData.map(track => track.uri)} />);
+
+	props.title = `Charts - Top Tracks`;
+	return (
+		<PageContainer {...props} infoToCreatePlaylist={infoToCreatePlaylist}>
+			<Tracklist>{trackRows}</Tracklist>
+		</PageContainer>
+	);
 };
 
 export default React.memo(ChartsPage);

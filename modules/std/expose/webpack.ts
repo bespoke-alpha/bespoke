@@ -2,32 +2,18 @@ import { capitalize } from "../deps.js";
 import { findBy } from "/hooks/util.js";
 
 import type { EnqueueSnackbar as EnqueueSnackbarT, OptionsObject as OptionsObjectT } from "notistack";
-export type EnqueueSnackbar = EnqueueSnackbarT;
-export type OptionsObject = OptionsObjectT;
 import type {
 	NamedExoticComponent as NamedExoticComponentT,
 	ForwardRefExoticComponent as ForwardRefExoticComponentT,
 	Context as ContextT,
 } from "react";
-export type NamedExoticComponent = NamedExoticComponentT;
-export type ForwardRefExoticComponent<P> = ForwardRefExoticComponentT<P>;
-export type Context<T> = ContextT<T>;
 import type { Flipped as FlippedT, Flipper as FlipperT } from "react-flip-toolkit";
-export type Flipped = typeof FlippedT;
-export type Flipper = FlipperT;
 import type { SnackbarProvider as SnackbarProviderT, useSnackbar as useSnackbarT } from "notistack";
-export type SnackbarProvider = SnackbarProviderT;
-export type useSnackbar = typeof useSnackbarT;
 import type SnackbarT from "notistack";
-export type Snackbar = typeof SnackbarT;
 import type ReactT from "react";
-export type React = typeof ReactT;
 import type ReactDOMT from "react-dom";
-export type ReactDOM = typeof ReactDOMT;
 import type ReactDOMServerT from "react-dom/server";
-export type ReactDOMServer = typeof ReactDOMServerT;
 import type classNamesT from "classnames";
-export type classNames = typeof classNamesT;
 import type {
 	QueryClient as QueryClientT,
 	QueryClientProvider as QueryClientProviderT,
@@ -37,6 +23,27 @@ import type {
 	useQueryClient as useQueryClientT,
 	useInfiniteQuery as useInfiniteQueryT,
 } from "react-query";
+import type MousetrapT from "mousetrap";
+
+export type EnqueueSnackbar = EnqueueSnackbarT;
+export type OptionsObject = OptionsObjectT;
+
+export type NamedExoticComponent = NamedExoticComponentT;
+export type ForwardRefExoticComponent<P> = ForwardRefExoticComponentT<P>;
+export type Context<T> = ContextT<T>;
+
+export type Flipped = typeof FlippedT;
+export type Flipper = FlipperT;
+
+export type SnackbarProvider = SnackbarProviderT;
+export type useSnackbar = typeof useSnackbarT;
+
+export type Snackbar = typeof SnackbarT;
+export type React = typeof ReactT;
+export type ReactDOM = typeof ReactDOMT;
+export type ReactDOMServer = typeof ReactDOMServerT;
+export type classNames = typeof classNamesT;
+
 export type QueryClient = QueryClientT;
 export type QueryClientProvider = typeof QueryClientProviderT;
 export type notifyManager = typeof notifyManagerT;
@@ -44,7 +51,7 @@ export type useMutation = typeof useMutationT;
 export type useQuery = typeof useQueryT;
 export type useQueryClient = typeof useQueryClientT;
 export type useInfiniteQuery = typeof useInfiniteQueryT;
-import type MousetrapT from "mousetrap";
+
 export type Mousetrap = typeof MousetrapT;
 
 import type { Platform } from "./platform.js";
@@ -129,42 +136,10 @@ type WebpackRequire = any;
 
 export type ExposedWebpack = ReturnType<typeof expose>;
 
-// TODO: extract functions
-export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: Platform }) {
-	const require = globalThis.webpackChunkclient_web.push([[Symbol()], {}, re => re]) as WebpackRequire;
-	const chunks = Object.entries(require.m);
-	const modules = chunks.map(([id]) => require(id));
-	const exports = modules
-		.filter(module => typeof module === "object")
-		.flatMap(module => {
-			try {
-				return Object.values(module);
-			} catch (_) {}
-		})
-		.filter(Boolean) as any[];
+// TODO: WTF TYPESCRIPT?
+// ! Type alias 'Webpack' circularly references itself.
 
-	// biome-ignore lint/complexity/noBannedTypes: ffs
-	const isFunction = (obj): obj is Function => typeof obj === "function";
-	const exportedFunctions = exports.filter(isFunction);
-
-	const exportedReactObjects = Object.groupBy(exports, x => x.$$typeof);
-	const exportedContexts = exportedReactObjects[Symbol.for("react.context") as any] as Array<Context<any>>;
-	const exportedForwardRefs = exportedReactObjects[Symbol.for("react.forward_ref") as any] as Array<ForwardRefExoticComponent<any>>;
-	const exportedMemos = exportedReactObjects[Symbol.for("react.memo") as any] as Array<NamedExoticComponent>;
-
-	const webpack = {
-		require,
-		chunks,
-		modules,
-		exports,
-		exportedFunctions,
-		exportedContexts,
-		exportedForwardRefs,
-		exportedMemos,
-	};
-
-	const useContextMenuState = findBy("useContextMenuState")(exportedFunctions);
-
+const exposeReactComponents = ({ chunks, exportedFunctions, exportedMemos, exportedForwardRefs }: Webpack, React: React, Platform: Platform) => {
 	const Menus = Object.fromEntries(
 		exportedMemos.flatMap(m => {
 			const str = (m as any).type.toString();
@@ -180,80 +155,77 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 		}),
 	);
 
-	const Cards = Object.fromEntries(
-		exports
-			.flatMap(m => {
-				try {
-					const str = m.toString();
-					const match = str.match(/featureIdentifier:"([^"]+)"/);
-					if (!match) return [];
-					const name = match[1];
-					const type = name[0].toUpperCase() + name.slice(1);
-					return [[type, m]];
-				} catch (e) {
-					return [];
-				}
-			})
-			.concat([["Profile", exportedMemos.find(m => (m as any).type.toString().includes(`featureIdentifier:"profile"`))]]),
+	const Cards = Object.assign(
+		{
+			Default: findBy('"card-click-handler"')(exportedFunctions),
+			Hero: findBy('"herocard-click-handler"')(exportedFunctions),
+			CardImage: findBy("isHero", "withWaves")(exportedFunctions),
+		},
+		Object.fromEntries(
+			exports
+				.flatMap(m => {
+					try {
+						const str = m.toString();
+						const match = str.match(/featureIdentifier:"(.+?)"/);
+						if (!match) return [];
+						const name = match[1];
+						return [[capitalize(name), m]];
+					} catch (e) {
+						return [];
+					}
+				})
+				.concat([["Profile", exportedMemos.find(m => (m as any).type.toString().includes(`featureIdentifier:"profile"`))]]),
+		),
 	);
-
-	type FN_enqueueCustomSnackbar_OPTS = (Omit<OptionsObject, "key"> & { keyPrefix: string }) | (OptionsObject & { identifier: string });
-	const enqueueCustomSnackbar = findBy("enqueueCustomSnackbar", "headless")(exportedFunctions) as (
-		element: React.ReactElement,
-		opts: FN_enqueueCustomSnackbar_OPTS,
-	) => ReturnType<EnqueueSnackbar>;
-
-	const React = modules.find(m => m.createElement) as React;
-	const ReactJSX = modules.find(m => m.jsx);
-	const ReactDOM = modules.find(m => m.createRoot) as ReactDOM;
-	const ReactDOMServer = modules.find(m => m.renderToString) as ReactDOMServer;
-	const Color = Object.assign(findBy("static fromHex")(exportedFunctions), { CSSFormat: exports.find(m => m.RGBA) });
-
-	const [classnamesModuleID] = chunks.find(([_, v]) => v.toString().includes("[native code]") && !v.toString().includes("<anonymous>"));
-	const classnames = require(classnamesModuleID) as classNames;
 
 	const [ContextMenuModuleID] = chunks.find(([_, v]) => v.toString().includes("toggleContextMenu"));
 	const [playlistMenuChunkID] = chunks.find(
 		([, v]) => v.toString().includes('value:"playlist"') && v.toString().includes("canView") && v.toString().includes("permissions"),
 	);
-	// const [dropdownChunkID] = chunks.find(([, v]) => v.toString().includes("dropDown") && v.toString().includes("isSafari"));
 
 	const RemoteConfigProvider = findBy("resolveSuspense", "configuration")(exportedFunctions);
 	const SliderComponent = exportedFunctions.find(
 		m => m.toString().includes("onStepBackward") && !m.toString().includes("volume"),
 	) as () => React.JSX.Element;
 
-	const ReactComponents = {
+	const Slider = React.createElement(props =>
+		React.createElement(
+			RemoteConfigProvider as any,
+			{ configuration: Platform.getRemoteConfiguration() },
+			React.createElement(SliderComponent, props),
+		),
+	);
+
+	return {
 		SettingColumn: findBy("setSectionFilterMatchQueryValue", "filterMatchQuery")(exportedFunctions),
 		SettingText: findBy("textSubdued", "dangerouslySetInnerHTML")(exportedFunctions),
 		SettingToggle: findBy("condensed", "onSelected")(exportedFunctions),
+
 		IconComponent: findBy("$iconColor", 'role:"img"')(exportedFunctions),
 		Text: exportedForwardRefs.find(m => (m as any).render.toString().includes("paddingBottom") && (m as any).render.toString().includes("className")),
 		TextComponent: exports.find(m => m.h1 && m.render),
-		PlaylistMenu: Object.values(require(playlistMenuChunkID)).find(m => typeof m === "function" || typeof m === "object"),
-		// Dropdown: Object.values(require(dropdownChunkID)).find(m => typeof m === "function"),
+
 		ContextMenu: Object.values(require(ContextMenuModuleID))[0],
+		RightClickMenu: findBy("action", "open", "trigger", "right-click")(exportedFunctions),
+
 		ConfirmDialog: findBy("isOpen", "shouldCloseOnEsc", "onClose")(exportedFunctions),
 		Tooltip: findBy("hover-or-focus", "tooltip")(exportedFunctions),
+
 		Menu: findBy("getInitialFocusElement", "children")(exportedFunctions),
 		MenuItem: findBy("handleMouseEnter", "onClick")(exportedFunctions),
 		MenuItemSubMenu: findBy("subMenuIcon")(exportedFunctions),
-		Slider: React.createElement(props =>
-			React.createElement(
-				RemoteConfigProvider as any,
-				{ configuration: Platform.getRemoteConfiguration() },
-				React.createElement(SliderComponent, props),
-			),
-		),
+		Slider,
 		RemoteConfigProvider,
-		RightClickMenu: findBy("action", "open", "trigger", "right-click")(exportedFunctions),
+
 		PanelHeader: exportedFunctions.find(m => m.toString().includes("panel") && m.toString().includes("actions")),
 		PanelContent:
 			findBy(m => m.render.toString().includes("scrollBarContainer"))(exportedForwardRefs) || findBy("scrollBarContainer")(exportedFunctions),
 		PanelSkeleton: findBy("label", "aside")(exportedFunctions) || findBy(m => m.render.toString().includes("section"))(exportedForwardRefs),
+
 		ButtonPrimary: findBy(m => m.displayName === "ButtonPrimary")(exportedForwardRefs),
 		ButtonSecondary: findBy(m => m.displayName === "ButtonSecondary")(exportedForwardRefs),
 		ButtonTertiary: findBy(m => m.displayName === "ButtonTertiary")(exportedForwardRefs),
+
 		Snackbar: {
 			wrapper: findBy("encore-light-theme", "elevated")(exportedFunctions),
 			simpleLayout: findBy("leading", "center", "trailing")(exportedFunctions),
@@ -262,59 +234,24 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 		},
 		Chip: findBy(m => m.render.toString().includes("invertedDark") && m.render.toString().includes("isUsingKeyboard"))(exportedForwardRefs),
 		Toggle: findBy("onSelected", 'type:"checkbox"')(exportedFunctions),
-		Cards: {
-			Default: findBy('"card-click-handler"')(exportedFunctions),
-			Hero: findBy('"herocard-click-handler"')(exportedFunctions),
-			CardImage: findBy("isHero", "withWaves")(exportedFunctions),
-			...Cards,
-		},
 		Router: findBy("navigationType", "static")(exportedFunctions),
 		Routes: findBy(/\([\w$]+\)\{let\{children:[\w$]+,location:[\w$]+\}=[\w$]+/)(exportedFunctions),
 		Route: findBy(/^function [\w$]+\([\w$]+\)\{\(0,[\w$]+\.[\w$]+\)\(\!1\)\}$/)(exportedFunctions),
 		StoreProvider: findBy("notifyNestedSubs", "serverState")(exportedFunctions),
+
+		Cards,
 		Menus,
+		PlaylistMenu: Object.values(require(playlistMenuChunkID)).find(m => typeof m === "function" || typeof m === "object"),
 		GenericModal: findBy("GenericModal")(exportedFunctions),
+
+		Tracklist: findBy("nrValidItems")(exportedMemos),
+		TracklistRow: findBy("track-icon")(exportedMemos),
 	};
+};
 
-	const ReactHooks = {
-		DragHandler: findBy("dataTransfer", "data-dragging")(exportedFunctions),
-		useExtractedColor: exportedFunctions.find(
-			m => m.toString().includes("extracted-color") || (m.toString().includes("colorRaw") && m.toString().includes("useEffect")),
-		),
-	};
-
-	const [infiniteQueryChunkID] = chunks.find(([_, v]) => v.toString().includes("fetchPreviousPage") && v.toString().includes("getOptimisticResult"));
-
-	const ReactQuery = {
-		PersistQueryClientProvider: findBy("persistOptions")(exportedFunctions),
-		QueryClient: findBy("defaultMutationOptions")(exportedFunctions) as unknown as QueryClient,
-		QueryClientProvider: findBy("use QueryClientProvider")(exportedFunctions) as QueryClientProvider,
-		notifyManager: modules.find(m => m.setBatchNotifyFunction) as notifyManager,
-		useMutation: findBy("mutateAsync")(exportedFunctions) as useMutation,
-		useQuery: findBy(
-			/^function [\w_\$][\w_\$\d]*\(([\w_\$][\w_\$\d]*),([\w_\$][\w_\$\d]*)\)\{return\(0,[\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*\)\(\1,[\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*,\2\)\}$/,
-		)(exportedFunctions) as useQuery,
-		useQueryClient: findBy("client", "Provider", "mount")(exportedFunctions) as useQueryClient,
-		useSuspenseQuery: findBy("throwOnError", "suspense", "enabled")(exportedFunctions),
-		useInfiniteQuery: Object.values(require(infiniteQueryChunkID)).find(m => typeof m === "function") as useInfiniteQuery,
-	};
-
-	const ReactFlipToolkit = {
-		Flipper: exportedFunctions.find(m => m.prototype?.getSnapshotBeforeUpdate) as unknown as Flipper,
-		Flipped: exportedFunctions.find(m => (m as any).displayName === "Flipped") as Flipped,
-	};
-
-	const SnackbarProvider = findBy("enqueueSnackbar called with invalid argument")(exportedFunctions) as unknown as SnackbarProvider;
-	const useSnackbar = findBy(/^function\(\)\{return\(0,[\w$]+\.useContext\)\([\w$]+\)\}$/)(exportedFunctions) as useSnackbar;
-
-	const _reservedPanelIds = exports.find(m => m.BuddyFeed) as Record<string, number>;
-	const Mousetrap = modules.find(m => m.addKeycodes) as Mousetrap;
-	const Locale = exports.find(m => m.getTranslations);
-	const createUrlLocale = findBy("has", "baseName", "language")(exportedFunctions);
-
+const exposeURI = ({ chunks }: Webpack) => {
 	const [URIModuleID] = chunks.find(([id, v]) => v.toString().includes("Invalid Spotify URI!") && Object.keys(require(id)).length > 1);
 	const URIModule = require(URIModuleID);
-	// biome-ignore lint/complexity/noBannedTypes: ffs
 	const [Types, ...vs] = Object.values(URIModule) as [URITypes, ...Function[]];
 	const TypesKeys = Object.keys(Types);
 
@@ -382,7 +319,7 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 	const from = findAndExcludeBy("allowedTypes") as (uri: ParsableAsURI) => URIClass<any>;
 	const fromString = findAndExcludeBy("Argument `uri` must be a string.") as (str: string) => URIClass<any>;
 
-	const URI = {
+	return {
 		Types,
 		isSameIdentity,
 		urlEncode,
@@ -395,6 +332,100 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 		}),
 		create,
 	};
+};
+
+type Webpack = ReturnType<typeof exposeWebpack>;
+const exposeWebpack = () => {
+	const require = globalThis.webpackChunkclient_web.push([[Symbol()], {}, re => re]) as WebpackRequire;
+	const chunks = Object.entries(require.m);
+	const modules = chunks.map(([id]) => require(id));
+	const exports = modules
+		.filter(module => typeof module === "object")
+		.flatMap(module => {
+			try {
+				return Object.values(module);
+			} catch (_) {}
+		})
+		.filter(Boolean) as any[];
+
+	// biome-ignore lint/complexity/noBannedTypes: ffs
+	const isFunction = (obj): obj is Function => typeof obj === "function";
+	const exportedFunctions = exports.filter(isFunction);
+
+	const exportedReactObjects = Object.groupBy(exports, x => x.$$typeof);
+	const exportedContexts = exportedReactObjects[Symbol.for("react.context") as any] as Array<Context<any>>;
+	const exportedForwardRefs = exportedReactObjects[Symbol.for("react.forward_ref") as any] as Array<ForwardRefExoticComponent<any>>;
+	const exportedMemos = exportedReactObjects[Symbol.for("react.memo") as any] as Array<NamedExoticComponent>;
+
+	return {
+		require,
+		chunks,
+		modules,
+		exports,
+		exportedFunctions,
+		exportedContexts,
+		exportedForwardRefs,
+		exportedMemos,
+	};
+};
+
+// TODO: extract functions
+export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: Platform }) {
+	const webpack = exposeWebpack();
+	const { require, chunks, modules, exports, exportedFunctions, exportedContexts, exportedForwardRefs, exportedMemos } = webpack;
+
+	const useContextMenuState = findBy("useContextMenuState")(exportedFunctions);
+
+	type FN_enqueueCustomSnackbar_OPTS = (Omit<OptionsObject, "key"> & { keyPrefix: string }) | (OptionsObject & { identifier: string });
+	const enqueueCustomSnackbar = findBy("enqueueCustomSnackbar", "headless")(exportedFunctions) as (
+		element: React.ReactElement,
+		opts: FN_enqueueCustomSnackbar_OPTS,
+	) => ReturnType<EnqueueSnackbar>;
+
+	const React = modules.find(m => m.createElement) as React;
+	const ReactJSX = modules.find(m => m.jsx);
+	const ReactDOM = modules.find(m => m.createRoot) as ReactDOM;
+	const ReactDOMServer = modules.find(m => m.renderToString) as ReactDOMServer;
+	const Color = Object.assign(findBy("static fromHex")(exportedFunctions), { CSSFormat: exports.find(m => m.RGBA) });
+
+	const [classnamesModuleID] = chunks.find(([_, v]) => v.toString().includes("[native code]") && !v.toString().includes("<anonymous>"));
+	const classnames = require(classnamesModuleID) as classNames;
+
+	const ReactHooks = {
+		DragHandler: findBy("dataTransfer", "data-dragging")(exportedFunctions),
+		useExtractedColor: exportedFunctions.find(
+			m => m.toString().includes("extracted-color") || (m.toString().includes("colorRaw") && m.toString().includes("useEffect")),
+		),
+	};
+
+	const [infiniteQueryChunkID] = chunks.find(([_, v]) => v.toString().includes("fetchPreviousPage") && v.toString().includes("getOptimisticResult"));
+
+	const ReactQuery = {
+		PersistQueryClientProvider: findBy("persistOptions")(exportedFunctions),
+		QueryClient: findBy("defaultMutationOptions")(exportedFunctions) as unknown as QueryClient,
+		QueryClientProvider: findBy("use QueryClientProvider")(exportedFunctions) as QueryClientProvider,
+		notifyManager: modules.find(m => m.setBatchNotifyFunction) as notifyManager,
+		useMutation: findBy("mutateAsync")(exportedFunctions) as useMutation,
+		useQuery: findBy(
+			/^function [\w_\$][\w_\$\d]*\(([\w_\$][\w_\$\d]*),([\w_\$][\w_\$\d]*)\)\{return\(0,[\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*\)\(\1,[\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*,\2\)\}$/,
+		)(exportedFunctions) as useQuery,
+		useQueryClient: findBy("client", "Provider", "mount")(exportedFunctions) as useQueryClient,
+		useSuspenseQuery: findBy("throwOnError", "suspense", "enabled")(exportedFunctions),
+		useInfiniteQuery: Object.values(require(infiniteQueryChunkID)).find(m => typeof m === "function") as useInfiniteQuery,
+	};
+
+	const ReactFlipToolkit = {
+		Flipper: exportedFunctions.find(m => m.prototype?.getSnapshotBeforeUpdate) as unknown as Flipper,
+		Flipped: exportedFunctions.find(m => (m as any).displayName === "Flipped") as Flipped,
+	};
+
+	const SnackbarProvider = findBy("enqueueSnackbar called with invalid argument")(exportedFunctions) as unknown as SnackbarProvider;
+	const useSnackbar = findBy(/^function\(\)\{return\(0,[\w$]+\.useContext\)\([\w$]+\)\}$/)(exportedFunctions) as useSnackbar;
+
+	const _reservedPanelIds = exports.find(m => m.BuddyFeed) as Record<string, number>;
+	const Mousetrap = modules.find(m => m.addKeycodes) as Mousetrap;
+	const Locale = exports.find(m => m.getTranslations);
+	const createUrlLocale = findBy("has", "baseName", "language")(exportedFunctions);
 
 	const imageAnalysis = findBy(/\![\w$]+\.isFallback|\{extractColor/)(exportedFunctions);
 	const fallbackPreset = exports.find(m => m.colorDark);
@@ -419,7 +450,7 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 		ReactDOMServer,
 		classnames,
 		Color,
-		ReactComponents,
+		ReactComponents: exposeReactComponents(webpack, React, Platform),
 		ReactHooks,
 		ReactQuery,
 		ReactFlipToolkit,
@@ -430,7 +461,7 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 		Locale,
 		createUrlLocale,
 		Snackbar,
-		URI,
+		URI: exposeURI(webpack),
 		extractColorPreset,
 	};
 }

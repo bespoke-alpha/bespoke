@@ -2,7 +2,7 @@ import { _ } from "/modules/std/deps.js";
 import { SpotifyLoc } from "/modules/delulib/util.js";
 
 import { CONFIG } from "./settings.js";
-import { S, SVGIcons, extendRegistrar } from "/modules/std/index.js";
+import { S, SVGIcons, createRegistrar } from "/modules/std/index.js";
 import { useMenuItem } from "/modules/std/registers/menu.js";
 import { createIconComponent } from "/modules/std/api/createIconComponent.js";
 import type { Module } from "/hooks/module.js";
@@ -22,9 +22,8 @@ const createAnonRadio = (uri: string) => {
 	});
 };
 
-export default function (_module: Module) {
-	const module = extendRegistrar(_module);
-	const { registrar } = module;
+export default function (mod: Module) {
+	const registrar = createRegistrar(mod);
 
 	registrar.register(
 		"menu",

@@ -1,41 +1,40 @@
-import React from "react";
-
-import { InfoToCreatePlaylist } from "../../types/stats_types";
+import { S } from "/modules/std/index.js";
+import type { InfoToCreatePlaylist } from "../../types/stats_types";
 
 interface CreatePlaylistButtonProps {
-    infoToCreatePlaylist: InfoToCreatePlaylist;
+	infoToCreatePlaylist: InfoToCreatePlaylist;
 }
 
-async function createPlaylistAsync(infoToCreatePlaylist: InfoToCreatePlaylist): Promise<void> {
-    const { Platform, showNotification } = Spicetify;
-    const { RootlistAPI, PlaylistAPI } = Platform;
+const RootlistAPI = S.Platform.getRootlistAPI();
+const PlaylistAPI = S.Platform.getPlaylistAPI();
 
-    try {
-        const { playlistName, itemsUris } = infoToCreatePlaylist;
-        const playlistUri = await RootlistAPI.createPlaylist(playlistName, { before: "start" });
-        await PlaylistAPI.add(playlistUri, itemsUris, { before: "start" });
-    } catch (error) {
-        console.error(error);
-        showNotification("Failed to create playlist", true, 1000);
-    }
+async function createPlaylistAsync(infoToCreatePlaylist: InfoToCreatePlaylist): Promise<void> {
+	try {
+		const { playlistName, itemsUris } = infoToCreatePlaylist;
+		const playlistUri = await RootlistAPI.createPlaylist(playlistName, { before: "start" });
+		await PlaylistAPI.add(playlistUri, itemsUris, { before: "start" });
+	} catch (error) {
+		console.error(error);
+		S.Snackbar.enqueueSnackbar("Failed to create playlist", { variant: "error" });
+	}
 }
 
 function CreatePlaylistButton(props: CreatePlaylistButtonProps): React.ReactElement<HTMLButtonElement> {
-    const { TooltipWrapper, ButtonSecondary } = Spicetify.ReactComponent;
-    const { infoToCreatePlaylist } = props;
+	const { Tooltip, ButtonSecondary } = S.ReactComponents;
+	const { infoToCreatePlaylist } = props;
 
-    return (
-        <TooltipWrapper label={"Turn Into Playlist"} renderInline={true} placement="top">
-            <ButtonSecondary
-                aria-label="Turn Into Playlist"
-                children="Turn Into Playlist"
-                semanticColor="textBase"
-                buttonSize="sm"
-                onClick={() => createPlaylistAsync(infoToCreatePlaylist)}
-                className="stats-make-playlist-button"
-            />
-        </TooltipWrapper>
-    );
+	return (
+		<Tooltip label={"Turn Into Playlist"} renderInline={true} placement="top">
+			<ButtonSecondary
+				aria-label="Turn Into Playlist"
+				children="Turn Into Playlist"
+				semanticColor="textBase"
+				buttonSize="sm"
+				onClick={() => createPlaylistAsync(infoToCreatePlaylist)}
+				className="stats-make-playlist-button"
+			/>
+		</Tooltip>
+	);
 }
 
 export default CreatePlaylistButton;

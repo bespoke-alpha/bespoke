@@ -1,4 +1,4 @@
-import { S, SVGIcons, extendLocalStorage, extendRegistrar } from "/modules/std/index.js";
+import { type NamespacedStorage, S, SVGIcons, createStorage, createRegistrar, NamespacedLogger, createLogger } from "/modules/std/index.js";
 import { NavLink } from "/modules/std/registers/navlink.js";
 import { ACTIVE_ICON, ICON } from "./constants.js";
 import { Module } from "/hooks/module.js";
@@ -13,23 +13,27 @@ const { React, URI } = S;
 
 const History = S.Platform.getHistory();
 
-export default function (_module: Module) {
-	const module = extendLocalStorage(extendRegistrar(_module));
-	const { registrar, localStorage } = module;
+export let storage: NamespacedStorage = undefined;
+export let logger: NamespacedLogger = undefined;
+
+export default function (mod: Module) {
+	storage = createStorage(mod);
+	logger = createLogger(mod);
+	const registrar = createRegistrar(mod);
 
 	{
-		const version = localStorage.getItem("version");
+		const version = storage.getItem("version");
 		if (!version || version !== STATS_VERSION) {
 			for (const k of Object.keys(globalThis.localStorage)) {
 				if (k.startsWith("stats:") && !k.startsWith("stats:config:")) {
 					globalThis.localStorage.removeItem(k);
 				}
 			}
-			localStorage.setItem("version", STATS_VERSION);
+			storage.setItem("version", STATS_VERSION);
 		}
 	}
 
-	localStorage.setItem("cache-info", JSON.stringify([0, 0, 0, 0, 0, 0]));
+	storage.setItem("cache-info", JSON.stringify([0, 0, 0, 0, 0, 0]));
 
 	let setPlaylistEditHidden: React.Dispatch<React.SetStateAction<boolean>> | undefined = undefined;
 

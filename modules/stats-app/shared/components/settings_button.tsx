@@ -9,7 +9,7 @@ const SettingsIcon = () =>
 	});
 
 interface SettingsButtonProps {
-	section: ConfigWrapperProps;
+	section: string;
 }
 
 function SettingsButton({ section }: SettingsButtonProps): React.ReactElement<HTMLButtonElement> {

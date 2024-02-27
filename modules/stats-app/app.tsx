@@ -6,9 +6,9 @@ import ChartsPage from "./pages/charts.js";
 import AlbumsPage from "./pages/top_albums.js";
 import { STATS_VERSION, LATEST_RELEASE } from "./constants.js";
 
-import "./styles/app.scss";
-import "../../shared/shared.scss";
 import { S } from "/modules/std/index.js";
+
+import { storage } from "./index.js";
 
 const { React } = S;
 
@@ -50,35 +50,35 @@ export default function () {
 		Charts: <ChartsPage configWrapper={configWrapper} />,
 	};
 
-	const tabPages = ["Artists", "Tracks", "Albums", "Genres", "Library", "Charts"].filter(page => configWrapper.config[`show-${page.toLowerCase()}`]);
+	// const tabPages = ["Artists", "Tracks", "Albums", "Genres", "Library", "Charts"].filter(page => configWrapper.config[`show-${page.toLowerCase()}`]);
 
-	const [navBar, activeLink, setActiveLink] = useNavigationBar(tabPages);
-	const [hasPageSwitched, setHasPageSwitched] = React.useState(false); // TODO: edit spcr-navigation-bar to include initial active link
-	const [newUpdate, setNewUpdate] = React.useState(false);
+	// const [navBar, activeLink, setActiveLink] = useNavigationBar(tabPages);
+	// const [hasPageSwitched, setHasPageSwitched] = React.useState(false); // TODO: edit spcr-navigation-bar to include initial active link
+	// const [newUpdate, setNewUpdate] = React.useState(false);
 
-	React.useEffect(() => {
-		setActiveLink(Spicetify.LocalStorage.get("stats:active-link") || "Artists");
-		checkForUpdates(setNewUpdate);
-		setHasPageSwitched(true);
-	}, []);
+	// React.useEffect(() => {
+	// 	setActiveLink(storage.getItem("active-link") || "Artists");
+	// 	checkForUpdates(setNewUpdate);
+	// 	setHasPageSwitched(true);
+	// }, []);
 
-	React.useEffect(() => {
-		Spicetify.LocalStorage.set("stats:active-link", activeLink);
-	}, [activeLink]);
+	// React.useEffect(() => {
+	// 	storage.setItem("active-link", activeLink);
+	// }, [activeLink]);
 
-	if (!hasPageSwitched) {
-		return;
-	}
+	// if (!hasPageSwitched) {
+	// 	return;
+	// }
 
 	return (
 		<div id="stats-app">
-			{navBar}
-			{newUpdate && (
+			{/* {navBar} */}
+			{/* {newUpdate && (
 				<div className="new-update">
 					New app update available! Visit <a href="https://github.com/harbassan/spicetify-stats/releases">harbassan/spicetify-stats</a> to install.
 				</div>
-			)}
-			{pages[activeLink]}
+			)} */}
+			{pages["Artists" /* activeLink */]}
 		</div>
 	);
 }
