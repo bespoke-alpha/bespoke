@@ -12,7 +12,9 @@ const CONFIG = {
 // if (!CONFIG.musixmatchToken) {
 const url = new URL("https://apic-desktop.musixmatch.com/ws/1.1/token.get");
 url.searchParams.append("app_id", "web-desktop-app-v1.0");
-Cosmos.get(url.toString(), undefined, _.omit(headers, "cookie")).then(res => {
+fetch(url, { headers: _.omit(headers, "cookie") })
+    .then(res => res.json())
+    .then(res => {
     if (res.message.header.status_code === 200 && res.message.body.user_token) {
         CONFIG.musixmatchToken = res.message.body.user_token;
     }
@@ -109,7 +111,7 @@ const fetchMxmMacroSubtitlesGet = async (uri, title, artist, album, durationS, r
     url.searchParams.append("q_duration", encodeURIComponent(durationS));
     url.searchParams.append("f_subtitle_length", encodeURIComponent(Math.floor(durationS)));
     url.searchParams.append("usertoken", CONFIG.musixmatchToken);
-    const res = await Cosmos.get(url.toString(), undefined, headers);
+    const res = await fetch(url, { headers }).then(res => res.json());
     if (res.message.header.hint === "renew") {
         return renewsLeft > 0 ? fetchMxmMacroSubtitlesGet(uri, title, artist, album, durationS, 0) : Promise.resolve({});
     }
@@ -130,7 +132,7 @@ const fetchMxmTrackRichSyncGet = async (commonTrackId, trackLength) => {
     url.searchParams.append("q_duration", encodeURIComponent(trackLength));
     url.searchParams.append("commontrack_id", encodeURIComponent(commonTrackId));
     url.searchParams.append("usertoken", CONFIG.musixmatchToken);
-    const res = await Cosmos.get(url.toString(), undefined, headers);
+    const res = await fetch(url, { headers }).then(res => res.json());
     return JSON.parse(res.message.body.richsync.richsync_body);
 };
 const fetchMxmCrowdTrackTranslationsGet = async (trackId, lang = "en") => {
@@ -142,6 +144,6 @@ const fetchMxmCrowdTrackTranslationsGet = async (trackId, lang = "en") => {
     url.searchParams.append("app_id", "web-desktop-app-v1.0");
     url.searchParams.append("track_id", trackId);
     url.searchParams.append("usertoken", CONFIG.musixmatchToken);
-    const res = await Cosmos.get(url.toString(), undefined, headers);
+    const res = await fetch(url, { headers }).then(res => res.json());
     return res.message.body.translations_list.map((translation_element) => translation_element.translation);
 };
