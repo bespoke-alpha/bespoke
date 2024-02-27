@@ -16,14 +16,12 @@ internalRegisterTransform({
     glob: /^\/xpui\.js/,
 });
 export const NavLink = ({ localizedApp, appRoutePath, icon, activeIcon }) => {
-    const I_O = S.React.useMemo(() => S.webpack.exportedMemos.find(m => m.type.$$typeof === Symbol.for("react.forward_ref") && m.type.render.toString().includes("navigationalRoot")), []);
     const isSidebarCollapsed = S.Platform.getLocalStorageAPI().getItem("ylx-sidebar-state") === 1;
     return (S.React.createElement("li", { className: "LU0q0itTx2613uiATSig InvalidDropTarget" },
-        S.React.createElement(S.ReactComponents.Tooltip, { label: isSidebarCollapsed ? localizedApp : null, disabled: !isSidebarCollapsed, placement: "right" },
-            S.React.createElement(I_O, { to: appRoutePath, referrer: appRoutePath.slice(1), className: S.classnames("link-subtle", "UYeKN11KAw61rZoyjcgZ", {
-                    "DzWw3g4E_66wu9ktqn36": S.Platform.getHistory().location.pathanme.startsWith(appRoutePath),
-                }), onClick: () => undefined, "aria-label": localizedApp },
-                createIconComponent({ icon, iconSize: 24 }),
-                createIconComponent({ icon: activeIcon, iconSize: 24 }),
-                !isSidebarCollapsed && S.React.createElement(S.ReactComponents.Text, { variant: "bodyMediumBold" }, localizedApp)))));
+        S.React.createElement(S.ReactComponents.Nav, { to: appRoutePath, referrer: "other", className: S.classnames("link-subtle", "UYeKN11KAw61rZoyjcgZ", {
+                "DzWw3g4E_66wu9ktqn36": S.Platform.getHistory().location.pathanme?.startsWith(appRoutePath),
+            }), onClick: () => undefined, "aria-label": localizedApp },
+            createIconComponent({ icon, iconSize: 24 }),
+            createIconComponent({ icon: activeIcon, iconSize: 24 }),
+            !isSidebarCollapsed && S.React.createElement(S.ReactComponents.Text, { variant: "bodyMediumBold" }, localizedApp))));
 };

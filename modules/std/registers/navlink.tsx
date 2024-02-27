@@ -21,31 +21,27 @@ internalRegisterTransform({
 
 export type NavLinkProps = { localizedApp: string; appRoutePath: string; icon: string; activeIcon: string };
 export const NavLink = ({ localizedApp, appRoutePath, icon, activeIcon }: NavLinkProps) => {
-	const I_O = S.React.useMemo(
-		() =>
-			S.webpack.exportedMemos.find(m => m.type.$$typeof === Symbol.for("react.forward_ref") && m.type.render.toString().includes("navigationalRoot")),
-		[],
-	);
-
 	const isSidebarCollapsed = S.Platform.getLocalStorageAPI().getItem("ylx-sidebar-state") === 1;
 
 	return (
 		<li className="main-yourLibraryX-navItem InvalidDropTarget">
-			<S.ReactComponents.Tooltip label={isSidebarCollapsed ? localizedApp : null} disabled={!isSidebarCollapsed} placement="right">
-				<I_O
-					to={appRoutePath}
-					referrer={appRoutePath.slice(1)}
-					className={S.classnames("link-subtle", "main-yourLibraryX-navLink", {
-						"main-yourLibraryX-navLinkActive": S.Platform.getHistory().location.pathanme.startsWith(appRoutePath),
-					})}
-					onClick={() => undefined}
-					aria-label={localizedApp}
-				>
-					{createIconComponent({ icon, iconSize: 24 })}
-					{createIconComponent({ icon: activeIcon, iconSize: 24 })}
-					{!isSidebarCollapsed && <S.ReactComponents.Text variant="bodyMediumBold">{localizedApp}</S.ReactComponents.Text>}
-				</I_O>
-			</S.ReactComponents.Tooltip>
+			{/* <S.ReactComponents.RemoteConfigProvider> */}
+			{/* <S.ReactComponents.Tooltip label={isSidebarCollapsed ? localizedApp : null} disabled={!isSidebarCollapsed} placement="right"> */}
+			<S.ReactComponents.Nav
+				to={appRoutePath}
+				referrer="other"
+				className={S.classnames("link-subtle", "main-yourLibraryX-navLink", {
+					"main-yourLibraryX-navLinkActive": S.Platform.getHistory().location.pathanme?.startsWith(appRoutePath),
+				})}
+				onClick={() => undefined}
+				aria-label={localizedApp}
+			>
+				{createIconComponent({ icon, iconSize: 24 })}
+				{createIconComponent({ icon: activeIcon, iconSize: 24 })}
+				{!isSidebarCollapsed && <S.ReactComponents.Text variant="bodyMediumBold">{localizedApp}</S.ReactComponents.Text>}
+			</S.ReactComponents.Nav>
+			{/* </S.ReactComponents.Tooltip> */}
+			{/* </S.ReactComponents.RemoteConfigProvider> */}
 		</li>
 	);
 };

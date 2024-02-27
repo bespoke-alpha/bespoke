@@ -11,13 +11,12 @@ import { LASTFM } from "../endpoints.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import { storage } from "../index.js";
+import { CONFIG } from "../settings.js";
 
-export const topAlbumsReq = async (time_range: string, configWrapper: ConfigWrapper) => {
-	const { config } = configWrapper;
-	if (!config["api-key"] || !config["lastfm-user"]) return 300;
+export const topAlbumsReq = async (time_range: string) => {
+	if (!CONFIG.LFMApiKey || !CONFIG.LFMUsername) return 300;
 
-	const { "lastfm-user": user, "api-key": key } = config;
-	const response = await apiRequest("lastfm", LASTFM.topalbums(user, key, time_range));
+	const response = await apiRequest("lastfm", LASTFM.topalbums(CONFIG.LFMUsername, CONFIG.LFMApiKey, time_range));
 
 	if (!response) return 200;
 
@@ -30,9 +29,9 @@ const DropdownOptions = [
 	{ id: "long_term", name: "All Time" },
 ];
 
-const AlbumsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
+const AlbumsPage = () => {
 	const [topAlbums, setTopAlbums] = React.useState<Album[] | 100 | 200 | 300>(100);
-	const [dropdown, activeOption] = useDropdownMenu(DropdownOptions, "stats:top-albums");
+	const [dropdown, activeOption] = useDropdownMenu(DropdownOptions, "top-albums");
 
 	const fetchTopAlbums = async (time_range: string, force?: boolean, set = true) => {
 		if (!force) {
@@ -42,7 +41,7 @@ const AlbumsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 
 		const start = window.performance.now();
 
-		const topAlbums = await topAlbumsReq(time_range, configWrapper);
+		const topAlbums = await topAlbumsReq(time_range);
 		if (set) setTopAlbums(topAlbums);
 		storage.setItem(`top-albums:${time_range}`, JSON.stringify(topAlbums));
 

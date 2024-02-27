@@ -12,7 +12,7 @@ export const getTrackListTracks = (trackList: HTMLDivElement) =>
 
 export const onHistoryChanged = (
 	toMatchTo: string | RegExp | ((location: string) => boolean),
-	callback: (uri: string) => void,
+	callback: (uri?: string) => void,
 	dropDuplicates = true,
 ) => {
 	const createMatchFn = (toMatchTo: string | RegExp | ((input: string) => boolean)) => {
@@ -34,7 +34,7 @@ export const onHistoryChanged = (
 	const historyChanged = ({ pathname }: any) => {
 		if (matchFn(pathname)) {
 			if (dropDuplicates && lastPathname === pathname) {
-			} else callback(URI.fromString(pathname).toURI());
+			} else callback(URI.from(pathname)?.toURI());
 		}
 		lastPathname = pathname;
 	};

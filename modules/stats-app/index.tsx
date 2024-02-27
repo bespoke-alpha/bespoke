@@ -56,9 +56,8 @@ export default function (mod: Module) {
 
 	onHistoryChanged(
 		() => true,
-		pathname => {
-			const [, type, uid] = pathname.split("/");
-			const isPlaylistPage = type === "playlist" && uid;
+		uri => {
+			const isPlaylistPage = URI.is.Playlist(uri);
 			setPlaylistEditHidden?.(!isPlaylistPage);
 		},
 		false,
@@ -66,7 +65,8 @@ export default function (mod: Module) {
 
 	registrar.register("topbarLeftButton", <PlaylistEdit />);
 
-	registrar.register("route", <S.ReactComponents.Route path={"/stats"} element={import("./app.js")} />);
+	const LazyStatsApp = S.React.lazy(() => import("./app.js"));
+	registrar.register("route", <S.ReactComponents.Route path={"/stats"} element={<LazyStatsApp />} />);
 
 	registrar.register("navlink", <NavLink localizedApp="Statistics" appRoutePath="/stats" icon={ICON} activeIcon={ACTIVE_ICON} />);
 }

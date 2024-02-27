@@ -22,21 +22,14 @@ const checkForUpdates = (setNewUpdate) => {
     });
 };
 export default function () {
-    const [config, setConfig] = React.useState({ ...SpicetifyStats.ConfigWrapper.Config });
-    const launchModal = () => {
-        SpicetifyStats.ConfigWrapper.launchModal(setConfig);
-    };
-    const configWrapper = {
-        config: config,
-        launchModal,
-    };
+    console.log("HOLY MOLY");
     const pages = {
-        Artists: S.React.createElement(ArtistsPage, { configWrapper: configWrapper }),
-        Tracks: S.React.createElement(TracksPage, { configWrapper: configWrapper }),
-        Albums: S.React.createElement(AlbumsPage, { configWrapper: configWrapper }),
-        Genres: S.React.createElement(GenresPage, { configWrapper: configWrapper }),
-        Library: S.React.createElement(LibraryPage, { configWrapper: configWrapper }),
-        Charts: S.React.createElement(ChartsPage, { configWrapper: configWrapper }),
+        Artists: S.React.createElement(ArtistsPage, null),
+        Tracks: S.React.createElement(TracksPage, null),
+        Albums: S.React.createElement(AlbumsPage, null),
+        Genres: S.React.createElement(GenresPage, null),
+        Library: S.React.createElement(LibraryPage, null),
+        Charts: S.React.createElement(ChartsPage, null),
     };
     // const tabPages = ["Artists", "Tracks", "Albums", "Genres", "Library", "Charts"].filter(page => configWrapper.config[`show-${page.toLowerCase()}`]);
     // const [navBar, activeLink, setActiveLink] = useNavigationBar(tabPages);

@@ -22,7 +22,7 @@ export const onHistoryChanged = (toMatchTo, callback, dropDuplicates = true) => 
             if (dropDuplicates && lastPathname === pathname) {
             }
             else
-                callback(URI.fromString(pathname).toURI());
+                callback(URI.from(pathname)?.toURI());
         }
         lastPathname = pathname;
     };

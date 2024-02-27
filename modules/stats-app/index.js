@@ -37,12 +37,12 @@ export default function (mod) {
                 display({ title: "Playlist Stats", content: S.React.createElement(PlaylistPage, { uri: playlistUri }), isLarge: true });
             } }));
     };
-    onHistoryChanged(() => true, pathname => {
-        const [, type, uid] = pathname.split("/");
-        const isPlaylistPage = type === "playlist" && uid;
+    onHistoryChanged(() => true, uri => {
+        const isPlaylistPage = URI.is.Playlist(uri);
         setPlaylistEditHidden?.(!isPlaylistPage);
     }, false);
     registrar.register("topbarLeftButton", S.React.createElement(PlaylistEdit, null));
-    registrar.register("route", S.React.createElement(S.ReactComponents.Route, { path: "/stats", element: import("./app.js") }));
+    const LazyStatsApp = S.React.lazy(() => import("./app.js"));
+    registrar.register("route", S.React.createElement(S.ReactComponents.Route, { path: "/stats", element: S.React.createElement(LazyStatsApp, null) }));
     registrar.register("navlink", S.React.createElement(NavLink, { localizedApp: "Statistics", appRoutePath: "/stats", icon: ICON, activeIcon: ACTIVE_ICON }));
 }

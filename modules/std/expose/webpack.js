@@ -1,8 +1,7 @@
 import { capitalize } from "../deps.js";
 import { findBy } from "/hooks/util.js";
-// TODO: WTF TYPESCRIPT?
-// ! Type alias 'Webpack' circularly references itself.
 const exposeReactComponents = ({ require, chunks, exports, exportedFunctions, exportedMemos, exportedForwardRefs }, React, Platform) => {
+    const exportedFCs = exportedFunctions;
     const Menus = Object.fromEntries(exportedMemos.flatMap(m => {
         const str = m.type.toString();
         const match = str.match(/value:"([\w-]+)"/);
@@ -16,9 +15,9 @@ const exposeReactComponents = ({ require, chunks, exports, exportedFunctions, ex
         return type ? [[type, m]] : [];
     }));
     const Cards = Object.assign({
-        Default: findBy('"card-click-handler"')(exportedFunctions),
-        Hero: findBy('"herocard-click-handler"')(exportedFunctions),
-        CardImage: findBy("isHero", "withWaves")(exportedFunctions),
+        Default: findBy('"card-click-handler"')(exportedFCs),
+        Hero: findBy('"herocard-click-handler"')(exportedFCs),
+        CardImage: findBy("isHero", "withWaves")(exportedFCs),
     }, Object.fromEntries(exports
         .flatMap(m => {
         try {
@@ -36,47 +35,48 @@ const exposeReactComponents = ({ require, chunks, exports, exportedFunctions, ex
         .concat([["Profile", exportedMemos.find(m => m.type.toString().includes(`featureIdentifier:"profile"`))]])));
     const [ContextMenuModuleID] = chunks.find(([_, v]) => v.toString().includes("toggleContextMenu"));
     const [playlistMenuChunkID] = chunks.find(([, v]) => v.toString().includes('value:"playlist"') && v.toString().includes("canView") && v.toString().includes("permissions"));
-    const RemoteConfigProvider = findBy("resolveSuspense", "configuration")(exportedFunctions);
-    const SliderComponent = exportedFunctions.find(m => m.toString().includes("onStepBackward") && !m.toString().includes("volume"));
-    const Slider = React.createElement(props => React.createElement(RemoteConfigProvider, { configuration: Platform.getRemoteConfiguration() }, React.createElement(SliderComponent, props)));
+    const RemoteConfigProviderComponent = findBy("resolveSuspense", "configuration")(exportedFCs);
+    const Slider = exportedFCs.find(m => m.toString().includes("onStepBackward") && !m.toString().includes("volume"));
+    const Nav = exportedMemos.find(m => m.type.$$typeof === Symbol.for("react.forward_ref") && m.type.render.toString().includes("navigationalRoot"));
     return {
-        SettingColumn: findBy("setSectionFilterMatchQueryValue", "filterMatchQuery")(exportedFunctions),
-        SettingText: findBy("textSubdued", "dangerouslySetInnerHTML")(exportedFunctions),
-        SettingToggle: findBy("condensed", "onSelected")(exportedFunctions),
-        IconComponent: findBy("$iconColor", 'role:"img"')(exportedFunctions),
+        SettingColumn: findBy("setSectionFilterMatchQueryValue", "filterMatchQuery")(exportedFCs),
+        SettingText: findBy("textSubdued", "dangerouslySetInnerHTML")(exportedFCs),
+        SettingToggle: findBy("condensed", "onSelected")(exportedFCs),
+        IconComponent: findBy("$iconColor", 'role:"img"')(exportedFCs),
         Text: exportedForwardRefs.find(m => m.render.toString().includes("paddingBottom") && m.render.toString().includes("className")),
         TextComponent: exports.find(m => m.h1 && m.render),
         ContextMenu: Object.values(require(ContextMenuModuleID))[0],
-        RightClickMenu: findBy("action", "open", "trigger", "right-click")(exportedFunctions),
-        ConfirmDialog: findBy("isOpen", "shouldCloseOnEsc", "onClose")(exportedFunctions),
-        Tooltip: findBy("hover-or-focus", "tooltip")(exportedFunctions),
-        Menu: findBy("getInitialFocusElement", "children")(exportedFunctions),
-        MenuItem: findBy("handleMouseEnter", "onClick")(exportedFunctions),
-        MenuItemSubMenu: findBy("subMenuIcon")(exportedFunctions),
+        RightClickMenu: findBy("action", "open", "trigger", "right-click")(exportedFCs),
+        ConfirmDialog: findBy("isOpen", "shouldCloseOnEsc", "onClose")(exportedFCs),
+        Tooltip: findBy("hover-or-focus", "tooltip")(exportedFCs),
+        Menu: findBy("getInitialFocusElement", "children")(exportedFCs),
+        MenuItem: findBy("handleMouseEnter", "onClick")(exportedFCs),
+        MenuItemSubMenu: findBy("subMenuIcon")(exportedFCs),
         Slider,
-        RemoteConfigProvider,
-        PanelHeader: exportedFunctions.find(m => m.toString().includes("panel") && m.toString().includes("actions")),
-        PanelContent: findBy(m => m.render.toString().includes("scrollBarContainer"))(exportedForwardRefs) || findBy("scrollBarContainer")(exportedFunctions),
-        PanelSkeleton: findBy("label", "aside")(exportedFunctions) || findBy(m => m.render.toString().includes("section"))(exportedForwardRefs),
+        Nav,
+        RemoteConfigProvider: ({ configuration = Platform.getRemoteConfiguration(), children }) => React.createElement(RemoteConfigProviderComponent, { configuration }, children),
+        PanelHeader: exportedFCs.find(m => m.toString().includes("panel") && m.toString().includes("actions")),
+        PanelContent: findBy(m => m.render.toString().includes("scrollBarContainer"))(exportedForwardRefs) || findBy("scrollBarContainer")(exportedFCs),
+        PanelSkeleton: findBy("label", "aside")(exportedFCs) || findBy(m => m.render.toString().includes("section"))(exportedForwardRefs),
         ButtonPrimary: findBy(m => m.displayName === "ButtonPrimary")(exportedForwardRefs),
         ButtonSecondary: findBy(m => m.displayName === "ButtonSecondary")(exportedForwardRefs),
         ButtonTertiary: findBy(m => m.displayName === "ButtonTertiary")(exportedForwardRefs),
         Snackbar: {
-            wrapper: findBy("encore-light-theme", "elevated")(exportedFunctions),
-            simpleLayout: findBy("leading", "center", "trailing")(exportedFunctions),
-            ctaText: findBy("ctaText")(exportedFunctions),
-            styledImage: findBy("placeholderSrc")(exportedFunctions),
+            wrapper: findBy("encore-light-theme", "elevated")(exportedFCs),
+            simpleLayout: findBy("leading", "center", "trailing")(exportedFCs),
+            ctaText: findBy("ctaText")(exportedFCs),
+            styledImage: findBy("placeholderSrc")(exportedFCs),
         },
         Chip: findBy(m => m.render.toString().includes("invertedDark") && m.render.toString().includes("isUsingKeyboard"))(exportedForwardRefs),
-        Toggle: findBy("onSelected", 'type:"checkbox"')(exportedFunctions),
-        Router: findBy("navigationType", "static")(exportedFunctions),
-        Routes: findBy(/\([\w$]+\)\{let\{children:[\w$]+,location:[\w$]+\}=[\w$]+/)(exportedFunctions),
-        Route: findBy(/^function [\w$]+\([\w$]+\)\{\(0,[\w$]+\.[\w$]+\)\(\!1\)\}$/)(exportedFunctions),
-        StoreProvider: findBy("notifyNestedSubs", "serverState")(exportedFunctions),
+        Toggle: findBy("onSelected", 'type:"checkbox"')(exportedFCs),
+        Router: findBy("navigationType", "static")(exportedFCs),
+        Routes: findBy(/\([\w$]+\)\{let\{children:[\w$]+,location:[\w$]+\}=[\w$]+/)(exportedFCs),
+        Route: findBy(/^function [\w$]+\([\w$]+\)\{\(0,[\w$]+\.[\w$]+\)\(\!1\)\}$/)(exportedFCs),
+        StoreProvider: findBy("notifyNestedSubs", "serverState")(exportedFCs),
         Cards,
         Menus,
         PlaylistMenu: Object.values(require(playlistMenuChunkID)).find(m => typeof m === "function" || typeof m === "object"),
-        GenericModal: findBy("GenericModal")(exportedFunctions),
+        GenericModal: findBy("GenericModal")(exportedFCs),
         Tracklist: findBy("nrValidItems")(exportedMemos),
         TracklistRow: findBy("track-icon")(exportedMemos),
     };

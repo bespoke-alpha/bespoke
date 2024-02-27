@@ -30,24 +30,15 @@ const checkForUpdates = (setNewUpdate: (a: boolean) => void) => {
 };
 
 export default function () {
-	const [config, setConfig] = React.useState({ ...SpicetifyStats.ConfigWrapper.Config });
-
-	const launchModal = () => {
-		SpicetifyStats.ConfigWrapper.launchModal(setConfig);
-	};
-
-	const configWrapper = {
-		config: config,
-		launchModal,
-	};
+	console.log("HOLY MOLY");
 
 	const pages: Record<string, React.ReactElement> = {
-		Artists: <ArtistsPage configWrapper={configWrapper} />,
-		Tracks: <TracksPage configWrapper={configWrapper} />,
-		Albums: <AlbumsPage configWrapper={configWrapper} />,
-		Genres: <GenresPage configWrapper={configWrapper} />,
-		Library: <LibraryPage configWrapper={configWrapper} />,
-		Charts: <ChartsPage configWrapper={configWrapper} />,
+		Artists: <ArtistsPage />,
+		Tracks: <TracksPage />,
+		Albums: <AlbumsPage />,
+		Genres: <GenresPage />,
+		Library: <LibraryPage />,
+		Charts: <ChartsPage />,
 	};
 
 	// const tabPages = ["Artists", "Tracks", "Albums", "Genres", "Library", "Charts"].filter(page => configWrapper.config[`show-${page.toLowerCase()}`]);

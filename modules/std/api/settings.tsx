@@ -86,7 +86,7 @@ export class SettingsSection<A = Record<string, never>> {
 		return this as SettingsSection<A & { [X in I]: string }>;
 	};
 
-	private addField<SF extends SettingsField>(type: SF["type"], opts: OmitType<SF>, fieldComponent: (field: SF) => JSX.Element, defaultValue?: any) {
+	private addField<SF extends SettingsField>(type: SF["type"], opts: OmitType<SF>, fieldComponent: React.FC<SF>, defaultValue?: any) {
 		if (defaultValue !== undefined) {
 			const settingId = this.getId(opts.id);
 			SettingsSection.setDefaultFieldValue(settingId, defaultValue);

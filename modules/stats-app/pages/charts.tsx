@@ -12,15 +12,16 @@ import { LASTFM } from "../endpoints.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import { storage } from "../index.js";
+import { CONFIG } from "../settings.js";
 
 const DropdownOptions = [
 	{ id: "artists", name: "Top Artists" },
 	{ id: "tracks", name: "Top Tracks" },
 ];
 
-const ChartsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
+const ChartsPage = () => {
 	const [chartData, setChartData] = React.useState<Track[] | ArtistCardProps[] | 100 | 200 | 500>(100);
-	const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "stats:charts");
+	const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "charts");
 
 	async function fetchChartData(type: string, force?: boolean, set = true) {
 		if (!force) {
@@ -28,7 +29,7 @@ const ChartsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 			if (storedData) return setChartData(JSON.parse(storedData));
 		}
 
-		const api_key = configWrapper.config["api-key"];
+		const api_key = CONFIG.LFMApiKey;
 		if (!api_key) return setChartData(200);
 
 		const response = await apiRequest("charts", LASTFM.charts(api_key, type));

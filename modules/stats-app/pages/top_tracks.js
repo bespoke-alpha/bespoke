@@ -9,13 +9,12 @@ import { LASTFM, SPOTIFY, PLACEHOLDER } from "../endpoints.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import { storage } from "../index.js";
-export const topTracksReq = async (time_range, configWrapper) => {
-    const { config } = configWrapper;
-    if (config["use-lastfm"] === true) {
-        if (!config["api-key"] || !config["lastfm-user"])
+import { CONFIG } from "../settings.js";
+export const topTracksReq = async (time_range) => {
+    if (CONFIG.UseLFM === true) {
+        if (!CONFIG.LFMApiKey || !CONFIG.LFMUsername)
             return 300;
-        const { "lastfm-user": user, "api-key": key } = config;
-        const lastfmData = await apiRequest("lastfm", LASTFM.toptracks(user, key, time_range));
+        const lastfmData = await apiRequest("lastfm", LASTFM.toptracks(CONFIG.LFMUsername, CONFIG.LFMApiKey, time_range));
         if (!lastfmData)
             return 200;
         const spotifyData = await convertTrackData(lastfmData.toptracks.track);
@@ -60,9 +59,9 @@ const DropdownOptions = [
     { id: "medium_term", name: "Past 6 Months" },
     { id: "long_term", name: "All Time" },
 ];
-const TracksPage = ({ configWrapper }) => {
+const TracksPage = () => {
     const [topTracks, setTopTracks] = React.useState(100);
-    const [dropdown, activeOption] = useDropdownMenu(DropdownOptions, "stats:top-tracks");
+    const [dropdown, activeOption] = useDropdownMenu(DropdownOptions, "top-tracks");
     const fetchTopTracks = async (time_range, force, set = true) => {
         if (!force) {
             const storedData = storage.getItem(`top-tracks:${time_range}`);
@@ -70,7 +69,7 @@ const TracksPage = ({ configWrapper }) => {
                 return setTopTracks(JSON.parse(storedData));
         }
         const start = window.performance.now();
-        const topTracks = await topTracksReq(time_range, configWrapper);
+        const topTracks = await topTracksReq(time_range);
         if (set)
             setTopTracks(topTracks);
         storage.setItem(`top-tracks:${time_range}`, JSON.stringify(topTracks));

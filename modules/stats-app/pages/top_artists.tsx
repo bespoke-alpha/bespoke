@@ -11,14 +11,13 @@ import { PLACEHOLDER, LASTFM, SPOTIFY } from "../endpoints.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import { storage } from "../index.js";
+import { CONFIG } from "../settings.js";
 
-export const topArtistsReq = async (time_range: string, configWrapper: ConfigWrapper) => {
-	const { config } = configWrapper;
-	if (config["use-lastfm"] === true) {
-		if (!config["api-key"] || !config["lastfm-user"]) return 300;
+export const topArtistsReq = async (time_range: string) => {
+	if (CONFIG.UseLFM === true) {
+		if (!CONFIG.LFMApiKey || !CONFIG.LFMUsername) return 300;
 
-		const { "lastfm-user": user, "api-key": key } = config;
-		const response = await apiRequest("lastfm", LASTFM.topartists(user, key, time_range));
+		const response = await apiRequest("lastfm", LASTFM.topartists(CONFIG.LFMUsername, CONFIG.LFMApiKey, time_range));
 
 		if (!response) return 200;
 
@@ -46,9 +45,9 @@ const DropdownOptions = [
 	{ id: "long_term", name: "All Time" },
 ];
 
-const ArtistsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
+const ArtistsPage = () => {
 	const [topArtists, setTopArtists] = React.useState<ArtistCardProps[] | 100 | 200 | 300>(100);
-	const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "stats:top-artists");
+	const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "top-artists");
 
 	const fetchTopArtists = async (time_range: string, force?: boolean, set = true) => {
 		if (!force) {
@@ -58,7 +57,7 @@ const ArtistsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 
 		const start = window.performance.now();
 
-		const topArtists = await topArtistsReq(time_range, configWrapper);
+		const topArtists = await topArtistsReq(time_range);
 		if (set) setTopArtists(topArtists);
 		storage.setItem(`top-artists:${time_range}`, JSON.stringify(topArtists));
 

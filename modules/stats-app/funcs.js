@@ -34,10 +34,10 @@ export const updatePageCache = (i, callback, activeOption, lib = false) => {
 export const apiRequest = async (name, url, timeout = 5, log = true) => {
     try {
         const timeStart = window.performance.now();
-        const response = await S.Cosmos.get(url);
+        const response = await S.Platform.getRequestBuilder().build().withHost(url).withoutMarket().send();
         if (log)
             console.log(name, "fetch time:", window.performance.now() - timeStart);
-        return response;
+        return response.body;
     }
     catch (e) {
         if (timeout === 0) {
@@ -151,7 +151,8 @@ export const fetchTopArtists = async (artists) => {
 };
 export const convertTrackData = async (data) => {
     return await Promise.all(data.map(async (item) => {
-        const spotifyItem = await S.Cosmos.get(SPOTIFY.search(item.name, item.artist.name)).then((res) => res.tracks?.items[0]);
+        const res = await S.Platform.getRequestBuilder().build().withHost(SPOTIFY.search(item.name, item.artist.name)).withoutMarket().send();
+        const spotifyItem = res.body.tracks?.items[0];
         if (!spotifyItem) {
             console.log(`couldn't find track: ${item.name} by ${item.artist.name}`);
             return {
@@ -183,7 +184,8 @@ export const convertTrackData = async (data) => {
 };
 export const convertAlbumData = async (data) => {
     return await Promise.all(data.map(async (item) => {
-        const spotifyItem = await S.Cosmos.get(SPOTIFY.searchalbum(item.name, item.artist.name)).then((res) => res.albums?.items[0]);
+        const res = await S.Platform.getRequestBuilder().build().withHost(SPOTIFY.searchalbum(item.name, item.artist.name)).withoutMarket().send();
+        const spotifyItem = res.body.albums?.items[0];
         if (!spotifyItem) {
             console.log(`couldn't find album: ${item.name} by ${item.artist.name}`);
             return {
@@ -203,7 +205,8 @@ export const convertAlbumData = async (data) => {
 };
 export const convertArtistData = async (data) => {
     return await Promise.all(data.map(async (item) => {
-        const spotifyItem = await S.Cosmos.get(SPOTIFY.searchartist(item.name)).then((res) => res.artists?.items[0]);
+        const res = await S.Platform.getRequestBuilder().build().withHost(SPOTIFY.searchartist(item.name)).withoutMarket().send();
+        const spotifyItem = res.body.artists?.items[0];
         if (!spotifyItem) {
             console.log(`couldn't find artist: ${item.name}`);
             return {

@@ -9,13 +9,12 @@ import { PLACEHOLDER, LASTFM, SPOTIFY } from "../endpoints.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import { storage } from "../index.js";
-export const topArtistsReq = async (time_range, configWrapper) => {
-    const { config } = configWrapper;
-    if (config["use-lastfm"] === true) {
-        if (!config["api-key"] || !config["lastfm-user"])
+import { CONFIG } from "../settings.js";
+export const topArtistsReq = async (time_range) => {
+    if (CONFIG.UseLFM === true) {
+        if (!CONFIG.LFMApiKey || !CONFIG.LFMUsername)
             return 300;
-        const { "lastfm-user": user, "api-key": key } = config;
-        const response = await apiRequest("lastfm", LASTFM.topartists(user, key, time_range));
+        const response = await apiRequest("lastfm", LASTFM.topartists(CONFIG.LFMUsername, CONFIG.LFMApiKey, time_range));
         if (!response)
             return 200;
         return await convertArtistData(response.topartists.artist);
@@ -39,9 +38,9 @@ const DropdownOptions = [
     { id: "medium_term", name: "Past 6 Months" },
     { id: "long_term", name: "All Time" },
 ];
-const ArtistsPage = ({ configWrapper }) => {
+const ArtistsPage = () => {
     const [topArtists, setTopArtists] = React.useState(100);
-    const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "stats:top-artists");
+    const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "top-artists");
     const fetchTopArtists = async (time_range, force, set = true) => {
         if (!force) {
             const storedData = storage.getItem(`top-artists:${time_range}`);
@@ -49,7 +48,7 @@ const ArtistsPage = ({ configWrapper }) => {
                 return setTopArtists(JSON.parse(storedData));
         }
         const start = window.performance.now();
-        const topArtists = await topArtistsReq(time_range, configWrapper);
+        const topArtists = await topArtistsReq(time_range);
         if (set)
             setTopArtists(topArtists);
         storage.setItem(`top-artists:${time_range}`, JSON.stringify(topArtists));

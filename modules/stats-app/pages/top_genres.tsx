@@ -32,9 +32,9 @@ const DropdownOptions = [
 	{ id: "long_term", name: "All Time" },
 ];
 
-const GenresPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
+const GenresPage = () => {
 	const [topGenres, setTopGenres] = React.useState<GenresPageProps | 100 | 200 | 300>(100);
-	const [dropdown, activeOption] = useDropdownMenu(DropdownOptions, "stats:top-genres");
+	const [dropdown, activeOption] = useDropdownMenu(DropdownOptions, "top-genres");
 
 	const fetchTopGenres = async (time_range: string, force?: boolean, set = true, force_refetch?: boolean) => {
 		if (!force) {
@@ -50,7 +50,7 @@ const GenresPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 				if (cacheInfo[index] === true && !force_refetch) {
 					return await JSON.parse(storage.getItem(`top-${type}:${time_range}`) as string);
 				}
-				const fetchedItems = await (type === "artists" ? topArtistsReq(time_range, configWrapper) : topTracksReq(time_range, configWrapper));
+				const fetchedItems = await (type === "artists" ? topArtistsReq(time_range) : topTracksReq(time_range));
 				cacheInfo[index] = true;
 				cacheInfo[2] = true;
 				storage.setItem(`top-${type}:${time_range}`, JSON.stringify(fetchedItems));

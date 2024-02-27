@@ -1,3 +1,6 @@
+import { createIconComponent } from "/modules/std/api/createIconComponent.js";
+import { S } from "/modules/std/index.js";
+
 interface Option {
 	id: string;
 	name: string;
@@ -15,21 +18,12 @@ interface MenuItemProps {
 	switchCallback: (option: Option) => void;
 }
 
-function CheckIcon() {
-	return (
-		<Spicetify.ReactComponent.IconComponent
-			iconSize="16"
-			semanticColor="textBase"
-			dangerouslySetInnerHTML={{
-				__html:
-					'<svg xmlns="http://www.w3.org/2000/svg"><path d="M15.53 2.47a.75.75 0 0 1 0 1.06L4.907 14.153.47 9.716a.75.75 0 0 1 1.06-1.06l3.377 3.376L14.47 2.47a.75.75 0 0 1 1.06 0z"/></svg>',
-			}}
-		/>
-	);
-}
+const CheckIcon = () =>
+	createIconComponent({
+		icon: '<svg xmlns="http://www.w3.org/2000/svg"><path d="M15.53 2.47a.75.75 0 0 1 0 1.06L4.907 14.153.47 9.716a.75.75 0 0 1 1.06-1.06l3.377 3.376L14.47 2.47a.75.75 0 0 1 1.06 0z"/></svg>',
+	});
 
 const MenuItem = (props: MenuItemProps) => {
-	const { ReactComponent } = Spicetify;
 	const { option, isActive, switchCallback } = props;
 
 	const activeStyle = {
@@ -37,7 +31,7 @@ const MenuItem = (props: MenuItemProps) => {
 	};
 
 	return (
-		<ReactComponent.MenuItem
+		<S.ReactComponents.MenuItem
 			trigger="click"
 			onClick={() => switchCallback(option)}
 			data-checked={isActive}
@@ -45,19 +39,19 @@ const MenuItem = (props: MenuItemProps) => {
 			style={isActive ? activeStyle : undefined}
 		>
 			{option.name}
-		</ReactComponent.MenuItem>
+		</S.ReactComponents.MenuItem>
 	);
 };
 
 const DropdownMenu = (props: DropdownMenuProps) => {
-	const { ContextMenu, Menu, TextComponent } = Spicetify.ReactComponent;
+	const { ContextMenu, Menu, TextComponent } = S.ReactComponents;
 	const { options, activeOption, switchCallback } = props;
 
 	const optionItems = options.map(option => {
 		return <MenuItem option={option} isActive={option === activeOption} switchCallback={switchCallback} />;
 	});
 
-	const MenuWrapper = (props: Spicetify.ReactComponent.MenuProps) => {
+	const MenuWrapper = props => {
 		return <Menu {...props}>{optionItems}</Menu>;
 	};
 
@@ -76,7 +70,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 					viewBox="0 0 16 16"
 					data-encore-id="icon"
 				>
-					<path d="m14 6-6 6-6-6h12z"></path>
+					<path d="m14 6-6 6-6-6h12z" />
 				</svg>
 			</button>
 		</ContextMenu>
