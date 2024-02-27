@@ -15,7 +15,7 @@ const PlayerAPI = S.Platform.getPlayerAPI();
 const fetchLastFMTagsForNowPlayingTrack = async () => {
 	const item = PlayerAPI.getState()?.item;
 	if (!item) return [];
-	const track = await fetchLastFMTrack(CONFIG.LFMApiKey, item.artists[0], item.name);
+	const track = await fetchLastFMTrack(CONFIG.LFMApiKey, item.artists[0].name, item.name);
 	const tags = track.toptags.tag.map(tag => tag.name);
 
 	const deletedTagRegex = /^-\d{13}$/;

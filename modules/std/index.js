@@ -2,18 +2,20 @@ export * from "./static.js";
 import { S as _S } from "./expose/expose.js";
 export const S = _S;
 import { Registrar } from "./registers/registers.js";
-export const extendRegistrar = (_module) => {
-    const module = Object.assign(_module, {
-        registrar: new Registrar(_module.getIdentifier()),
-    });
-    const unloadJS = module.unloadJS;
-    module.unloadJS = () => {
-        module.registrar.dispose();
+export const createRegistrar = (mod) => {
+    let registrar = mod.registrar;
+    if (registrar) {
+        return registrar;
+    }
+    registrar = new Registrar(mod.getIdentifier());
+    const unloadJS = mod.unloadJS;
+    mod.unloadJS = () => {
+        mod.registrar.dispose();
         return unloadJS();
     };
-    return module;
+    return registrar;
 };
-class NamespacedStorage {
+export class NamespacedStorage {
     constructor(name) {
         this.name = name;
     }
@@ -30,12 +32,17 @@ class NamespacedStorage {
         return localStorage.removeItem(this.getNamespacedKey(keyName));
     }
 }
-export const getLocalStorage = (_module) => {
-    const module = Object.assign(_module, {
-        localStorage: new NamespacedStorage(_module.getIdentifier()),
-    });
-    return module;
-};
+export const createStorage = (mod) => (mod.storage ??= new NamespacedStorage(mod.getIdentifier()));
+console.log();
+export class NamespacedLogger {
+    constructor(name) {
+        this.name = name;
+    }
+    log(...data) {
+        return console.log(`[${this.name}]`, ...data);
+    }
+}
+export const createLogger = (mod) => (mod.logger ??= new NamespacedLogger(mod.getIdentifier()));
 class Event {
     constructor(getArg) {
         this.getArg = getArg;

@@ -139,7 +139,11 @@ export type ExposedWebpack = ReturnType<typeof expose>;
 // TODO: WTF TYPESCRIPT?
 // ! Type alias 'Webpack' circularly references itself.
 
-const exposeReactComponents = ({ chunks, exportedFunctions, exportedMemos, exportedForwardRefs }: Webpack, React: React, Platform: Platform) => {
+const exposeReactComponents = (
+	{ require, chunks, exports, exportedFunctions, exportedMemos, exportedForwardRefs }: Webpack,
+	React: React,
+	Platform: Platform,
+) => {
 	const Menus = Object.fromEntries(
 		exportedMemos.flatMap(m => {
 			const str = (m as any).type.toString();
@@ -249,7 +253,7 @@ const exposeReactComponents = ({ chunks, exportedFunctions, exportedMemos, expor
 	};
 };
 
-const exposeURI = ({ chunks }: Webpack) => {
+const exposeURI = ({ require, chunks }: Webpack) => {
 	const [URIModuleID] = chunks.find(([id, v]) => v.toString().includes("Invalid Spotify URI!") && Object.keys(require(id)).length > 1);
 	const URIModule = require(URIModuleID);
 	const [Types, ...vs] = Object.values(URIModule) as [URITypes, ...Function[]];
