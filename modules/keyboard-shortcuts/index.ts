@@ -1,5 +1,5 @@
-import { toggleInLibrary } from "../delulib/platformApi.js";
-import { S } from "../std/index.js";
+import { toggleInLibrary } from "/modules/delulib/platformApi.js";
+import { S } from "/modules/std/index.js";
 
 import { KEY_LIST, _SneakOverlay, mousetrapInst } from "./sneak.js";
 import { Bind, appScroll, appScrollY, openPage, rotateSidebar } from "./util.js";

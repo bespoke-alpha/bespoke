@@ -1,9 +1,9 @@
 import { CheckedPlaylistButtonIcon, curationButtonClass } from "./modules.js";
 
 import { toggleRating } from "./ratings.js";
-import { _ } from "../std/deps.js";
+import { _ } from "/modules/std/deps.js";
 
-import { S } from "../std/index.js";
+import { S } from "/modules/std/index.js";
 
 const { ButtonTertiary } = S.ReactComponents;
 

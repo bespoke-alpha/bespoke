@@ -2,12 +2,12 @@ import { updateCollectionControls, updateNowPlayingControls, updateTrackControls
 import { loadRatings } from "./util.js";
 import { CONFIG } from "./settings.js";
 
-import { _ } from "../std/deps.js";
-import { onHistoryChanged, onTrackListMutationListeners } from "../delulib/listeners.js";
-import { Events, SVGIcons, extendRegistrar } from "../std/index.js";
-import { S } from "../std/index.js";
-import { useMenuItem } from "../std/registers/menu.js";
-import { createIconComponent } from "../std/api/createIconComponent.js";
+import { _ } from "/modules/std/deps.js";
+import { onHistoryChanged, onTrackListMutationListeners } from "/modules/delulib/listeners.js";
+import { Events, SVGIcons, extendRegistrar } from "/modules/std/index.js";
+import { S } from "/modules/std/index.js";
+import { useMenuItem } from "/modules/std/registers/menu.js";
+import { createIconComponent } from "/modules/std/api/createIconComponent.js";
 import type { Module } from "/hooks/module.js";
 const { URI } = S;
 

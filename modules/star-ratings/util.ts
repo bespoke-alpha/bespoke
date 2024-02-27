@@ -1,5 +1,5 @@
-import { fetchFolder, fetchPlaylistContents } from "../delulib/platformApi.js";
-import { REACT_PROPS } from "../delulib/util.js";
+import { fetchFolder, fetchPlaylistContents } from "/modules/delulib/platformApi.js";
+import { REACT_PROPS } from "/modules/delulib/util.js";
 import { CONFIG } from "./settings.js";
 
 export const getTrackLists = () => Array.from(document.querySelectorAll<HTMLDivElement>(".main-trackList-trackList.main-trackList-indexable"));

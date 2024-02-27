@@ -1,5 +1,5 @@
-import { _ } from "../std/deps.js";
-import { progressify } from "../delulib/fp.js";
+import { _ } from "/modules/std/deps.js";
+import { progressify } from "/modules/delulib/fp.js";
 import {
 	createPlaylistFromTracks,
 	fetchFolder,
@@ -7,14 +7,14 @@ import {
 	fetchRootFolder,
 	movePlaylistTracks,
 	setPlaylistVisibility,
-} from "../delulib/platformApi.js";
-import { SpotifyLoc } from "../delulib/util.js";
+} from "/modules/delulib/platformApi.js";
+import { SpotifyLoc } from "/modules/delulib/util.js";
 
 import { lastFetchedUri, lastSortAction } from "./index.js";
 import { CONFIG } from "./settings.js";
 import { ERROR, getNameFromUri } from "./util.js";
 
-import { S } from "../std/index.js";
+import { S } from "/modules/std/index.js";
 
 const { URI } = S;
 

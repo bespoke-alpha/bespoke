@@ -1,4 +1,4 @@
-import { S } from "../std/index.js";
+import { S } from "/modules/std/index.js";
 const { URI } = S;
 
 export type PoF = Playlist | Folder;

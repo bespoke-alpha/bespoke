@@ -1,5 +1,5 @@
-import { createFolder } from "../delulib/platformApi.js";
-import { SettingsSection } from "../std/api/settings.js";
+import { createFolder } from "/modules/delulib/platformApi.js";
+import { SettingsSection } from "/modules/std/api/settings.js";
 
 const SORTED_PLAYLISTS_FOLDER_NAME = "📀 Sorted Playlists";
 

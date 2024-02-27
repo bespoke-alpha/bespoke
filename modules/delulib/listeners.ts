@@ -1,5 +1,5 @@
-import { _ } from "../std/deps.js";
-import { S } from "../std/index.js";
+import { _ } from "/modules/std/deps.js";
+import { S } from "/modules/std/index.js";
 
 import { PermanentMutationObserver, REACT_FIBER } from "./util.js";
 

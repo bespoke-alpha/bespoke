@@ -38,7 +38,7 @@ class NamespacedStorage {
 	}
 }
 
-export const getLocalStorage = <M extends Module>(_module: M) => {
+export const extendLocalStorage = <M extends Module>(_module: M) => {
 	const module = Object.assign(_module, {
 		localStorage: new NamespacedStorage(_module.getIdentifier()),
 	});

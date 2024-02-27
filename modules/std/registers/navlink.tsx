@@ -2,6 +2,7 @@ import { Registry } from "./registry.js";
 import { S } from "../expose/expose.js";
 import { internalRegisterTransform } from "/hooks/transforms/transforms.js";
 import { findMatchingPos } from "/hooks/util.js";
+import { createIconComponent } from "../api/createIconComponent.js";
 
 const registry = new Registry<React.ReactElement, void>();
 export default registry;
@@ -35,18 +36,13 @@ export const NavLink = ({ localizedApp, appRoutePath, icon, activeIcon }: NavLin
 					to={appRoutePath}
 					referrer={appRoutePath.slice(1)}
 					className={S.classnames("link-subtle", "main-yourLibraryX-navLink", {
-						"main-yourLibraryX-navLinkActive": S.Platform.getHistory().pathanme.startsWith(appRoutePath),
+						"main-yourLibraryX-navLinkActive": S.Platform.getHistory().location.pathanme.startsWith(appRoutePath),
 					})}
 					onClick={() => undefined}
 					aria-label={localizedApp}
 				>
-					<S.ReactComponents.IconComponent autoMirror={false} className="icon" viewBox="0 0 24 24" dangerouslySetInnerHTML={{ __html: icon }} />
-					<S.ReactComponents.IconComponent
-						autoMirror={false}
-						className="active-icon"
-						viewBox="0 0 24 24"
-						dangerouslySetInnerHTML={{ __html: activeIcon }}
-					/>
+					{createIconComponent({ icon, iconSize: 24 })}
+					{createIconComponent({ icon: activeIcon, iconSize: 24 })}
 					{!isSidebarCollapsed && <S.ReactComponents.Text variant="bodyMediumBold">{localizedApp}</S.ReactComponents.Text>}
 				</I_O>
 			</S.ReactComponents.Tooltip>

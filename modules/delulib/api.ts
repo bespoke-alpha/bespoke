@@ -1,6 +1,6 @@
 import { AccessToken, SpotifyApi } from "https://esm.sh/@fostertheweb/spotify-web-api-ts-sdk";
-import { _ } from "../std/deps.js";
-import { S } from "../std/index.js";
+import { _ } from "/modules/std/deps.js";
+import { S } from "/modules/std/index.js";
 
 const getAccessToken = () => S.Platform.getAuthorizationAPI().getState().token.accessToken;
 

@@ -1,90 +1,68 @@
-import React from "react";
-import useNavigationBar from "spcr-navigation-bar";
-import ArtistsPage from "./pages/top_artists";
-import TracksPage from "./pages/top_tracks";
-import GenresPage from "./pages/top_genres";
-import LibraryPage from "./pages/library";
-import ChartsPage from "./pages/charts";
-import AlbumsPage from "./pages/top_albums";
-import { STATS_VERSION, LATEST_RELEASE } from "./constants";
+import { S, SVGIcons, extendLocalStorage, extendRegistrar } from "/modules/std/index.js";
+import { NavLink } from "/modules/std/registers/navlink.js";
+import { ACTIVE_ICON, ICON } from "./constants.js";
+import { Module } from "/hooks/module.js";
 
-import "./styles/app.scss";
-import "../../shared/config/config_modal.scss";
-import "../../shared/shared.scss";
+import PlaylistPage from "./pages/playlist.js";
+import { STATS_VERSION } from "./constants.js";
+import { onHistoryChanged } from "/modules/delulib/listeners.js";
+import { display } from "/modules/std/api/modal.js";
+import { Button } from "../std/registers/topbarLeftButton.js";
 
-const checkForUpdates = (setNewUpdate: (a: boolean) => void) => {
-    fetch(LATEST_RELEASE)
-        .then((res) => res.json())
-        .then(
-            (result) => {
-                try {
-                    setNewUpdate(result[0].name.slice(1) !== STATS_VERSION);
-                } catch (err) {
-                    console.log(err);
-                }
-            },
-            (error) => {
-                console.log("Failed to check for updates", error);
-            }
-        );
-};
+const { React, URI } = S;
 
-const App = () => {
-    const [config, setConfig] = React.useState({ ...SpicetifyStats.ConfigWrapper.Config });
+const History = S.Platform.getHistory();
 
-    const launchModal = () => {
-        SpicetifyStats.ConfigWrapper.launchModal(setConfig);
-    };
+export default function (_module: Module) {
+	const module = extendLocalStorage(extendRegistrar(_module));
+	const { registrar, localStorage } = module;
 
-    const configWrapper = {
-        config: config,
-        launchModal,
-    };
+	{
+		const version = localStorage.getItem("version");
+		if (!version || version !== STATS_VERSION) {
+			for (const k of Object.keys(globalThis.localStorage)) {
+				if (k.startsWith("stats:") && !k.startsWith("stats:config:")) {
+					globalThis.localStorage.removeItem(k);
+				}
+			}
+			localStorage.setItem("version", STATS_VERSION);
+		}
+	}
 
-    const pages: Record<string, React.ReactElement> = {
-        ["Artists"]: <ArtistsPage configWrapper={configWrapper} />,
-        ["Tracks"]: <TracksPage configWrapper={configWrapper} />,
-        ["Albums"]: <AlbumsPage configWrapper={configWrapper} />,
-        ["Genres"]: <GenresPage configWrapper={configWrapper} />,
-        ["Library"]: <LibraryPage configWrapper={configWrapper} />,
-        ["Charts"]: <ChartsPage configWrapper={configWrapper} />,
-    };
+	localStorage.setItem("cache-info", JSON.stringify([0, 0, 0, 0, 0, 0]));
 
-    const tabPages = ["Artists", "Tracks", "Albums", "Genres", "Library", "Charts"].filter(
-        (page) => configWrapper.config[`show-${page.toLowerCase()}`]
-    );
+	let setPlaylistEditHidden: React.Dispatch<React.SetStateAction<boolean>> | undefined = undefined;
 
-    const [navBar, activeLink, setActiveLink] = useNavigationBar(tabPages);
-    const [hasPageSwitched, setHasPageSwitched] = React.useState(false); // TODO: edit spcr-navigation-bar to include initial active link
-    const [newUpdate, setNewUpdate] = React.useState(false);
+	const PlaylistEdit = () => {
+		const [hidden, setHidden] = React.useState(true);
+		setPlaylistEditHidden = setHidden;
+		if (hidden) return;
 
-    React.useEffect(() => {
-        setActiveLink(Spicetify.LocalStorage.get("stats:active-link") || "Artists");
-        checkForUpdates(setNewUpdate);
-        setHasPageSwitched(true);
-    }, []);
+		return (
+			<Button
+				label="playlist-stats"
+				icon={SVGIcons.visualizer}
+				onClick={() => {
+					const playlistUri = URI.fromString(History.location.pathname);
+					display({ title: "Playlist Stats", content: <PlaylistPage uri={playlistUri} />, isLarge: true });
+				}}
+			/>
+		);
+	};
 
-    React.useEffect(() => {
-        Spicetify.LocalStorage.set("stats:active-link", activeLink);
-    }, [activeLink]);
+	onHistoryChanged(
+		() => true,
+		pathname => {
+			const [, type, uid] = pathname.split("/");
+			const isPlaylistPage = type === "playlist" && uid;
+			setPlaylistEditHidden?.(!isPlaylistPage);
+		},
+		false,
+	);
 
-    if (!hasPageSwitched) {
-        return <></>;
-    }
+	registrar.register("topbarLeftButton", <PlaylistEdit />);
 
-    return (
-        <div id="stats-app">
-            {navBar}
-            {newUpdate && (
-                <div className="new-update">
-                    New app update available! Visit{" "}
-                    <a href="https://github.com/harbassan/spicetify-stats/releases">harbassan/spicetify-stats</a> to
-                    install.
-                </div>
-            )}
-            {pages[activeLink]}
-        </div>
-    );
-};
+	registrar.register("route", <S.ReactComponents.Route path={"/stats"} element={import("./app.js")} />);
 
-export default App;
+	registrar.register("navlink", <NavLink localizedApp="Statistics" appRoutePath="/stats" icon={ICON} activeIcon={ACTIVE_ICON} />);
+}

@@ -1,5 +1,5 @@
-import { _ } from "../../std/deps.js";
-import { OneUplet, TwoUplet, zip_n_uplets } from "../../delulib/fp.js";
+import { _ } from "/modules/std/deps.js";
+import { OneUplet, TwoUplet, zip_n_uplets } from "/modules/delulib/fp.js";
 
 const headers = {
 	authority: "apic-desktop.musixmatch.com",

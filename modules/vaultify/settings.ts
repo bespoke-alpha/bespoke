@@ -1,4 +1,4 @@
-import { SettingsSection } from "../std/api/settings.js";
+import { SettingsSection } from "/modules/std/api/settings.js";
 
 import { RestoreScope, backup, restoreFactory } from "./index.js";
 

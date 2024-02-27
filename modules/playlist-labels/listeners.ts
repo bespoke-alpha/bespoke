@@ -1,4 +1,4 @@
-import { S } from "../std/index.js";
+import { S } from "/modules/std/index.js";
 import { getPlaylistsFromURIs, getTracksFromURIs } from "./db.js";
 
 const RootlistAPI = S.Platform.getRootlistAPI();

@@ -1,14 +1,14 @@
-import { TrackData } from "../delulib/parse.js";
-import { createQueueItem, setQueue as _setQueue } from "../delulib/util.js";
-import { _, fp } from "../std/deps.js";
-import { S, extendRegistrar } from "../std/index.js";
-import { Button } from "../std/registers/topbarLeftButton.js";
+import { TrackData } from "/modules/delulib/parse.js";
+import { createQueueItem, setQueue as _setQueue } from "/modules/delulib/util.js";
+import { _, fp } from "/modules/std/deps.js";
+import { S, extendRegistrar } from "/modules/std/index.js";
+import { Button } from "/modules/std/registers/topbarLeftButton.js";
 
 import { createPlaylistFromLastSortedQueue, reordedPlaylistLikeSortedQueue } from "./playlistsInterop.js";
 import { fillTracksFromLastFM, fillTracksFromSpotify } from "./populate.js";
 import { CONFIG } from "./settings.js";
 import { AsyncTracksOperation, SEPARATOR_URI, SortAction, SortActionIcon, SortActionProp, URI_is_LikedTracks, getTracksFromUri } from "./util.js";
-import { SVGIcons } from "../std/index.js";
+import { SVGIcons } from "/modules/std/index.js";
 
 declare global {
 	// biome-ignore lint/style/noVar: global scope
@@ -88,9 +88,9 @@ const SubMenuItems = Object.values(SortAction).map(
 		}),
 );
 
-import { createIconComponent } from "../std/api/createIconComponent.js";
+import { createIconComponent } from "/modules/std/api/createIconComponent.js";
 import { Module } from "/hooks/module.js";
-import { useMenuItem } from "../std/registers/menu.js";
+import { useMenuItem } from "/modules/std/registers/menu.js";
 
 const SortByShuffleSubMenuItem = ({ descending }: SortBySubMenuItemProps) => {
 	const { props } = useMenuItem();

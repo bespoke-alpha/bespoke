@@ -1,10 +1,10 @@
-import { _ } from "../std/deps.js";
-import { SpotifyLoc } from "../delulib/util.js";
+import { _ } from "/modules/std/deps.js";
+import { SpotifyLoc } from "/modules/delulib/util.js";
 
 import { CONFIG } from "./settings.js";
-import { S, SVGIcons, extendRegistrar } from "../std/index.js";
-import { useMenuItem } from "../std/registers/menu.js";
-import { createIconComponent } from "../std/api/createIconComponent.js";
+import { S, SVGIcons, extendRegistrar } from "/modules/std/index.js";
+import { useMenuItem } from "/modules/std/registers/menu.js";
+import { createIconComponent } from "/modules/std/api/createIconComponent.js";
 import type { Module } from "/hooks/module.js";
 
 const { URI } = S;

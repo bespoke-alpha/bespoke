@@ -1,4 +1,4 @@
-import { S } from "../../std/index.js";
+import { S } from "/modules/std/index.js";
 import { Items, ItemsWithCount } from "./sharedTypes.js";
 
 export type fetchAlbumRes = {

@@ -1,13 +1,13 @@
-import { fetchLastFMTrack, spotifyApi } from "../delulib/api.js";
-import { waitForElement } from "../delulib/util.js";
+import { fetchLastFMTrack, spotifyApi } from "/modules/delulib/api.js";
+import { waitForElement } from "/modules/delulib/util.js";
 
 import { CONFIG } from "./settings.js";
 
 import "./components.js";
-import { fetchArtistRelated } from "../delulib/GraphQL/fetchArtistRelated.js";
-import { onHistoryChanged } from "../delulib/listeners.js";
-import { _ } from "../std/deps.js";
-import { Events, S } from "../std/index.js";
+import { fetchArtistRelated } from "/modules/delulib/GraphQL/fetchArtistRelated.js";
+import { onHistoryChanged } from "/modules/delulib/listeners.js";
+import { _ } from "/modules/std/deps.js";
+import { Events, S } from "/modules/std/index.js";
 
 const { URI } = S;
 const PlayerAPI = S.Platform.getPlayerAPI();

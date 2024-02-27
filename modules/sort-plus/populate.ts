@@ -1,8 +1,8 @@
-import { fetchLastFMTrack, spotifyApi } from "../delulib/api.js";
-import { _, fp } from "../std/deps.js";
-import { S } from "../std/index.js";
-import { chunkify50, progressify } from "../delulib/fp.js";
-import { TrackData, parseWebAPITrack } from "../delulib/parse.js";
+import { fetchLastFMTrack, spotifyApi } from "/modules/delulib/api.js";
+import { _, fp } from "/modules/std/deps.js";
+import { S } from "/modules/std/index.js";
+import { chunkify50, progressify } from "/modules/delulib/fp.js";
+import { TrackData, parseWebAPITrack } from "/modules/delulib/parse.js";
 
 import { getTracksFromAlbum } from "./fetch.js";
 import { CONFIG } from "./settings.js";

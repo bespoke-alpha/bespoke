@@ -1,11 +1,11 @@
 import type { Instance, Props } from "tippy.js";
 
-import { _, fp } from "../std/deps.js";
+import { _, fp } from "/modules/std/deps.js";
 import { getTracksFromUri } from "../sort-plus/util.js";
 import { Dropdown } from "./dropdown.js";
 import { getCollectionPlaylistButton, getNowPlayingBar, getPlaylistButton, getTrackListTrackUri, getTrackListTracks, getTrackLists } from "./util.js";
 
-import { S } from "../std/index.js";
+import { S } from "/modules/std/index.js";
 
 const { URI, Tippy, ReactDOM } = S;
 

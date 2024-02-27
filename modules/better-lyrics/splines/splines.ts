@@ -1,5 +1,5 @@
-import { _ } from "../../std/deps.js";
-import { TwoUplet, Triplet, zip_n_uplets } from "../../delulib/fp.js";
+import { _ } from "/modules/std/deps.js";
+import { TwoUplet, Triplet, zip_n_uplets } from "/modules/delulib/fp.js";
 import {
 	matrix,
 	matrixMultMatrix,
@@ -12,7 +12,7 @@ import {
 	vectorDivScalar,
 	vectorMultVector,
 	vectorSubVector,
-} from "../../delulib/math.js";
+} from "/modules/delulib/math.js";
 
 enum EndCondition {
 	NATURAL = 0,

@@ -1,14 +1,14 @@
-import { SettingsSection } from "../std/api/settings.js"
+import { SettingsSection } from "/modules/std/api/settings.js";
 
 const settings = new SettingsSection("Search On YouTube").addInput(
-    {
-        id: "YouTubeApiKey",
-        desc: "YouTube API Key",
-        inputType: "text",
-    },
-    () => "***************************************",
-)
+	{
+		id: "YouTubeApiKey",
+		desc: "YouTube API Key",
+		inputType: "text",
+	},
+	() => "***************************************",
+);
 
-settings.pushSettings()
+settings.pushSettings();
 
-export const CONFIG = settings.toObject()
+export const CONFIG = settings.toObject();

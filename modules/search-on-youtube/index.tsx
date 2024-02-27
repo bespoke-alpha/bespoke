@@ -1,12 +1,12 @@
-import { searchYoutube, spotifyApi } from "../delulib/api.js";
-import { _ } from "../std/deps.js";
-import { normalizeStr } from "../delulib/util.js";
+import { searchYoutube, spotifyApi } from "/modules/delulib/api.js";
+import { _ } from "/modules/std/deps.js";
+import { normalizeStr } from "/modules/delulib/util.js";
 
 import { CONFIG } from "./settings.js";
 
-import { S, extendRegistrar } from "../std/index.js";
-import { useMenuItem } from "../std/registers/menu.js";
-import { createIconComponent } from "../std/api/createIconComponent.js";
+import { S, extendRegistrar } from "/modules/std/index.js";
+import { useMenuItem } from "/modules/std/registers/menu.js";
+import { createIconComponent } from "/modules/std/api/createIconComponent.js";
 import type { Module } from "/hooks/module.js";
 
 // import { Innertube, UniversalCache } from "https://esm.sh/youtubei.js/web.bundle.min";

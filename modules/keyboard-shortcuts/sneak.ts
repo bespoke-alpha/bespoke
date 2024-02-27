@@ -5,7 +5,7 @@ import { styleMap } from "https://esm.sh/lit/directives/style-map.js";
 
 import { CLICKABLE_ELEMENT_SELECTOR, isElementInViewPort } from "./util.js";
 
-import { S } from "../std/index.js";
+import { S } from "/modules/std/index.js";
 
 export const mousetrapInst = S.Mousetrap();
 export const KEY_LIST = "abcdefghijklmnopqrstuvwxyz".split("");

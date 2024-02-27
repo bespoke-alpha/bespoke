@@ -1,30 +1,32 @@
-import React from "react";
+import CreatePlaylistButton from "../../components/buttons/create_playlist_button.js";
+import { InfoToCreatePlaylist } from "../../types/stats_types.js";
 
-import CreatePlaylistButton from "../../stats/src/components/buttons/create_playlist_button";
-import { InfoToCreatePlaylist } from "../../stats/src/types/stats_types";
+import { S } from "/modules/std/index.js";
 
 interface PageContainerProps {
-    title: string;
-    infoToCreatePlaylist?: InfoToCreatePlaylist;
-    headerEls?: React.ReactElement | React.ReactElement[];
-    children: React.ReactElement | React.ReactElement[];
+	title: string;
+	infoToCreatePlaylist?: InfoToCreatePlaylist;
+	headerEls?: React.ReactElement | React.ReactElement[];
+	children: React.ReactElement | React.ReactElement[];
 }
 
 const PageContainer = (props: PageContainerProps) => {
-    const { title, infoToCreatePlaylist, headerEls, children } = props;
-    const { TextComponent } = Spicetify.ReactComponent;
-    return (
-        <section className="contentSpacing">
-            <div className={"page-header"}>
-                <div className="header-left">
-                    <TextComponent children={title} as="h1" variant="canon" semanticColor="textBase" />
-                    {infoToCreatePlaylist ? <CreatePlaylistButton infoToCreatePlaylist={infoToCreatePlaylist} /> : null}
-                </div>
-                <div className="header-right">{headerEls}</div>
-            </div>
-            <div className={"page-content"}>{children}</div>
-        </section>
-    );
+	const { title, infoToCreatePlaylist, headerEls, children } = props;
+	const { TextComponent } = S.ReactComponents;
+	return (
+		<section className="contentSpacing">
+			<div className={"page-header"}>
+				<div className="header-left">
+					<TextComponent as="h1" variant="canon" semanticColor="textBase">
+						{title}
+					</TextComponent>
+					{infoToCreatePlaylist ? <CreatePlaylistButton infoToCreatePlaylist={infoToCreatePlaylist} /> : null}
+				</div>
+				<div className="header-right">{headerEls}</div>
+			</div>
+			<div className={"page-content"}>{children}</div>
+		</section>
+	);
 };
 
 export default PageContainer;

@@ -1,9 +1,9 @@
-import { S } from "../std/index.js";
-import { _ } from "../std/deps.js";
-import { onTrackListMutationListeners } from "../delulib/listeners.js";
+import { S } from "/modules/std/index.js";
+import { _ } from "/modules/std/deps.js";
+import { onTrackListMutationListeners } from "/modules/delulib/listeners.js";
 import { PlaylistItems, useLivePlaylistItems } from "./listeners.js";
-import { createIconComponent } from "../std/api/createIconComponent.js";
-import { useLiveQuery } from "../dexie-react-query/index.js";
+import { createIconComponent } from "/modules/std/api/createIconComponent.js";
+import { useLiveQuery } from "/modules/dexie-react-query/index.js";
 import { db } from "./db.js";
 
 const { ReactDOM, URI } = S;
@@ -94,7 +94,7 @@ const PlaylistLabel = ({ uri, playlistUri }) => {
 
 /*
 import { _ } from "/hooks/deps.js";
-import { onTrackListMutationListeners } from "../delulib/listeners.js";
+import { onTrackListMutationListeners } from "/modules/delulib/listeners.js";
 import { db, getTracksFromURIs } from "./db.js";
 import { PlaylistItems } from "./listeners.js";
 

@@ -1,5 +1,5 @@
 import { Item2, ItemsReleases } from "./sharedTypes.js";
-import { S } from "../../std/index.js";
+import { S } from "/modules/std/index.js";
 
 export type fetchArtistDiscographyRes = {
 	__typename: "artist";

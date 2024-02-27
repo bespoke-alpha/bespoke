@@ -1,6 +1,6 @@
 import { findBy } from "/hooks/util.js";
 
-import { S } from "../std/index.js";
+import { S } from "/modules/std/index.js";
 const { webpack } = S;
 
 export const CheckedPlaylistButtonIcon = findBy(

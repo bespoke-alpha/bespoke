@@ -1,9 +1,9 @@
-import { _ } from "../std/deps.js";
-import { fetchPlaylistContents, fetchRootFolder } from "../delulib/platformApi.js";
+import { _ } from "/modules/std/deps.js";
+import { fetchPlaylistContents, fetchRootFolder } from "/modules/delulib/platformApi.js";
 
 import { LikedPlaylist, PersonalFolder, PersonalPlaylist, PoF } from "./util.js";
 
-import { S } from "../std/index.js";
+import { S } from "/modules/std/index.js";
 
 const LibraryAPI = S.Platform.getLibraryAPI();
 const LocalStorageAPI = S.Platform.getLocalStorageAPI();

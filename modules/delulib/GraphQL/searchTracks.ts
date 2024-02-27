@@ -1,6 +1,6 @@
 import { Items } from "./sharedTypes.js";
 import { searchTracksDefinition } from "./Definitions/searchTracks.js";
-import { S } from "../../std/index.js";
+import { S } from "/modules/std/index.js";
 
 type Track = {
 	__typename: "Track";

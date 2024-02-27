@@ -1,5 +1,5 @@
 import { Item1, ItemMin, Items, ItemsReleases, ItemsReleasesWithCount, ItemsWithCount, TopTracksItem } from "./sharedTypes.js";
-import { S } from "../../std/index.js";
+import { S } from "/modules/std/index.js";
 
 export type fetchArtistOverviewRes = {
 	__typename: "Artist";

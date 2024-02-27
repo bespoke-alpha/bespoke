@@ -1,4 +1,4 @@
-import { _, fp } from "../std/deps.js";
+import { _, fp } from "/modules/std/deps.js";
 
 export type vector = number[];
 export type matrix = vector[];

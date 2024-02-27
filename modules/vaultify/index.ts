@@ -1,7 +1,7 @@
 import { LibraryBackup, LocalStorageBackup, SettingBackup, getLibrary, getLocalStorage, getLocalStoreAPI, getSettings } from "./backup.js";
 import { restoreLocalStorage, restoreLibrary, restoreSettings } from "./restore.js";
 
-import { S } from "../std/index.js";
+import { S } from "/modules/std/index.js";
 
 const ClipboardAPI = S.Platform.getClipboardAPI();
 

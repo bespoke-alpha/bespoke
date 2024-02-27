@@ -165,7 +165,7 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 
 	const useContextMenuState = findBy("useContextMenuState")(exportedFunctions);
 
-	const menus = Object.fromEntries(
+	const Menus = Object.fromEntries(
 		exportedMemos.flatMap(m => {
 			const str = (m as any).type.toString();
 			const match = str.match(/value:"([\w-]+)"/);
@@ -176,11 +176,11 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 				artist: "Artist",
 				track: "Track",
 			}[name];
-			return type ? [[`${type}Menu`, m]] : [];
+			return type ? [[type, m]] : [];
 		}),
 	);
 
-	const cards = Object.fromEntries(
+	const Cards = Object.fromEntries(
 		exports
 			.flatMap(m => {
 				try {
@@ -266,13 +266,13 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 			Default: findBy('"card-click-handler"')(exportedFunctions),
 			Hero: findBy('"herocard-click-handler"')(exportedFunctions),
 			CardImage: findBy("isHero", "withWaves")(exportedFunctions),
-			...cards,
+			...Cards,
 		},
 		Router: findBy("navigationType", "static")(exportedFunctions),
 		Routes: findBy(/\([\w$]+\)\{let\{children:[\w$]+,location:[\w$]+\}=[\w$]+/)(exportedFunctions),
 		Route: findBy(/^function [\w$]+\([\w$]+\)\{\(0,[\w$]+\.[\w$]+\)\(\!1\)\}$/)(exportedFunctions),
 		StoreProvider: findBy("notifyNestedSubs", "serverState")(exportedFunctions),
-		...menus,
+		Menus,
 		GenericModal: findBy("GenericModal")(exportedFunctions),
 	};
 

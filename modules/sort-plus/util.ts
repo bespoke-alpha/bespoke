@@ -1,10 +1,10 @@
-import { _, fp } from "../std/deps.js";
-import { S } from "../std/index.js";
-import { spotifyApi } from "../delulib/api.js";
-import { TrackData } from "../delulib/parse.js";
+import { _, fp } from "/modules/std/deps.js";
+import { S } from "/modules/std/index.js";
+import { spotifyApi } from "/modules/delulib/api.js";
+import { TrackData } from "/modules/delulib/parse.js";
 
 import { getLikedTracks, getTracksFromAlbum, getTracksFromArtist, getTracksFromPlaylist } from "./fetch.js";
-import { URIClass } from "../std/expose/webpack.js";
+import { URIClass } from "/modules/std/expose/webpack.js";
 
 const { URI } = S;
 
