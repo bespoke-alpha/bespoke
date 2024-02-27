@@ -1,16 +1,16 @@
-import React from "react";
+import { S } from "/modules/std/index.js";
+const { React } = S;
 
-import Status from "../shared/components/status";
-import useDropdownMenu from "../shared/dropdown/useDropdownMenu";
-import { apiRequest, checkLiked, convertArtistData, convertTrackData, updatePageCache } from "../funcs";
-import SpotifyCard from "../shared/components/spotify_card";
-import TrackRow from "../components/track_row";
-import Tracklist from "../components/tracklist";
-import PageContainer from "../shared/components/page_container";
-import { ArtistCardProps, ConfigWrapper, Track } from "../types/stats_types";
-import { LASTFM } from "../endpoints";
-import RefreshButton from "../components/buttons/refresh_button";
-import SettingsButton from "../shared/components/settings_button";
+import Status from "../shared/components/status.js";
+import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
+import { apiRequest, checkLiked, convertArtistData, convertTrackData, updatePageCache } from "../funcs.js";
+import SpotifyCard from "../shared/components/spotify_card.js";
+import Tracklist from "../components/tracklist.js";
+import PageContainer from "../shared/components/page_container.js";
+import { ArtistCardProps, ConfigWrapper, Track } from "../types/stats_types.js";
+import { LASTFM } from "../endpoints.js";
+import RefreshButton from "../components/buttons/refresh_button.js";
+import SettingsButton from "../shared/components/settings_button.js";
 import { storage } from "../index.js";
 
 const DropdownOptions = [

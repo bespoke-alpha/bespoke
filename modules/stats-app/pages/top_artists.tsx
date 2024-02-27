@@ -1,13 +1,15 @@
-import React from "react";
-import useDropdownMenu from "../shared/dropdown/useDropdownMenu";
-import SpotifyCard from "../shared/components/spotify_card";
-import { apiRequest, convertArtistData, updatePageCache } from "../funcs";
-import Status from "../shared/components/status";
-import PageContainer from "../shared/components/page_container";
-import { ArtistCardProps, ConfigWrapper } from "../types/stats_types";
-import { PLACEHOLDER, LASTFM, SPOTIFY } from "../endpoints";
-import SettingsButton from "../shared/components/settings_button";
-import RefreshButton from "../components/buttons/refresh_button";
+import { S } from "/modules/std/index.js";
+const { React } = S;
+
+import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
+import SpotifyCard from "../shared/components/spotify_card.js";
+import { apiRequest, convertArtistData, updatePageCache } from "../funcs.js";
+import Status from "../shared/components/status.js";
+import PageContainer from "../shared/components/page_container.js";
+import { ArtistCardProps, ConfigWrapper } from "../types/stats_types.js";
+import { PLACEHOLDER, LASTFM, SPOTIFY } from "../endpoints.js";
+import SettingsButton from "../shared/components/settings_button.js";
+import RefreshButton from "../components/buttons/refresh_button.js";
 
 export const topArtistsReq = async (time_range: string, configWrapper: ConfigWrapper) => {
 	const { config } = configWrapper;

@@ -1,22 +1,23 @@
-import React from "react";
+import { S } from "/modules/std/index.js";
+const { React } = S;
 
-import useDropdownMenu from "../shared/dropdown/useDropdownMenu";
-import StatCard from "../components/cards/stat_card";
-import GenresCard from "../components/cards/genres_card";
-import InlineGrid from "../components/inline_grid";
-import Status from "../shared/components/status";
-import PageContainer from "../shared/components/page_container";
-import TrackRow from "../components/track_row";
-import Tracklist from "../components/tracklist";
-import Shelf from "../components/shelf";
+import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
+import StatCard from "../components/cards/stat_card.js";
+import GenresCard from "../components/cards/genres_card.js";
+import InlineGrid from "../components/inline_grid.js";
+import Status from "../shared/components/status.js";
+import PageContainer from "../shared/components/page_container.js";
+import TrackRow from "../components/track_row.js";
+import Tracklist from "../components/tracklist.js";
+import Shelf from "../components/shelf.js";
 
-import { topArtistsReq } from "./top_artists";
-import { topTracksReq } from "./top_tracks";
-import { apiRequest, fetchAudioFeatures, updatePageCache } from "../funcs";
-import { ConfigWrapper, Track } from "../types/stats_types";
-import { SPOTIFY } from "../endpoints";
-import RefreshButton from "../components/buttons/refresh_button";
-import SettingsButton from "../shared/components/settings_button";
+import { topArtistsReq } from "./top_artists.js";
+import { topTracksReq } from "./top_tracks.js";
+import { apiRequest, fetchAudioFeatures, updatePageCache } from "../funcs.js";
+import { ConfigWrapper, Track } from "../types/stats_types.js";
+import { SPOTIFY } from "../endpoints.js";
+import RefreshButton from "../components/buttons/refresh_button.js";
+import SettingsButton from "../shared/components/settings_button.js";
 
 interface GenresPageProps {
 	genres: [string, number][];

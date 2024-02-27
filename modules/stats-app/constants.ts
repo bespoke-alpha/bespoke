@@ -1,6 +1,6 @@
 export const STATS_VERSION = "0.3.1";
 
-export const LATEST_RELEASE = "https://api.github.com/repos/harbassan/spicetify-stats/releases";
+export const LATEST_RELEASE = "https://api.github.com/repos/harbassan/spicetify-stats/releases.js";
 
 export const ACTIVE_ICON = `<svg xmlns="http://www.w3.org/2000/svg"
 width="24" height="24" viewBox="0 0 24 24" style="fill:currentColor" >

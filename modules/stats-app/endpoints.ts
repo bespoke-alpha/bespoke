@@ -1,4 +1,4 @@
-import { filter } from "./funcs";
+import { filter } from "./funcs.js";
 
 const lfmperiods = {
 	short_term: "1month",

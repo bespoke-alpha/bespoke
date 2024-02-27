@@ -1,5 +1,5 @@
-import { PLACEHOLDER, SPOTIFY } from "./endpoints";
-import { Album, ArtistCardProps } from "./types/stats_types";
+import { PLACEHOLDER, SPOTIFY } from "./endpoints.js";
+import { Album, ArtistCardProps } from "./types/stats_types.js";
 import { storage } from "./index.js";
 
 import { S } from "/modules/std/index.js";

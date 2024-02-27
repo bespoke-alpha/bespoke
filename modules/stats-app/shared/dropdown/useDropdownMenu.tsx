@@ -1,5 +1,5 @@
 import { useState } from "react";
-import DropdownMenu from "./dropdown";
+import DropdownMenu from "./dropdown.js";
 
 interface OptionProps {
 	id: string;

@@ -1,15 +1,16 @@
-import React from "react";
+import { S } from "/modules/std/index.js";
+const { React } = S;
 
-import TrackRow from "../components/track_row";
-import Status from "../shared/components/status";
-import PageContainer from "../shared/components/page_container";
-import Tracklist from "../components/tracklist";
-import useDropdownMenu from "../shared/dropdown/useDropdownMenu";
-import { apiRequest, updatePageCache, checkLiked, convertTrackData } from "../funcs";
-import { ConfigWrapper, Track } from "../types/stats_types";
-import { LASTFM, SPOTIFY, PLACEHOLDER } from "../endpoints";
-import RefreshButton from "../components/buttons/refresh_button";
-import SettingsButton from "../shared/components/settings_button";
+import TrackRow from "../components/track_row.js";
+import Status from "../shared/components/status.js";
+import PageContainer from "../shared/components/page_container.js";
+import Tracklist from "../components/tracklist.js";
+import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
+import { apiRequest, updatePageCache, checkLiked, convertTrackData } from "../funcs.js";
+import { ConfigWrapper, Track } from "../types/stats_types.js";
+import { LASTFM, SPOTIFY, PLACEHOLDER } from "../endpoints.js";
+import RefreshButton from "../components/buttons/refresh_button.js";
+import SettingsButton from "../shared/components/settings_button.js";
 
 export const topTracksReq = async (time_range: string, configWrapper: ConfigWrapper) => {
 	const { config } = configWrapper;

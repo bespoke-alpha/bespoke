@@ -1,14 +1,15 @@
-import React from "react";
+import { S } from "/modules/std/index.js";
+const { React } = S;
 
-import StatCard from "../components/cards/stat_card";
-import GenresCard from "../components/cards/genres_card";
-import SpotifyCard from "../shared/components/spotify_card";
-import Status from "../shared/components/status";
-import InlineGrid from "../components/inline_grid";
-import Shelf from "../components/shelf";
-import { apiRequest, fetchAudioFeatures, fetchTopArtists, fetchTopAlbums } from "../funcs";
-import { Album, ArtistCardProps } from "../types/stats_types";
-import { SPOTIFY } from "../endpoints";
+import StatCard from "../components/cards/stat_card.js";
+import GenresCard from "../components/cards/genres_card.js";
+import SpotifyCard from "../shared/components/spotify_card.js";
+import Status from "../shared/components/status.js";
+import InlineGrid from "../components/inline_grid.js";
+import Shelf from "../components/shelf.js";
+import { apiRequest, fetchAudioFeatures, fetchTopArtists, fetchTopAlbums } from "../funcs.js";
+import { Album, ArtistCardProps } from "../types/stats_types.js";
+import { SPOTIFY } from "../endpoints.js";
 
 interface LibraryProps {
 	audioFeatures: Record<string, number>;

@@ -1,13 +1,15 @@
-import React from "react";
-import useDropdownMenu from "../shared/dropdown/useDropdownMenu";
-import SpotifyCard from "../shared/components/spotify_card";
-import { apiRequest, convertAlbumData, updatePageCache } from "../funcs";
-import Status from "../shared/components/status";
-import PageContainer from "../shared/components/page_container";
-import { Album, ConfigWrapper } from "../types/stats_types";
-import { LASTFM } from "../endpoints";
-import RefreshButton from "../components/buttons/refresh_button";
-import SettingsButton from "../shared/components/settings_button";
+import { S } from "/modules/std/index.js";
+const { React } = S;
+
+import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
+import SpotifyCard from "../shared/components/spotify_card.js";
+import { apiRequest, convertAlbumData, updatePageCache } from "../funcs.js";
+import Status from "../shared/components/status.js";
+import PageContainer from "../shared/components/page_container.js";
+import { Album, ConfigWrapper } from "../types/stats_types.js";
+import { LASTFM } from "../endpoints.js";
+import RefreshButton from "../components/buttons/refresh_button.js";
+import SettingsButton from "../shared/components/settings_button.js";
 
 export const topAlbumsReq = async (time_range: string, configWrapper: ConfigWrapper) => {
 	const { config } = configWrapper;

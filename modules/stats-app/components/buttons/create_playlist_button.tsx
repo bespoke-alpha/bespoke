@@ -1,5 +1,5 @@
 import { S } from "/modules/std/index.js";
-import type { InfoToCreatePlaylist } from "../../types/stats_types";
+import type { InfoToCreatePlaylist } from "../../types/stats_types.js";
 
 interface CreatePlaylistButtonProps {
 	infoToCreatePlaylist: InfoToCreatePlaylist;
