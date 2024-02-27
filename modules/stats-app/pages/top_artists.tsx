@@ -10,34 +10,34 @@ import { ArtistCardProps, ConfigWrapper } from "../types/stats_types.js";
 import { PLACEHOLDER, LASTFM, SPOTIFY } from "../endpoints.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
+import { storage } from "../index.js";
 
 export const topArtistsReq = async (time_range: string, configWrapper: ConfigWrapper) => {
 	const { config } = configWrapper;
 	if (config["use-lastfm"] === true) {
 		if (!config["api-key"] || !config["lastfm-user"]) return 300;
 
-		const { ["lastfm-user"]: user, ["api-key"]: key } = config;
+		const { "lastfm-user": user, "api-key": key } = config;
 		const response = await apiRequest("lastfm", LASTFM.topartists(user, key, time_range));
 
 		if (!response) return 200;
 
 		return await convertArtistData(response.topartists.artist);
-	} else {
-		const response = await apiRequest("topArtists", SPOTIFY.topartists(time_range));
-
-		if (!response) return 200;
-
-		return response.items.map((artist: any) => {
-			const image = artist.images[2]?.url || artist.images[1]?.url || PLACEHOLDER;
-			return {
-				id: artist.id,
-				name: artist.name,
-				image,
-				uri: artist.uri,
-				genres: artist.genres,
-			};
-		});
 	}
+	const response = await apiRequest("topArtists", SPOTIFY.topartists(time_range));
+
+	if (!response) return 200;
+
+	return response.items.map((artist: any) => {
+		const image = artist.images[2]?.url || artist.images[1]?.url || PLACEHOLDER;
+		return {
+			id: artist.id,
+			name: artist.name,
+			image,
+			uri: artist.uri,
+			genres: artist.genres,
+		};
+	});
 };
 
 const DropdownOptions = [
@@ -50,9 +50,9 @@ const ArtistsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 	const [topArtists, setTopArtists] = React.useState<ArtistCardProps[] | 100 | 200 | 300>(100);
 	const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "stats:top-artists");
 
-	const fetchTopArtists = async (time_range: string, force?: boolean, set: boolean = true) => {
+	const fetchTopArtists = async (time_range: string, force?: boolean, set = true) => {
 		if (!force) {
-			let storedData = Spicetify.LocalStorage.get(`stats:top-artists:${time_range}`);
+			const storedData = storage.getItem(`top-artists:${time_range}`);
 			if (storedData) return setTopArtists(JSON.parse(storedData));
 		}
 
@@ -60,7 +60,7 @@ const ArtistsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 
 		const topArtists = await topArtistsReq(time_range, configWrapper);
 		if (set) setTopArtists(topArtists);
-		Spicetify.LocalStorage.set(`stats:top-artists:${time_range}`, JSON.stringify(topArtists));
+		storage.setItem(`top-artists:${time_range}`, JSON.stringify(topArtists));
 
 		console.log("total artists fetch time:", window.performance.now() - start);
 	};
@@ -79,7 +79,7 @@ const ArtistsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 
 	const props = {
 		title: "Top Artists",
-		headerEls: [dropdown, <RefreshButton callback={refresh} />, <SettingsButton configWrapper={configWrapper} />],
+		headerEls: [dropdown, <RefreshButton callback={refresh} />, <SettingsButton section="stats" />],
 	};
 
 	switch (topArtists) {
@@ -114,11 +114,9 @@ const ArtistsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 	));
 
 	return (
-		<>
-			<PageContainer {...props}>
-				<div className={`main-gridContainer-gridContainer grid`}>{artistCards}</div>
-			</PageContainer>
-		</>
+		<PageContainer {...props}>
+			<div className={"main-gridContainer-gridContainer grid"}>{artistCards}</div>
+		</PageContainer>
 	);
 };
 

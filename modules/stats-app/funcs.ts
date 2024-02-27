@@ -81,7 +81,7 @@ export const fetchAudioFeatures = async (ids: string[]) => {
 	const responses = await Promise.all(promises);
 
 	// Merge responses from all batches into a single array
-	const data = responses.reduce((acc: Record<string, any>[], response) => {
+	const data = responses.reduce<Array<Record<string, any>>>((acc, response) => {
 		if (!response?.audio_features) return acc; // Skip if response is empty
 		return acc.concat(response.audio_features);
 	}, []);
@@ -140,7 +140,7 @@ export const fetchTopAlbums = async (albums: Record<string, number>, cachedAlbum
 	);
 
 	top_albums = top_albums.filter(el => el != null).slice(0, 10);
-	return [top_albums, Object.entries(release_years), total_album_tracks];
+	return [top_albums, Object.entries(release_years), total_album_tracks] as const;
 };
 
 export const fetchTopArtists = async (artists: Record<string, number>) => {
@@ -176,7 +176,7 @@ export const fetchTopArtists = async (artists: Record<string, number>) => {
 	const top_genres = Object.entries(genres)
 		.sort((a, b) => b[1] - a[1])
 		.slice(0, 10);
-	return [top_artists, top_genres, total_genre_tracks];
+	return [top_artists, top_genres, total_genre_tracks] as const;
 };
 
 export const convertTrackData = async (data: any[]) => {

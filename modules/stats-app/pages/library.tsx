@@ -1,5 +1,5 @@
 import { S } from "/modules/std/index.js";
-const { React } = S;
+const { React, URI } = S;
 
 import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
 import StatCard from "../components/cards/stat_card.js";
@@ -14,6 +14,7 @@ import { Album, ArtistCardProps, ConfigWrapper } from "../types/stats_types.js";
 import { SPOTIFY } from "../endpoints.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
+import { storage } from "../index.js";
 
 interface LibraryProps {
 	audioFeatures: Record<string, number>;
@@ -38,10 +39,10 @@ const LibraryPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 	const [library, setLibrary] = React.useState<LibraryProps | 100 | 200 | 300>(100);
 	const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "stats:library");
 
-	const fetchData = async (option: string, force?: boolean, set: boolean = true) => {
+	const fetchData = async (option: string, force?: boolean, set = true) => {
 		try {
 			if (!force) {
-				let storedData = Spicetify.LocalStorage.get(`stats:library:${option}`);
+				const storedData = storage.getItem(`library:${option}`);
 				if (storedData) return setLibrary(JSON.parse(storedData));
 			}
 			const start = window.performance.now();
@@ -53,7 +54,7 @@ const LibraryPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 			const flattenPlaylists = (items: any[]) => {
 				const playlists: any[] = [];
 
-				items.forEach(row => {
+				for (const row of items) {
 					if (row.type === "playlist") {
 						// add the playlist to the result list
 						playlists.push(row);
@@ -64,7 +65,7 @@ const LibraryPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 						// add the flattened playlists to the result list
 						playlists.push(...folderPlaylists);
 					}
-				});
+				}
 
 				return playlists;
 			};
@@ -74,18 +75,18 @@ const LibraryPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 			playlists = playlists.sort((a, b) => (a.ownedBySelf === b.ownedBySelf ? 0 : a.ownedBySelf ? -1 : 1));
 			let indexOfFirstNotOwned = -1;
 
-			let playlistUris: string[] = [];
+			const playlistUris = new Array<string>();
 
-			let trackCount: number = 0;
-			let ownedTrackCount: number = 0;
+			let trackCount = 0;
+			let ownedTrackCount = 0;
 
-			playlists.forEach(playlist => {
+			for (const playlist of playlists) {
 				if (playlist.totalLength === 0) return;
 				if (!playlist.ownedBySelf && indexOfFirstNotOwned === -1) indexOfFirstNotOwned = playlistUris.length;
 				playlistUris.push(playlist.link);
 				trackCount += playlist.totalLength;
 				if (playlist.ownedBySelf) ownedTrackCount += playlist.totalLength;
-			}, 0);
+			}
 
 			// fetch all playlist tracks
 			const playlistsMeta = await Promise.all(
@@ -95,17 +96,17 @@ const LibraryPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 			);
 
 			let duration = 0;
-			let trackIDs: string[] = [];
-			let popularity: number = 0;
-			let albums: Record<string, number> = {};
-			let artists: Record<string, number> = {};
-			let explicitCount: number = 0;
+			const trackIDs = new Array<string>();
+			let popularity = 0;
+			const albums = {} as Record<string, number>;
+			const artists = {} as Record<string, number>;
+			let explicitCount = 0;
 
 			let ownedDuration = 0;
-			let ownedArtists: Record<string, number> = {};
-			let ownedPopularity: number = 0;
-			let ownedAlbums: Record<string, number> = {};
-			let ownedExplicitCount: number = 0;
+			let ownedArtists = {} as Record<string, number>;
+			let ownedPopularity = 0;
+			let ownedAlbums = {} as Record<string, number>;
+			let ownedExplicitCount = 0;
 
 			// loop through all playlists, add up total duration and obscurity, seperate track ids and artists
 			for (let i = 0; i < playlistsMeta.length; i++) {
@@ -119,7 +120,7 @@ const LibraryPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 					ownedAlbums = Object.assign({}, albums);
 				}
 				duration += playlist.playlist.duration;
-				playlist.items.forEach((track: any) => {
+				for (const track of playlist.items) {
 					if (!track?.album) return;
 					if (track.link.includes("local")) return;
 
@@ -132,22 +133,22 @@ const LibraryPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 					const albumID = track.album.link.split(":")[2];
 					albums[albumID] = albums[albumID] ? albums[albumID] + 1 : 1;
 
-					track.artists.forEach((artist: any) => {
-						const artistID = artist.link.split(":")[2];
+					for (const artist of track.artists) {
+						const artistID = URI.fromString(artist.link).id;
 						artists[artistID] = artists[artistID] ? artists[artistID] + 1 : 1;
-					});
-				});
+					}
+				}
 			}
 
-			const [topArtists, topGenres, topGenresTotal]: any = await fetchTopArtists(artists);
-			const [ownedTopArtists, ownedTopGenres, ownedTopGenresTotal]: any = await fetchTopArtists(ownedArtists);
+			const [topArtists, topGenres, topGenresTotal] = await fetchTopArtists(artists);
+			const [ownedTopArtists, ownedTopGenres, ownedTopGenresTotal] = await fetchTopArtists(ownedArtists);
 
-			const [topAlbums, releaseYears, releaseYearsTotal]: any = await fetchTopAlbums(albums);
-			const [ownedTopAlbums, ownedReleaseYears, ownedReleaseYearsTotal]: any = await fetchTopAlbums(ownedAlbums, topAlbums);
+			const [topAlbums, releaseYears, releaseYearsTotal] = await fetchTopAlbums(albums);
+			const [ownedTopAlbums, ownedReleaseYears, ownedReleaseYearsTotal] = await fetchTopAlbums(ownedAlbums, topAlbums);
 
-			const fetchedFeatures: any[] = await fetchAudioFeatures(trackIDs);
+			const fetchedFeatures = await fetchAudioFeatures(trackIDs);
 
-			const audioFeatures: Record<string, number> = {
+			const audioFeatures = {
 				danceability: 0,
 				energy: 0,
 				valence: 0,
@@ -158,7 +159,7 @@ const LibraryPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 				tempo: 0,
 			};
 
-			let ownedAudioFeatures: Record<string, number> = {};
+			let ownedAudioFeatures = {};
 
 			for (let i = 0; i < fetchedFeatures.length; i++) {
 				if (i === ownedTrackCount) {
@@ -170,9 +171,9 @@ const LibraryPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 				}
 				if (!fetchedFeatures[i]) continue;
 				const track = fetchedFeatures[i];
-				Object.keys(audioFeatures).forEach(feature => {
+				for (const feature in Object.keys(audioFeatures)) {
 					audioFeatures[feature] += track[feature];
-				});
+				}
 			}
 
 			const allAudioFeatures: Record<string, any> = {
@@ -181,11 +182,11 @@ const LibraryPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 				...audioFeatures,
 			};
 
-			for (let key in allAudioFeatures) {
+			for (const key in allAudioFeatures) {
 				allAudioFeatures[key] /= fetchedFeatures.length;
 			}
 
-			for (let key in ownedAudioFeatures) {
+			for (const key in ownedAudioFeatures) {
 				ownedAudioFeatures[key] /= ownedTrackCount;
 			}
 
@@ -223,8 +224,8 @@ const LibraryPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 				else return setLibrary(300);
 			}
 
-			Spicetify.LocalStorage.set(`stats:library:all`, JSON.stringify(allStats));
-			Spicetify.LocalStorage.set(`stats:library:owned`, JSON.stringify(ownedStats));
+			storage.setItem("library:all", JSON.stringify(allStats));
+			storage.setItem("library:owned", JSON.stringify(ownedStats));
 
 			console.log("total library fetch time:", window.performance.now() - start);
 		} catch (e) {

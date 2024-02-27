@@ -1,7 +1,6 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
 
-import TrackRow from "../components/track_row.js";
 import Status from "../shared/components/status.js";
 import PageContainer from "../shared/components/page_container.js";
 import Tracklist from "../components/tracklist.js";
@@ -11,13 +10,14 @@ import { ConfigWrapper, Track } from "../types/stats_types.js";
 import { LASTFM, SPOTIFY, PLACEHOLDER } from "../endpoints.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
+import { storage } from "../index.js";
 
 export const topTracksReq = async (time_range: string, configWrapper: ConfigWrapper) => {
 	const { config } = configWrapper;
 	if (config["use-lastfm"] === true) {
 		if (!config["api-key"] || !config["lastfm-user"]) return 300;
 
-		const { ["lastfm-user"]: user, ["api-key"]: key } = config;
+		const { "lastfm-user": user, "api-key": key } = config;
 		const lastfmData = await apiRequest("lastfm", LASTFM.toptracks(user, key, time_range));
 
 		if (!lastfmData) return 200;
@@ -71,14 +71,12 @@ const DropdownOptions = [
 ];
 
 const TracksPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
-	const { LocalStorage } = Spicetify;
-
 	const [topTracks, setTopTracks] = React.useState<Track[] | 100 | 200 | 300>(100);
 	const [dropdown, activeOption] = useDropdownMenu(DropdownOptions, "stats:top-tracks");
 
-	const fetchTopTracks = async (time_range: string, force?: boolean, set: boolean = true) => {
+	const fetchTopTracks = async (time_range: string, force?: boolean, set = true) => {
 		if (!force) {
-			const storedData = LocalStorage.get(`stats:top-tracks:${time_range}`);
+			const storedData = storage.getItem(`top-tracks:${time_range}`);
 			if (storedData) return setTopTracks(JSON.parse(storedData));
 		}
 
@@ -86,7 +84,7 @@ const TracksPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 
 		const topTracks = await topTracksReq(time_range, configWrapper);
 		if (set) setTopTracks(topTracks);
-		LocalStorage.set(`stats:top-tracks:${time_range}`, JSON.stringify(topTracks));
+		storage.setItem(`top-tracks:${time_range}`, JSON.stringify(topTracks));
 
 		console.log("total tracks fetch time:", window.performance.now() - start);
 	};
@@ -105,7 +103,7 @@ const TracksPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 
 	const props = {
 		title: "Top Tracks",
-		headerEls: [dropdown, <RefreshButton callback={refresh} />, <SettingsButton configWrapper={configWrapper} />],
+		headerEls: [dropdown, <RefreshButton callback={refresh} />, <SettingsButton section="stats" />],
 	};
 
 	switch (topTracks) {
@@ -134,7 +132,19 @@ const TracksPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 		itemsUris: topTracks.map(track => track.uri),
 	};
 
-	const trackRows = topTracks.map((track: Track, index) => <TrackRow index={index + 1} {...track} uris={topTracks.map(track => track.uri)} />);
+	const trackRows = topTracks.map((track: Track, index) => (
+		<S.ReactComponents.TracklistRow
+			index={index + 1}
+			uri={track.uri}
+			name={track.name}
+			artists={track.artists}
+			imgUrl={track.image}
+			isExplicit={track.explicit}
+			albumOrShow={{ type: "album", name: track.album, uri: track.album_uri }}
+			isOwnedBySelf={track.liked}
+			duration_ms={track.duration}
+		/>
+	));
 
 	return (
 		<PageContainer {...props} infoToCreatePlaylist={infoToCreatePlaylist}>

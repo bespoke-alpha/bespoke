@@ -7,7 +7,6 @@ import GenresCard from "../components/cards/genres_card.js";
 import InlineGrid from "../components/inline_grid.js";
 import Status from "../shared/components/status.js";
 import PageContainer from "../shared/components/page_container.js";
-import TrackRow from "../components/track_row.js";
 import Tracklist from "../components/tracklist.js";
 import Shelf from "../components/shelf.js";
 
@@ -18,6 +17,7 @@ import { ConfigWrapper, Track } from "../types/stats_types.js";
 import { SPOTIFY } from "../endpoints.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
+import { storage } from "../index.js";
 
 interface GenresPageProps {
 	genres: [string, number][];
@@ -33,30 +33,28 @@ const DropdownOptions = [
 ];
 
 const GenresPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
-	const { LocalStorage } = Spicetify;
-
 	const [topGenres, setTopGenres] = React.useState<GenresPageProps | 100 | 200 | 300>(100);
 	const [dropdown, activeOption] = useDropdownMenu(DropdownOptions, "stats:top-genres");
 
-	const fetchTopGenres = async (time_range: string, force?: boolean, set: boolean = true, force_refetch?: boolean) => {
+	const fetchTopGenres = async (time_range: string, force?: boolean, set = true, force_refetch?: boolean) => {
 		if (!force) {
-			let storedData = LocalStorage.get(`stats:top-genres:${time_range}`);
+			const storedData = storage.getItem(`top-genres:${time_range}`);
 			if (storedData) return setTopGenres(JSON.parse(storedData));
 		}
 		const start = window.performance.now();
 
-		const cacheInfo = JSON.parse(LocalStorage.get("stats:cache-info") as string);
+		const cacheInfo = JSON.parse(storage.getItem("cache-info") as string);
 
 		const fetchedItems = await Promise.all(
 			["artists", "tracks"].map(async (type: string, index: number) => {
 				if (cacheInfo[index] === true && !force_refetch) {
-					return await JSON.parse(LocalStorage.get(`stats:top-${type}:${time_range}`) as string);
+					return await JSON.parse(storage.getItem(`top-${type}:${time_range}`) as string);
 				}
 				const fetchedItems = await (type === "artists" ? topArtistsReq(time_range, configWrapper) : topTracksReq(time_range, configWrapper));
 				cacheInfo[index] = true;
 				cacheInfo[2] = true;
-				LocalStorage.set(`stats:top-${type}:${time_range}`, JSON.stringify(fetchedItems));
-				LocalStorage.set("stats:cache-info", JSON.stringify(cacheInfo));
+				storage.setItem(`top-${type}:${time_range}`, JSON.stringify(fetchedItems));
+				storage.setItem("cache-info", JSON.stringify(cacheInfo));
 				return fetchedItems;
 			}),
 		);
@@ -69,19 +67,19 @@ const GenresPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 		const fetchedTracks = fetchedItems[1].filter((track: any) => track?.id);
 
 		const genres: [string, number][] = fetchedArtists.reduce((acc: [string, number][], artist: any) => {
-			artist.genres.forEach((genre: string) => {
+			for (const genre of artist.genres) {
 				const index = acc.findIndex(([g]) => g === genre);
 				if (index !== -1) {
 					acc[index][1] += 1 * Math.abs(fetchedArtists.indexOf(artist) - 50);
 				} else {
 					acc.push([genre, 1 * Math.abs(fetchedArtists.indexOf(artist) - 50)]);
 				}
-			});
+			}
 			return acc;
 		}, []);
 		let trackPopularity = 0;
 		let explicitness = 0;
-		let releaseData: [string, number][] = [];
+		const releaseData: [string, number][] = [];
 		const topTracks = fetchedTracks.map((track: Track) => {
 			trackPopularity += track.popularity;
 
@@ -111,7 +109,7 @@ const GenresPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 
 		let obscureTracks = [];
 		for (let i = 0; i < fetchedTracks.length; i++) {
-			let track = fetchedTracks[i];
+			const track = fetchedTracks[i];
 			if (!track?.popularity) continue;
 			if (obscureTracks.length < 5) {
 				const dupe = await testDupe(track);
@@ -150,9 +148,9 @@ const GenresPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 		for (let i = 0; i < fetchedFeatures.length; i++) {
 			if (!fetchedFeatures[i]) continue;
 			const track = fetchedFeatures[i];
-			Object.keys(audioFeatures).forEach(feature => {
+			for (const feature of Object.keys(audioFeatures)) {
 				audioFeatures[feature] += track[feature];
-			});
+			}
 		}
 
 		audioFeatures = {
@@ -161,7 +159,7 @@ const GenresPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 			...audioFeatures,
 		};
 
-		for (let key in audioFeatures) {
+		for (const key in audioFeatures) {
 			audioFeatures[key] = audioFeatures[key] / 50;
 		}
 		console.log("total genres fetch time:", window.performance.now() - start);
@@ -174,8 +172,8 @@ const GenresPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 				obscureTracks: obscureTracks,
 			});
 
-		LocalStorage.set(
-			`stats:top-genres:${time_range}`,
+		storage.setItem(
+			`top-genres:${time_range}`,
 			JSON.stringify({
 				genres: genres,
 				features: audioFeatures,
@@ -199,7 +197,7 @@ const GenresPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 
 	const props = {
 		title: "Top Genres",
-		headerEls: [dropdown, <RefreshButton callback={refresh} />, <SettingsButton configWrapper={configWrapper} />],
+		headerEls: [dropdown, <RefreshButton callback={refresh} />, <SettingsButton section="stats" />],
 	};
 
 	switch (topGenres) {
@@ -228,7 +226,17 @@ const GenresPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 	});
 
 	const obscureTracks = topGenres.obscureTracks.map((track: Track, index: number) => (
-		<TrackRow index={index + 1} {...track} uris={topGenres.obscureTracks.map(track => track.uri)} />
+		<S.ReactComponents.TracklistRow
+			index={index + 1}
+			uri={track.uri}
+			name={track.name}
+			artists={track.artists}
+			imgUrl={track.image}
+			isExplicit={track.explicit}
+			albumOrShow={{ type: "album", name: track.album, uri: track.album_uri }}
+			isOwnedBySelf={track.liked}
+			duration_ms={track.duration}
+		/>
 	));
 
 	return (

@@ -25,13 +25,6 @@ interface LibraryProps {
 }
 
 const PlaylistPage = ({ uri }: { uri: string }) => {
-	// @ts-expect-error
-	const { ReactComponent, ReactQuery, Platform, _platform } = Spicetify;
-	const { History, ReduxStore } = Platform;
-	const { QueryClientProvider, QueryClient } = ReactQuery;
-	// @ts-expect-error
-	const { Router, Route, Routes, PlatformProvider, StoreProvider } = ReactComponent;
-
 	const [library, setLibrary] = React.useState<LibraryProps | 100 | 200>(100);
 
 	const fetchData = async () => {
@@ -43,15 +36,15 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 			return;
 		}
 
-		let duration = playlistMeta.playlist.duration;
-		let trackCount = playlistMeta.playlist.length;
-		let explicitCount: number = 0;
-		let trackIDs: string[] = [];
-		let popularity: number = 0;
-		let albums: Record<string, number> = {};
-		let artists: Record<string, number> = {};
+		const duration = playlistMeta.playlist.duration;
+		const trackCount = playlistMeta.playlist.length;
+		let explicitCount = 0;
+		const trackIDs = new Array<string>();
+		let popularity = 0;
+		const albums = {} as Record<string, number>;
+		const artists = {} as Record<string, number>;
 
-		playlistMeta.items.forEach((track: any) => {
+		for (const track of playlistMeta.items) {
 			popularity += track.popularity;
 
 			trackIDs.push(track.link.split(":")[2]);
@@ -61,16 +54,16 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 			const albumID = track.album.link.split(":")[2];
 			albums[albumID] = albums[albumID] ? albums[albumID] + 1 : 1;
 
-			track.artists.forEach((artist: any) => {
+			for (const artist of track.artists) {
 				const artistID = artist.link.split(":")[2];
 				artists[artistID] = artists[artistID] ? artists[artistID] + 1 : 1;
-			});
-		});
+			}
+		}
 
-		const [topAlbums, releaseYears, releaseYearsTotal]: any = await fetchTopAlbums(albums);
-		const [topArtists, topGenres, topGenresTotal]: any = await fetchTopArtists(artists);
+		const [topAlbums, releaseYears, releaseYearsTotal] = await fetchTopAlbums(albums);
+		const [topArtists, topGenres, topGenresTotal] = await fetchTopArtists(artists);
 
-		const fetchedFeatures: any[] = await fetchAudioFeatures(trackIDs);
+		const fetchedFeatures = await fetchAudioFeatures(trackIDs);
 
 		let audioFeatures: Record<string, number> = {
 			danceability: 0,
@@ -86,9 +79,9 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 		for (let i = 0; i < fetchedFeatures.length; i++) {
 			if (!fetchedFeatures[i]) continue;
 			const track = fetchedFeatures[i];
-			Object.keys(audioFeatures).forEach(feature => {
+			for (const feature of Object.keys(audioFeatures)) {
 				audioFeatures[feature] += track[feature];
-			});
+			}
 		}
 
 		audioFeatures = {
@@ -97,7 +90,7 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 			...audioFeatures,
 		};
 
-		for (let key in audioFeatures) {
+		for (const key in audioFeatures) {
 			audioFeatures[key] /= fetchedFeatures.length;
 		}
 
@@ -143,47 +136,27 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 	});
 
 	return (
-		<QueryClientProvider client={new QueryClient()}>
-			<Router
-				location={{
-					pathname: "/",
-				}}
-				navigator={History}
-			>
-				<StoreProvider store={ReduxStore}>
-					<PlatformProvider platform={_platform}>
-						<Routes>
-							<Route
-								path="/"
-								element={
-									<div className="page-content encore-dark-theme encore-base-set">
-										<section className="stats-libraryOverview">
-											<StatCard label="Total Tracks" value={library.trackCount.toString()} />
-											<StatCard label="Total Artists" value={library.artistCount.toString()} />
-											<StatCard label="Total Minutes" value={Math.floor(library.totalDuration / 60).toString()} />
-											<StatCard label="Total Hours" value={(library.totalDuration / (60 * 60)).toFixed(1)} />
-										</section>
-										<Shelf title="Most Frequent Genres">
-											<GenresCard genres={library.genres} total={library.genresDenominator} />
-											<InlineGrid special>{statCards}</InlineGrid>
-										</Shelf>
-										<Shelf title="Most Frequent Artists">
-											<InlineGrid>{artistCards}</InlineGrid>
-										</Shelf>
-										<Shelf title="Most Frequent Albums">
-											<InlineGrid>{albumCards}</InlineGrid>
-										</Shelf>
-										<Shelf title="Release Year Distribution">
-											<GenresCard genres={library.years} total={library.yearsDenominator} />
-										</Shelf>
-									</div>
-								}
-							/>
-						</Routes>
-					</PlatformProvider>
-				</StoreProvider>
-			</Router>
-		</QueryClientProvider>
+		<div className="page-content encore-dark-theme encore-base-set">
+			<section className="stats-libraryOverview">
+				<StatCard label="Total Tracks" value={library.trackCount.toString()} />
+				<StatCard label="Total Artists" value={library.artistCount.toString()} />
+				<StatCard label="Total Minutes" value={Math.floor(library.totalDuration / 60).toString()} />
+				<StatCard label="Total Hours" value={(library.totalDuration / (60 * 60)).toFixed(1)} />
+			</section>
+			<Shelf title="Most Frequent Genres">
+				<GenresCard genres={library.genres} total={library.genresDenominator} />
+				<InlineGrid special>{statCards}</InlineGrid>
+			</Shelf>
+			<Shelf title="Most Frequent Artists">
+				<InlineGrid>{artistCards}</InlineGrid>
+			</Shelf>
+			<Shelf title="Most Frequent Albums">
+				<InlineGrid>{albumCards}</InlineGrid>
+			</Shelf>
+			<Shelf title="Release Year Distribution">
+				<GenresCard genres={library.years} total={library.yearsDenominator} />
+			</Shelf>
+		</div>
 	);
 };
 

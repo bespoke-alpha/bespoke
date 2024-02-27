@@ -22,7 +22,7 @@ const ChartsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 	const [chartData, setChartData] = React.useState<Track[] | ArtistCardProps[] | 100 | 200 | 500>(100);
 	const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "stats:charts");
 
-	async function fetchChartData(type: string, force?: boolean, set: boolean = true) {
+	async function fetchChartData(type: string, force?: boolean, set = true) {
 		if (!force) {
 			const storedData = storage.getItem(`charts:${type}`);
 			if (storedData) return setChartData(JSON.parse(storedData));
@@ -65,7 +65,7 @@ const ChartsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 
 	const props = {
 		title: "Top Albums",
-		headerEls: [dropdown, <RefreshButton callback={refresh} />, <SettingsButton configWrapper={configWrapper} />],
+		headerEls: [dropdown, <RefreshButton callback={refresh} />, <SettingsButton section="stats" />],
 	};
 	switch (chartData) {
 		case 200:
@@ -94,10 +94,10 @@ const ChartsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 			const type = artist.uri.startsWith("https") ? "lastfm" : "artist";
 			return <SpotifyCard type={type} uri={artist.uri} header={artist.name} subheader={`#${index + 1} Artist`} imageUrl={artist.image} />;
 		});
-		props.title = `Charts - Top Artists`;
+		props.title = "Charts - Top Artists";
 		return (
 			<PageContainer {...props}>
-				<div className={`main-gridContainer-gridContainer grid`}>{artistCards}</div>
+				<div className={"main-gridContainer-gridContainer grid"}>{artistCards}</div>
 			</PageContainer>
 		);
 	}
@@ -112,9 +112,21 @@ const ChartsPage = ({ configWrapper }: { configWrapper: ConfigWrapper }) => {
 		itemsUris: chartData.map(track => track.uri),
 	};
 
-	const trackRows = chartData.map((track: any, index) => <TrackRow index={index + 1} {...track} uris={chartData.map(track => track.uri)} />);
+	const trackRows = chartData.map((track, index) => (
+		<S.ReactComponents.TracklistRow
+			index={index + 1}
+			uri={track.uri}
+			name={track.name}
+			artists={track.artists}
+			imgUrl={track.image}
+			isExplicit={track.explicit}
+			albumOrShow={{ type: "album", name: track.album, uri: track.album_uri }}
+			isOwnedBySelf={track.liked}
+			duration_ms={track.duration}
+		/>
+	));
 
-	props.title = `Charts - Top Tracks`;
+	props.title = "Charts - Top Tracks";
 	return (
 		<PageContainer {...props} infoToCreatePlaylist={infoToCreatePlaylist}>
 			<Tracklist>{trackRows}</Tracklist>
