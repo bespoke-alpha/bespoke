@@ -50,14 +50,15 @@ export const apiRequest = async (name: string, url: string, timeout = 5, log = t
 			console.log(name, "all requests failed:", e);
 			console.log(name, "giving up");
 			return null;
-		} else {
-			if (timeout === 5) {
-				logger.log(name, "request failed:", e);
-				logger.log(name, "retrying...");
-			}
-			await new Promise(resolve => setTimeout(resolve, 5000));
-			return apiRequest(name, url, timeout - 1);
 		}
+
+		if (timeout === 5) {
+			logger.log(name, "request failed:", e);
+			logger.log(name, "retrying...");
+		}
+
+		await new Promise(resolve => setTimeout(resolve, 5000));
+		return apiRequest(name, url, timeout - 1);
 	}
 };
 
@@ -90,19 +91,19 @@ export const fetchAudioFeatures = async (ids: string[]) => {
 };
 
 export const fetchTopAlbums = async (albums: Record<string, number>, cachedAlbums?: Album[]) => {
-	let album_keys = Object.keys(albums)
+	const album_keys = Object.keys(albums)
 		.filter(id => id.match(/^[a-zA-Z0-9]{22}$/))
 		.sort((a, b) => albums[b] - albums[a])
 		.slice(0, 100);
 
-	let release_years: Record<string, number> = {};
+	const release_years: Record<string, number> = {};
 	let total_album_tracks = 0;
 
 	const cachedAlbumsSet = new Set(cachedAlbums?.map(album => album.uri));
 
 	let top_albums: Album[] = <Album[]>await Promise.all(
 		album_keys.map(async (albumID: string) => {
-			let albumMeta;
+			let albumMeta: Album;
 
 			// loop through and see if the album is already cached
 			if (cachedAlbums && cachedAlbumsSet.has(`spotify:album:${albumID}`)) {
@@ -111,7 +112,7 @@ export const fetchTopAlbums = async (albums: Record<string, number>, cachedAlbum
 
 			if (!albumMeta) {
 				try {
-					albumMeta = await Spicetify.GraphQL.Request(Spicetify.GraphQL.Definitions.getAlbum, {
+					albumMeta = await S.Platform.getGraphQLLoader()(S.GraphQLDefinitions.getAlbum, {
 						uri: `spotify:album:${albumID}`,
 						locale: "en",
 						offset: 0,
@@ -146,12 +147,12 @@ export const fetchTopAlbums = async (albums: Record<string, number>, cachedAlbum
 export const fetchTopArtists = async (artists: Record<string, number>) => {
 	if (Object.keys(artists).length === 0) return [[], [], 0];
 
-	let artist_keys: string[] = Object.keys(artists)
+	const artist_keys = Object.keys(artists)
 		.filter(id => id.match(/^[a-zA-Z0-9]{22}$/))
 		.sort((a, b) => artists[b] - artists[a])
 		.slice(0, 50);
 
-	let genres: Record<string, number> = {};
+	const genres = {} as Record<string, number>;
 	let total_genre_tracks = 0;
 
 	const artistsMeta = await apiRequest("artistsMetadata", SPOTIFY.artists(artist_keys.join(",")));
@@ -159,9 +160,10 @@ export const fetchTopArtists = async (artists: Record<string, number>) => {
 	let top_artists: ArtistCardProps[] = artistsMeta?.artists?.map((artist: any) => {
 		if (!artist) return null;
 
-		artist.genres.forEach((genre: string) => {
+		for (const genre of artist.genres) {
 			genres[genre] = (genres[genre] || 0) + artists[artist.id];
-		});
+		}
+
 		total_genre_tracks += artists[artist.id];
 
 		return {
@@ -182,7 +184,7 @@ export const fetchTopArtists = async (artists: Record<string, number>) => {
 export const convertTrackData = async (data: any[]) => {
 	return await Promise.all(
 		data.map(async (item: any) => {
-			const spotifyItem = await Spicetify.CosmosAsync.get(SPOTIFY.search(item.name, item.artist.name)).then((res: any) => res.tracks?.items[0]);
+			const spotifyItem = await S.Cosmos.get(SPOTIFY.search(item.name, item.artist.name)).then((res: any) => res.tracks?.items[0]);
 
 			if (!spotifyItem) {
 				console.log(`couldn't find track: ${item.name} by ${item.artist.name}`);
@@ -219,7 +221,7 @@ export const convertTrackData = async (data: any[]) => {
 export const convertAlbumData = async (data: any[]) => {
 	return await Promise.all(
 		data.map(async (item: any) => {
-			const spotifyItem = await Spicetify.CosmosAsync.get(SPOTIFY.searchalbum(item.name, item.artist.name)).then((res: any) => res.albums?.items[0]);
+			const spotifyItem = await S.Cosmos.get(SPOTIFY.searchalbum(item.name, item.artist.name)).then((res: any) => res.albums?.items[0]);
 
 			if (!spotifyItem) {
 				console.log(`couldn't find album: ${item.name} by ${item.artist.name}`);
@@ -244,7 +246,7 @@ export const convertAlbumData = async (data: any[]) => {
 export const convertArtistData = async (data: any[]) => {
 	return await Promise.all(
 		data.map(async (item: any) => {
-			const spotifyItem = await Spicetify.CosmosAsync.get(SPOTIFY.searchartist(item.name)).then((res: any) => res.artists?.items[0]);
+			const spotifyItem = await S.Cosmos.get(SPOTIFY.searchartist(item.name)).then((res: any) => res.artists?.items[0]);
 
 			if (!spotifyItem) {
 				console.log(`couldn't find artist: ${item.name}`);
