@@ -1,8 +1,12 @@
 {
 	"modules": [
 		"std",
-		"hazy",
 		"delulib",
+
+		"dexie-react-query",
+
+		"hazy",
+
 		"keyboard-shortcuts",
 		"search-on-youtube",
 		"show-the-genres",
@@ -10,7 +14,9 @@
 		"spoqify-radios",
 		"star-ratings",
 		"vaultify",
-		"dexie-react-query",
-		"playlist-labels"
+		"playlist-labels",
+		"better-lyrics",
+
+		"stats-app"
 	]
 }
