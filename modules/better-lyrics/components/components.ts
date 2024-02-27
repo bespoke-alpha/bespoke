@@ -4,7 +4,7 @@ import { LitElement, css, html } from "https://esm.sh/lit";
 import { customElement, property, query, state } from "https://esm.sh/lit/decorators.js";
 import { map } from "https://esm.sh/lit/directives/map.js";
 import { when } from "https://esm.sh/lit/directives/when.js";
-import { PropertyValueMap } from "https://esm.sh/v133/@lit/reactive-element/development/reactive-element.js";
+// import { PropertyValueMap } from "https://esm.sh/v133/@lit/reactive-element/development/reactive-element.js";
 // import { hermite } from "https://esm.sh/@thi.ng/ramp"
 
 import { _ } from "/modules/std/deps.js";
@@ -98,7 +98,7 @@ export class AnimatedText extends AnimatedMixin(SyncedMixin(LitElement)) {
 	animateContent() {
 		const nextGradientAlpha = opacityInterpolator.at(this.csp).toFixed(5);
 		const nextGlowRadius = `${glowRadiusInterpolator.at(this.csp)}px`;
-		const nextGlowAlpha = glowAlphaInterpolator.at(this.csp);
+		const nextGlowAlpha = glowAlphaInterpolator.at(this.csp).toFixed(5);
 		const nextYOffset = `-${this.offsetHeight * 0.1 * this.csp}px`;
 		const nextGradientStart = `${this.csp * 95}%`;
 		const nextGradientEnd = `${this.csp * 105}%`;

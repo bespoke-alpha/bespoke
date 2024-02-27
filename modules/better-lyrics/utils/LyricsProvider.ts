@@ -1,5 +1,8 @@
 import { _ } from "/modules/std/deps.js";
 import { OneUplet, TwoUplet, zip_n_uplets } from "/modules/delulib/fp.js";
+import { S } from "/modules/std/index.js";
+
+const { Cosmos } = S;
 
 const headers = {
 	authority: "apic-desktop.musixmatch.com",
@@ -13,7 +16,7 @@ const CONFIG = {
 // if (!CONFIG.musixmatchToken) {
 const url = new URL("https://apic-desktop.musixmatch.com/ws/1.1/token.get");
 url.searchParams.append("app_id", "web-desktop-app-v1.0");
-Spicetify.CosmosAsync.get(url.toString(), undefined, _.omit(headers, "cookie")).then(res => {
+Cosmos.get(url.toString(), undefined, _.omit(headers, "cookie")).then(res => {
 	if (res.message.header.status_code === 200 && res.message.body.user_token) {
 		CONFIG.musixmatchToken = res.message.body.user_token;
 	}
@@ -45,9 +48,9 @@ export type S<A> = {
 };
 
 export enum LyricsType {
-	NOT_SYNCED,
-	LINE_SYNCED,
-	WORD_SYNCED,
+	NOT_SYNCED = 0,
+	LINE_SYNCED = 1,
+	WORD_SYNCED = 2,
 }
 
 export const Filler = "♪";
@@ -290,7 +293,7 @@ const fetchMxmMacroSubtitlesGet = async (
 	url.searchParams.append("f_subtitle_length", encodeURIComponent(Math.floor(durationS)));
 	url.searchParams.append("usertoken", CONFIG.musixmatchToken);
 
-	const res = await Spicetify.CosmosAsync.get(url.toString(), undefined, headers);
+	const res = await Cosmos.get(url.toString(), undefined, headers);
 	if (res.message.header.hint === "renew") {
 		return renewsLeft > 0 ? fetchMxmMacroSubtitlesGet(uri, title, artist, album, durationS, 0) : Promise.resolve({} as None<MxMMacroSubtitles>);
 	}
@@ -319,7 +322,7 @@ const fetchMxmTrackRichSyncGet = async (commonTrackId: number, trackLength: numb
 	url.searchParams.append("commontrack_id", encodeURIComponent(commonTrackId));
 	url.searchParams.append("usertoken", CONFIG.musixmatchToken);
 
-	const res = await Spicetify.CosmosAsync.get(url.toString(), undefined, headers);
+	const res = await Cosmos.get(url.toString(), undefined, headers);
 
 	return JSON.parse(res.message.body.richsync.richsync_body) as Array<{
 		ts: number;
@@ -342,7 +345,7 @@ const fetchMxmCrowdTrackTranslationsGet = async (trackId: string, lang = "en") =
 	url.searchParams.append("track_id", trackId);
 	url.searchParams.append("usertoken", CONFIG.musixmatchToken);
 
-	const res = await Spicetify.CosmosAsync.get(url.toString(), undefined, headers);
+	const res = await Cosmos.get(url.toString(), undefined, headers);
 
 	return res.message.body.translations_list.map((translation_element: any) => translation_element.translation) as Array<any>;
 };

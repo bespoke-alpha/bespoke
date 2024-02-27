@@ -78,7 +78,10 @@ export const PlayerW = new (class {
 		animationFrameScheduler.schedule(
 			function (self) {
 				if (self!.isPaused) return;
-				self!.tryUpdateScaledProgress(Spicetify.Player.getProgressPercent());
+				const item = PlayerAPI.getState().item;
+				const dateAtTimestamp = Date.now() - item.timestamp;
+				const progress = dateAtTimestamp + item.positionAsOfTimestamp;
+				self!.tryUpdateScaledProgress(progress / item.duration);
 				this.schedule(self);
 			},
 			undefined,
@@ -88,8 +91,8 @@ export const PlayerW = new (class {
 		this.triggerTimestampSync();
 	}
 
-	setTimestamp = (timestamp: number) => {
-		Spicetify.Player.seek(timestamp); // ms or percent
-		this.tryUpdateScaledProgress(timestamp);
+	setTimestamp = (percent: number) => {
+		PlayerAPI.seekTo(Math.round(percent * this.Song.duration));
+		this.tryUpdateScaledProgress(percent);
 	};
 })();
