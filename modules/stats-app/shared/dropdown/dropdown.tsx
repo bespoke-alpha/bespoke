@@ -1,29 +1,17 @@
 import { createIconComponent } from "/modules/std/api/createIconComponent.js";
-import { S } from "/modules/std/index.js";
-
-interface Option {
-	id: string;
-	name: string;
-}
-
-interface DropdownMenuProps {
-	options: Option[];
-	activeOption: Option;
-	switchCallback: (option: Option) => void;
-}
-
-interface MenuItemProps {
-	option: Option;
-	isActive: boolean;
-	switchCallback: (option: Option) => void;
-}
+import { S, SVGIcons } from "/modules/std/index.js";
 
 const CheckIcon = () =>
 	createIconComponent({
-		icon: '<svg xmlns="http://www.w3.org/2000/svg"><path d="M15.53 2.47a.75.75 0 0 1 0 1.06L4.907 14.153.47 9.716a.75.75 0 0 1 1.06-1.06l3.377 3.376L14.47 2.47a.75.75 0 0 1 1.06 0z"/></svg>',
+		icon: SVGIcons.check,
 	});
 
-const MenuItem = (props: MenuItemProps) => {
+interface MenuItemProps {
+	option: string;
+	isActive: boolean;
+	switchCallback: (option: string) => void;
+}
+const DropdownMenuItem = (props: MenuItemProps) => {
 	const { option, isActive, switchCallback } = props;
 
 	const activeStyle = {
@@ -38,28 +26,35 @@ const MenuItem = (props: MenuItemProps) => {
 			trailingIcon={isActive ? <CheckIcon /> : undefined}
 			style={isActive ? activeStyle : undefined}
 		>
-			{option.name}
+			{option}
 		</S.ReactComponents.MenuItem>
 	);
 };
 
-const DropdownMenu = (props: DropdownMenuProps) => {
+interface DropdownMenuProps {
+	options: string[];
+	activeOption: string;
+	switchCallback: (option: string) => void;
+}
+const Dropdown = (props: DropdownMenuProps) => {
 	const { ContextMenu, Menu, TextComponent } = S.ReactComponents;
 	const { options, activeOption, switchCallback } = props;
 
-	const optionItems = options.map(option => {
-		return <MenuItem option={option} isActive={option === activeOption} switchCallback={switchCallback} />;
-	});
-
-	const MenuWrapper = props => {
-		return <Menu {...props}>{optionItems}</Menu>;
+	const DropdownMenu = props => {
+		return (
+			<Menu {...props}>
+				{options.map(option => (
+					<DropdownMenuItem option={option} isActive={option === activeOption} switchCallback={switchCallback} />
+				))}
+			</Menu>
+		);
 	};
 
 	return (
-		<ContextMenu menu={<MenuWrapper />} trigger="click">
+		<ContextMenu menu={<DropdownMenu />} trigger="click">
 			<button className="x-sortBox-sortDropdown" type="button" role="combobox" aria-expanded="false">
 				<TextComponent variant="mesto" semanticColor="textSubdued">
-					{activeOption.name}
+					{activeOption}
 				</TextComponent>
 				<svg
 					role="img"
@@ -77,4 +72,4 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 	);
 };
 
-export default DropdownMenu;
+export default Dropdown;

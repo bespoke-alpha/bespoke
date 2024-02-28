@@ -1,11 +1,12 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
-import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../shared/dropdown/useDropdownMenu.js";
 import SpotifyCard from "../shared/components/spotify_card.js";
 import { apiRequest, convertArtistData, updatePageCache } from "../funcs.js";
 import Status from "../shared/components/status.js";
 import PageContainer from "../shared/components/page_container.js";
-import { PLACEHOLDER, LASTFM, SPOTIFY } from "../endpoints.js";
+import { LASTFM, SPOTIFY } from "../endpoints.js";
+import { PLACEHOLDER } from "../constants.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import { storage } from "../index.js";
@@ -40,7 +41,7 @@ const DropdownOptions = [
 ];
 const ArtistsPage = () => {
     const [topArtists, setTopArtists] = React.useState(100);
-    const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "top-artists");
+    const [dropdown, activeOption, setActiveOption] = useDropdown(DropdownOptions, "top-artists");
     const fetchTopArtists = async (time_range, force, set = true) => {
         if (!force) {
             const storedData = storage.getItem(`top-artists:${time_range}`);
@@ -78,8 +79,7 @@ const ArtistsPage = () => {
             return (S.React.createElement(PageContainer, { ...props },
                 S.React.createElement(Status, { icon: "library", heading: "Loading", subheading: "Fetching data..." })));
     }
-    const artistCards = topArtists.map((artist, index) => (S.React.createElement(SpotifyCard, { type: artist.uri.includes("last") ? "lastfm" : "artist", uri: artist.uri, header: artist.name, subheader: `#${index + 1} Artist`, imageUrl: artist.image })));
     return (S.React.createElement(PageContainer, { ...props },
-        S.React.createElement("div", { className: "iKwGKEfAfW7Rkx2_Ba4E grid" }, artistCards)));
+        S.React.createElement("div", { className: "iKwGKEfAfW7Rkx2_Ba4E grid" }, topArtists.map((artist, index) => (S.React.createElement(SpotifyCard, { type: artist.uri.includes("last") ? "lastfm" : "artist", uri: artist.uri, header: artist.name, subheader: `#${index + 1} Artist`, imageUrl: artist.image }))))));
 };
 export default React.memo(ArtistsPage);

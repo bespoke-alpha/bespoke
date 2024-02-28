@@ -1,5 +1,4 @@
 import { filter } from "./funcs.js";
-
 const lfmperiods = {
 	short_term: "1month",
 	medium_term: "6month",
@@ -28,5 +27,3 @@ export const SPOTIFY = {
 	audiofeatures: (ids: string) => `https://api.spotify.com/v1/audio-features?ids=${ids}`,
 	queryliked: (ids: string) => `https://api.spotify.com/v1/me/tracks/contains?ids=${ids}`,
 };
-
-export const PLACEHOLDER = "https://raw.githubusercontent.com/harbassan/spicetify-stats/main/src/styles/placeholder.png";

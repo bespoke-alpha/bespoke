@@ -1,7 +1,7 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
 
-import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../shared/dropdown/useDropdownMenu.js";
 import StatCard from "../components/cards/stat_card.js";
 import GenresCard from "../components/cards/genres_card.js";
 import InlineGrid from "../components/inline_grid.js";
@@ -34,7 +34,7 @@ const DropdownOptions = [
 
 const GenresPage = () => {
 	const [topGenres, setTopGenres] = React.useState<GenresPageProps | 100 | 200 | 300>(100);
-	const [dropdown, activeOption] = useDropdownMenu(DropdownOptions, "top-genres");
+	const [dropdown, activeOption] = useDropdown(DropdownOptions, "top-genres");
 
 	const fetchTopGenres = async (time_range: string, force?: boolean, set = true, force_refetch?: boolean) => {
 		if (!force) {

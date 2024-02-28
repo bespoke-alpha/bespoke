@@ -1,4 +1,5 @@
-import { PLACEHOLDER, SPOTIFY } from "./endpoints.js";
+import { SPOTIFY } from "./endpoints.js";
+import { PLACEHOLDER } from "./constants.js";
 import { storage } from "./index.js";
 import { S } from "/modules/std/index.js";
 import { logger } from "./index.js";
@@ -34,7 +35,13 @@ export const updatePageCache = (i, callback, activeOption, lib = false) => {
 export const apiRequest = async (name, url, timeout = 5, log = true) => {
     try {
         const timeStart = window.performance.now();
-        const response = await S.Platform.getRequestBuilder().build().withHost(url).withoutMarket().send();
+        let response;
+        if (url.startsWith("sp")) {
+            response = await S.Cosmos.get(url.toString());
+        }
+        else {
+            response = await S.Platform.getRequestBuilder().build().withHost(url).withoutMarket().send();
+        }
         if (log)
             console.log(name, "fetch time:", window.performance.now() - timeStart);
         return response.body;

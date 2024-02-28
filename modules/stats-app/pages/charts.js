@@ -1,7 +1,7 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
 import Status from "../shared/components/status.js";
-import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../shared/dropdown/useDropdownMenu.js";
 import { apiRequest, checkLiked, convertArtistData, convertTrackData, updatePageCache } from "../funcs.js";
 import SpotifyCard from "../shared/components/spotify_card.js";
 import Tracklist from "../components/tracklist.js";
@@ -17,7 +17,7 @@ const DropdownOptions = [
 ];
 const ChartsPage = () => {
     const [chartData, setChartData] = React.useState(100);
-    const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "charts");
+    const [dropdown, activeOption, setActiveOption] = useDropdown(DropdownOptions, "charts");
     async function fetchChartData(type, force, set = true) {
         if (!force) {
             const storedData = storage.getItem(`charts:${type}`);

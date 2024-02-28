@@ -1,13 +1,14 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
 
-import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../shared/dropdown/useDropdownMenu.js";
 import SpotifyCard from "../shared/components/spotify_card.js";
 import { apiRequest, convertArtistData, updatePageCache } from "../funcs.js";
 import Status from "../shared/components/status.js";
 import PageContainer from "../shared/components/page_container.js";
 import { ArtistCardProps, ConfigWrapper } from "../types/stats_types.js";
-import { PLACEHOLDER, LASTFM, SPOTIFY } from "../endpoints.js";
+import { LASTFM, SPOTIFY } from "../endpoints.js";
+import { PLACEHOLDER } from "../constants.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import { storage } from "../index.js";
@@ -47,7 +48,7 @@ const DropdownOptions = [
 
 const ArtistsPage = () => {
 	const [topArtists, setTopArtists] = React.useState<ArtistCardProps[] | 100 | 200 | 300>(100);
-	const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "top-artists");
+	const [dropdown, activeOption, setActiveOption] = useDropdown(DropdownOptions, "top-artists");
 
 	const fetchTopArtists = async (time_range: string, force?: boolean, set = true) => {
 		if (!force) {
@@ -102,19 +103,19 @@ const ArtistsPage = () => {
 			);
 	}
 
-	const artistCards = topArtists.map((artist, index) => (
-		<SpotifyCard
-			type={artist.uri.includes("last") ? "lastfm" : "artist"}
-			uri={artist.uri}
-			header={artist.name}
-			subheader={`#${index + 1} Artist`}
-			imageUrl={artist.image}
-		/>
-	));
-
 	return (
 		<PageContainer {...props}>
-			<div className={"main-gridContainer-gridContainer grid"}>{artistCards}</div>
+			<div className={"main-gridContainer-gridContainer grid"}>
+				{topArtists.map((artist, index) => (
+					<SpotifyCard
+						type={artist.uri.includes("last") ? "lastfm" : "artist"}
+						uri={artist.uri}
+						header={artist.name}
+						subheader={`#${index + 1} Artist`}
+						imageUrl={artist.image}
+					/>
+				))}
+			</div>
 		</PageContainer>
 	);
 };

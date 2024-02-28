@@ -1,7 +1,7 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
 
-import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../shared/dropdown/useDropdownMenu.js";
 import SpotifyCard from "../shared/components/spotify_card.js";
 import { apiRequest, convertAlbumData, updatePageCache } from "../funcs.js";
 import Status from "../shared/components/status.js";
@@ -31,7 +31,7 @@ const DropdownOptions = [
 
 const AlbumsPage = () => {
 	const [topAlbums, setTopAlbums] = React.useState<Album[] | 100 | 200 | 300>(100);
-	const [dropdown, activeOption] = useDropdownMenu(DropdownOptions, "top-albums");
+	const [dropdown, activeOption] = useDropdown(DropdownOptions, "top-albums");
 
 	const fetchTopAlbums = async (time_range: string, force?: boolean, set = true) => {
 		if (!force) {

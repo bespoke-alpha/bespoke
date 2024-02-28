@@ -22,4 +22,3 @@ export const SPOTIFY = {
     audiofeatures: (ids) => `https://api.spotify.com/v1/audio-features?ids=${ids}`,
     queryliked: (ids) => `https://api.spotify.com/v1/me/tracks/contains?ids=${ids}`,
 };
-export const PLACEHOLDER = "https://raw.githubusercontent.com/harbassan/spicetify-stats/main/src/styles/placeholder.png";

@@ -1,4 +1,5 @@
-import { PLACEHOLDER, SPOTIFY } from "./endpoints.js";
+import { SPOTIFY } from "./endpoints.js";
+import { PLACEHOLDER } from "./constants.js";
 import { Album, ArtistCardProps } from "./types/stats_types.js";
 import { storage } from "./index.js";
 
@@ -42,7 +43,12 @@ type ApiResponse = Record<string, any> | null;
 export const apiRequest = async (name: string, url: string, timeout = 5, log = true): Promise<ApiResponse> => {
 	try {
 		const timeStart = window.performance.now();
-		const response = await S.Platform.getRequestBuilder().build().withHost(url).withoutMarket().send();
+		let response;
+		if (url.startsWith("sp")) {
+			response = await S.Cosmos.get(url.toString());
+		} else {
+			response = await S.Platform.getRequestBuilder().build().withHost(url).withoutMarket().send();
+		}
 		if (log) console.log(name, "fetch time:", window.performance.now() - timeStart);
 		return response.body;
 	} catch (e) {

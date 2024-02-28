@@ -1,17 +1,32 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
-import DropdownMenu from "./dropdown.js";
+import Dropdown from "./dropdown.js";
 import { storage } from "../../index.js";
-const useDropdownMenu = (options, storageVariable) => {
-    const initialOptionID = storageVariable && storage.getItem(`${storageVariable}:active-option`);
-    const initialOption = initialOptionID && options.find(e => e.id === initialOptionID);
-    const [activeOption, setActiveOption] = React.useState(initialOption || options[0]);
-    const [availableOptions, setAvailableOptions] = React.useState(options);
-    const dropdown = (S.React.createElement(DropdownMenu, { options: availableOptions, activeOption: activeOption, switchCallback: option => {
-            setActiveOption(option);
-            if (storageVariable)
-                storage.setItem(`${storageVariable}:active-option`, option.id);
-        } }));
-    return [dropdown, activeOption, setActiveOption, setAvailableOptions];
+// * Who doesn't love some Fixed Point (Functional) Programming?
+const Bluebird = (a) => (b) => (c) => a(b(c));
+const createStorage = (provider) => ({
+    getItem(key, def) {
+        const v = provider.getItem(key);
+        return JSON.parse(v) ?? def();
+    },
+    setItem(key, value) {
+        const v = JSON.stringify(value);
+        provider.setItem(key, v);
+    },
+});
+const usePersistedState = ({ getItem, setItem }) => (key) => (initialState) => {
+    const [state, setState] = React.useState(() => getItem(key, initialState));
+    const persistentSetState = React.useCallback(newStateGen => {
+        const newStateValue = newStateGen(state);
+        setItem(key, newStateValue);
+        setState(newStateValue);
+    }, [state, setItem, key]);
+    return [state, persistentSetState];
 };
-export default useDropdownMenu;
+const createPersistedState = Bluebird(usePersistedState)(createStorage);
+const useDropdown = (options, storageVariable) => {
+    const [activeOption, setActiveOption] = createPersistedState(storage)(`drop-down:${storageVariable}`)(() => options[0]);
+    const dropdown = S.React.createElement(Dropdown, { options: options, activeOption: activeOption, switchCallback: setActiveOption });
+    return [dropdown, activeOption, setActiveOption];
+};
+export default useDropdown;

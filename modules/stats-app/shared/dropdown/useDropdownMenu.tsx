@@ -1,30 +1,55 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
-import DropdownMenu from "./dropdown.js";
+import Dropdown from "./dropdown.js";
 import { storage } from "../../index.js";
 
-interface OptionProps {
-	id: string;
-	name: string;
-}
+// * Who doesn't love some Fixed Point (Functional) Programming?
+const Bluebird =
+	<A, B>(a: (b: B) => A) =>
+	<C,>(b: (c: C) => B) =>
+	(c: C) =>
+		a(b(c));
 
-const useDropdownMenu = (options: OptionProps[], storageVariable?: string) => {
-	const initialOptionID = storageVariable && storage.getItem(`${storageVariable}:active-option`);
-	const initialOption = initialOptionID && options.find(e => e.id === initialOptionID);
-	const [activeOption, setActiveOption] = React.useState(initialOption || options[0]);
-	const [availableOptions, setAvailableOptions] = React.useState(options);
-	const dropdown = (
-		<DropdownMenu
-			options={availableOptions}
-			activeOption={activeOption}
-			switchCallback={option => {
-				setActiveOption(option);
-				if (storageVariable) storage.setItem(`${storageVariable}:active-option`, option.id);
-			}}
-		/>
-	);
+const createStorage = (provider: Pick<Storage, "getItem" | "setItem">) => ({
+	getItem(key: string, def: () => any) {
+		const v = provider.getItem(key);
+		return JSON.parse(v) ?? def();
+	},
+	setItem(key: string, value) {
+		const v = JSON.stringify(value);
+		provider.setItem(key, v);
+	},
+});
 
-	return [dropdown, activeOption, setActiveOption, setAvailableOptions] as const;
+type Thunk<A> = () => A;
+
+const usePersistedState =
+	({ getItem, setItem }: ReturnType<typeof createStorage>) =>
+	<K extends string>(key: K) =>
+	<A,>(initialState: Thunk<A>) => {
+		const [state, setState] = React.useState(() => getItem(key, initialState));
+
+		const persistentSetState = React.useCallback(
+			newStateGen => {
+				const newStateValue = newStateGen(state);
+
+				setItem(key, newStateValue);
+				setState(newStateValue);
+			},
+			[state, setItem, key],
+		);
+
+		return [state, persistentSetState] as const;
+	};
+
+const createPersistedState = Bluebird(usePersistedState)(createStorage);
+
+const useDropdown = (options: string[], storageVariable: string) => {
+	const [activeOption, setActiveOption] = createPersistedState(storage)(`drop-down:${storageVariable}`)(() => options[0]);
+
+	const dropdown = <Dropdown options={options} activeOption={activeOption} switchCallback={setActiveOption} />;
+
+	return [dropdown, activeOption, setActiveOption] as const;
 };
 
-export default useDropdownMenu;
+export default useDropdown;

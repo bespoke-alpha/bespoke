@@ -1,6 +1,6 @@
 import { S } from "/modules/std/index.js";
 const { React, URI } = S;
-import useDropdownMenu from "../shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../shared/dropdown/useDropdownMenu.js";
 import StatCard from "../components/cards/stat_card.js";
 import GenresCard from "../components/cards/genres_card.js";
 import SpotifyCard from "../shared/components/spotify_card.js";
@@ -19,7 +19,7 @@ const DropdownOptions = [
 ];
 const LibraryPage = () => {
     const [library, setLibrary] = React.useState(100);
-    const [dropdown, activeOption, setActiveOption] = useDropdownMenu(DropdownOptions, "library");
+    const [dropdown, activeOption, setActiveOption] = useDropdown(DropdownOptions, "library");
     const fetchData = async (option, force, set = true) => {
         try {
             if (!force) {

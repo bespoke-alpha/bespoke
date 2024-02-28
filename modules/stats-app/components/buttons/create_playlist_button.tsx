@@ -8,9 +8,8 @@ interface CreatePlaylistButtonProps {
 const RootlistAPI = S.Platform.getRootlistAPI();
 const PlaylistAPI = S.Platform.getPlaylistAPI();
 
-async function createPlaylistAsync(infoToCreatePlaylist: InfoToCreatePlaylist): Promise<void> {
+async function createPlaylist({ playlistName, itemsUris }: InfoToCreatePlaylist): Promise<void> {
 	try {
-		const { playlistName, itemsUris } = infoToCreatePlaylist;
 		const playlistUri = await RootlistAPI.createPlaylist(playlistName, { before: "start" });
 		await PlaylistAPI.add(playlistUri, itemsUris, { before: "start" });
 	} catch (error) {
@@ -30,7 +29,7 @@ function CreatePlaylistButton(props: CreatePlaylistButtonProps): React.ReactElem
 				children="Turn Into Playlist"
 				semanticColor="textBase"
 				buttonSize="sm"
-				onClick={() => createPlaylistAsync(infoToCreatePlaylist)}
+				onClick={() => createPlaylist(infoToCreatePlaylist)}
 				className="stats-make-playlist-button"
 			/>
 		</Tooltip>
