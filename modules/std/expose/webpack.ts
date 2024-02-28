@@ -137,6 +137,8 @@ type WebpackRequire = any;
 
 export type ExposedWebpack = ReturnType<typeof expose>;
 
+// ! Clean this file
+
 const exposeReactComponents = (
 	{ require, chunks, exports, exportedFunctions, exportedMemos, exportedForwardRefs }: Webpack,
 	React: React,
@@ -190,7 +192,10 @@ const exposeReactComponents = (
 	const RemoteConfigProviderComponent = findBy("resolveSuspense", "configuration")(exportedFCs) as React.FC<any>;
 
 	const Slider = exportedFCs.find(m => m.toString().includes("onStepBackward") && !m.toString().includes("volume")) as React.FC<any>;
-	const Nav = exportedMemos.find(m => m.type.$$typeof === Symbol.for("react.forward_ref") && m.type.render.toString().includes("navigationalRoot"));
+
+	const exportedMemoFRefs = exportedMemos.filter(m => m.type.$$typeof === Symbol.for("react.forward_ref"));
+	const Nav = exportedMemoFRefs.find(m => m.type.render.toString().includes("navigationalRoot"));
+	const NavTo = exportedMemoFRefs.find(m => m.type.render.toString().includes("pageId"));
 
 	return {
 		SettingColumn: findBy("setSectionFilterMatchQueryValue", "filterMatchQuery")(exportedFCs),
@@ -212,8 +217,12 @@ const exposeReactComponents = (
 		MenuItemSubMenu: findBy("subMenuIcon")(exportedFCs),
 		Slider,
 		Nav,
+		NavTo,
 		RemoteConfigProvider: ({ configuration = Platform.getRemoteConfiguration(), children }) =>
 			React.createElement(RemoteConfigProviderComponent, { configuration }, children),
+
+		// TODO: better nomenclature
+		Scrollable: findBy("applyLightThemeControls")(exportedFunctions) as React.FC<any>,
 
 		PanelHeader: exportedFCs.find(m => m.toString().includes("panel") && m.toString().includes("actions")),
 		PanelContent: findBy(m => m.render.toString().includes("scrollBarContainer"))(exportedForwardRefs) || findBy("scrollBarContainer")(exportedFCs),
@@ -371,6 +380,12 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 	const webpack = exposeWebpack();
 	const { require, chunks, modules, exports, exportedFunctions, exportedContexts, exportedForwardRefs, exportedMemos } = webpack;
 
+	const [ReactRouterModuleID] = chunks.find(([_, v]) => v.toString().includes("React Router"));
+	const ReactRouterModule = Object.values(require(ReactRouterModuleID));
+
+	// https://github.com/remix-run/react-router/blob/main/packages/react-router/lib/hooks.tsx#L131
+	const useMatch = findBy("let{pathname:", /\(([\w_\$][\w_\$\d]*),([\w_\$][\w_\$\d]*)\)\),\[\2,\1\]/)(ReactRouterModule);
+
 	const useContextMenuState = findBy("useContextMenuState")(exportedFunctions);
 
 	type FN_enqueueCustomSnackbar_OPTS = (Omit<OptionsObject, "key"> & { keyPrefix: string }) | (OptionsObject & { identifier: string });
@@ -439,6 +454,7 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 
 	return {
 		webpack,
+		useMatch,
 		useContextMenuState,
 		enqueueCustomSnackbar,
 		React,

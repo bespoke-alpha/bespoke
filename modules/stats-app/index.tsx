@@ -48,7 +48,7 @@ export default function (mod: Module) {
 				icon={SVGIcons.visualizer}
 				onClick={() => {
 					const playlistUri = URI.fromString(History.location.pathname);
-					display({ title: "Playlist Stats", content: <PlaylistPage uri={playlistUri} />, isLarge: true });
+					display({ title: "Playlist Stats", content: <PlaylistPage uri={playlistUri} />, isLarge: false });
 				}}
 			/>
 		);
@@ -57,7 +57,7 @@ export default function (mod: Module) {
 	onHistoryChanged(
 		() => true,
 		uri => {
-			const isPlaylistPage = URI.is.Playlist(uri);
+			const isPlaylistPage = URI.is.PlaylistV1OrV2(uri);
 			setPlaylistEditHidden?.(!isPlaylistPage);
 		},
 		false,
@@ -66,7 +66,7 @@ export default function (mod: Module) {
 	registrar.register("topbarLeftButton", <PlaylistEdit />);
 
 	const LazyStatsApp = S.React.lazy(() => import("./app.js"));
-	registrar.register("route", <S.ReactComponents.Route path={"/stats"} element={<LazyStatsApp />} />);
+	registrar.register("route", <S.ReactComponents.Route path={"/stats/*"} element={<LazyStatsApp />} />);
 
 	registrar.register("navlink", () => <NavLink localizedApp="Statistics" appRoutePath="/stats" icon={ICON} activeIcon={ACTIVE_ICON} />);
 }

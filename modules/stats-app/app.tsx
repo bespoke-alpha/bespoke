@@ -8,68 +8,73 @@ import { STATS_VERSION, LATEST_RELEASE } from "./constants.js";
 
 import { S } from "/modules/std/index.js";
 
-import { storage } from "./index.js";
-
 const { React } = S;
 
-const checkForUpdates = (setNewUpdate: (a: boolean) => void) => {
+const checkForUpdates = () =>
 	fetch(LATEST_RELEASE)
 		.then(res => res.json())
-		.then(
-			result => {
-				try {
-					setNewUpdate(result[0].name.slice(1) !== STATS_VERSION);
-				} catch (err) {
-					console.log(err);
-				}
-			},
-			error => {
-				console.log("Failed to check for updates", error);
-			},
-		);
+		.then(result => result[0].name.slice(1) !== STATS_VERSION)
+		.catch(err => console.log("Failed to check for updates", err));
+
+const pages = {
+	artists: <ArtistsPage />,
+	tracks: <TracksPage />,
+	albums: <AlbumsPage />,
+	genres: <GenresPage />,
+	library: <LibraryPage />,
+	charts: <ChartsPage />,
 };
 
+const Q = ({ to, title, selected, onClick }) => (
+	<S.ReactComponents.NavTo replace={true} to={to} tabIndex={-1} onClick={onClick} className="ZWI7JsjzJaR_G8Hy4W6J">
+		<S.ReactComponents.Chip selected={selected} selectedColorSet="invertedLight" tabIndex={-1}>
+			{title}
+		</S.ReactComponents.Chip>
+	</S.ReactComponents.NavTo>
+);
+
+const NavBar = ({ categories, selectedCategory }) => (
+	<div className="fVB_YDdnaDlztX7CcWTA">
+		<div className="e179_Eg8r7Ub6yjjxctr contentSpacing">
+			<div className="VIeVCUUETJyYPCDpsBif">
+				<S.ReactComponents.Scrollable>
+					{categories.map(category => (
+						<Q to={`spotify:app:stats:${category}`} title={category} selected={category === selectedCategory}>
+							{category}
+						</Q>
+					))}
+				</S.ReactComponents.Scrollable>
+			</div>
+		</div>
+	</div>
+);
+
+const categories = Object.keys(pages) as Array<keyof typeof pages>;
+
+const Page = ({ selectedCategory }: { selectedCategory: keyof typeof pages }) => pages[selectedCategory];
+
 export default function () {
-	console.log("HOLY MOLY");
+	const [newUpdate, setNewUpdate] = React.useState(false);
 
-	const pages: Record<string, React.ReactElement> = {
-		Artists: <ArtistsPage />,
-		Tracks: <TracksPage />,
-		Albums: <AlbumsPage />,
-		Genres: <GenresPage />,
-		Library: <LibraryPage />,
-		Charts: <ChartsPage />,
-	};
+	React.useEffect(() => {
+		checkForUpdates().then(newUpdate => setNewUpdate((newUpdate as boolean) ?? false));
+	}, []);
 
-	// const tabPages = ["Artists", "Tracks", "Albums", "Genres", "Library", "Charts"].filter(page => configWrapper.config[`show-${page.toLowerCase()}`]);
-
-	// const [navBar, activeLink, setActiveLink] = useNavigationBar(tabPages);
-	// const [hasPageSwitched, setHasPageSwitched] = React.useState(false); // TODO: edit spcr-navigation-bar to include initial active link
-	// const [newUpdate, setNewUpdate] = React.useState(false);
-
-	// React.useEffect(() => {
-	// 	setActiveLink(storage.getItem("active-link") || "Artists");
-	// 	checkForUpdates(setNewUpdate);
-	// 	setHasPageSwitched(true);
-	// }, []);
-
-	// React.useEffect(() => {
-	// 	storage.setItem("active-link", activeLink);
-	// }, [activeLink]);
-
-	// if (!hasPageSwitched) {
-	// 	return;
-	// }
+	const match = S.useMatch("/stats/:category");
+	const selectedCategory = match?.params?.category ?? categories[0];
 
 	return (
 		<div id="stats-app">
-			{/* {navBar} */}
-			{/* {newUpdate && (
+			<NavBar categories={categories} selectedCategory={selectedCategory} />
+			{newUpdate && (
 				<div className="new-update">
 					New app update available! Visit <a href="https://github.com/harbassan/spicetify-stats/releases">harbassan/spicetify-stats</a> to install.
 				</div>
-			)} */}
-			{pages["Artists" /* activeLink */]}
+			)}
+			<S.ReactComponents.Routes>
+				<S.ReactComponents.Route path="/" element={pages.library} />
+				<S.ReactComponents.Route path=":category" element={<Page selectedCategory={selectedCategory} />} />
+			</S.ReactComponents.Routes>
 		</div>
 	);
 }
