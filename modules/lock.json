@@ -1,10 +1,11 @@
 {
 	"modules": [
-		"std",
-		"delulib",
+		"Delusoire/std",
+		"Delusoire/delulib",
 
-		"dexie-react-query",
+		"Delusoire/library-db",
+		"Delusoire/dexie-react-query",
 
-		"stats-app"
+		"Delusoire/stats-app"
 	]
 }
