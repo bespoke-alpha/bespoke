@@ -1,14 +1,11 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
 
-import useDropdown from "../shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../shared/components/dropdown/useDropdownMenu.js";
 import SpotifyCard from "../shared/components/spotify_card.js";
-import { apiRequest, convertArtistData, updatePageCache } from "../funcs.js";
 import Status from "../shared/components/status.js";
 import PageContainer from "../shared/components/page_container.js";
-import { ArtistCardProps, ConfigWrapper } from "../types/stats_types.js";
-import { LASTFM, SPOTIFY } from "../endpoints.js";
-import { PLACEHOLDER } from "../constants.js";
+import { DEFAULT_TRACK_IMG } from "../constants.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import { storage } from "../index.js";
@@ -29,7 +26,7 @@ export const topArtistsReq = async (time_range: string) => {
 	if (!response) return 200;
 
 	return response.items.map((artist: any) => {
-		const image = artist.images[2]?.url || artist.images[1]?.url || PLACEHOLDER;
+		const image = artist.images[2]?.url || artist.images[1]?.url || DEFAULT_TRACK_IMG;
 		return {
 			id: artist.id,
 			name: artist.name,

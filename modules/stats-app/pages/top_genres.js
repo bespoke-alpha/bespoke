@@ -1,6 +1,6 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
-import useDropdown from "../shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../shared/components/dropdown/useDropdownMenu.js";
 import StatCard from "../components/cards/stat_card.js";
 import GenresCard from "../components/cards/genres_card.js";
 import InlineGrid from "../components/inline_grid.js";
@@ -9,9 +9,6 @@ import PageContainer from "../shared/components/page_container.js";
 import Tracklist from "../components/tracklist.js";
 import Shelf from "../components/shelf.js";
 import { topArtistsReq } from "./top_artists.js";
-import { topTracksReq } from "./top_tracks.js";
-import { apiRequest, fetchAudioFeatures, updatePageCache } from "../funcs.js";
-import { SPOTIFY } from "../endpoints.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import { storage } from "../index.js";

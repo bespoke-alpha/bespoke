@@ -1,17 +1,17 @@
 import { S } from "/modules/std/index.js";
-import type { InfoToCreatePlaylist } from "../../types/stats_types.js";
 
-interface CreatePlaylistButtonProps {
-	infoToCreatePlaylist: InfoToCreatePlaylist;
+export interface CreatePlaylistButtonProps {
+	name: string;
+	tracks: string[];
 }
 
 const RootlistAPI = S.Platform.getRootlistAPI();
 const PlaylistAPI = S.Platform.getPlaylistAPI();
 
-async function createPlaylist({ playlistName, itemsUris }: InfoToCreatePlaylist): Promise<void> {
+async function createPlaylist({ name, tracks }: CreatePlaylistButtonProps): Promise<void> {
 	try {
-		const playlistUri = await RootlistAPI.createPlaylist(playlistName, { before: "start" });
-		await PlaylistAPI.add(playlistUri, itemsUris, { before: "start" });
+		const playlistUri = await RootlistAPI.createPlaylist(name, { before: "start" });
+		await PlaylistAPI.add(playlistUri, tracks, { before: "start" });
 	} catch (error) {
 		console.error(error);
 		S.Snackbar.enqueueSnackbar("Failed to create playlist", { variant: "error" });
@@ -20,7 +20,6 @@ async function createPlaylist({ playlistName, itemsUris }: InfoToCreatePlaylist)
 
 function CreatePlaylistButton(props: CreatePlaylistButtonProps): React.ReactElement<HTMLButtonElement> {
 	const { Tooltip, ButtonSecondary } = S.ReactComponents;
-	const { infoToCreatePlaylist } = props;
 
 	return (
 		<Tooltip label={"Turn Into Playlist"} renderInline={true} placement="top">
@@ -29,7 +28,7 @@ function CreatePlaylistButton(props: CreatePlaylistButtonProps): React.ReactElem
 				children="Turn Into Playlist"
 				semanticColor="textBase"
 				buttonSize="sm"
-				onClick={() => createPlaylist(infoToCreatePlaylist)}
+				onClick={() => createPlaylist(props)}
 				className="stats-make-playlist-button"
 			/>
 		</Tooltip>

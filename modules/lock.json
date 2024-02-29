@@ -5,18 +5,6 @@
 
 		"dexie-react-query",
 
-		"hazy",
-
-		"keyboard-shortcuts",
-		"search-on-youtube",
-		"show-the-genres",
-		"sort-plus",
-		"spoqify-radios",
-		"star-ratings",
-		"vaultify",
-		"playlist-labels",
-		"better-lyrics",
-
 		"stats-app"
 	]
 }

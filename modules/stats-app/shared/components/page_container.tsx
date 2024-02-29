@@ -1,17 +1,16 @@
-import CreatePlaylistButton from "../../components/buttons/create_playlist_button.js";
-import { InfoToCreatePlaylist } from "../../types/stats_types.js";
+import CreatePlaylistButton, { CreatePlaylistButtonProps } from "../../components/buttons/create_playlist_button.js";
 
 import { S } from "/modules/std/index.js";
 
 interface PageContainerProps {
 	title: string;
-	infoToCreatePlaylist?: InfoToCreatePlaylist;
+	createPlaylistButtonProps?: CreatePlaylistButtonProps;
 	headerEls?: React.ReactElement | React.ReactElement[];
 	children: React.ReactElement | React.ReactElement[];
 }
 
 const PageContainer = (props: PageContainerProps) => {
-	const { title, infoToCreatePlaylist, headerEls, children } = props;
+	const { title, createPlaylistButtonProps, headerEls, children } = props;
 	const { TextComponent } = S.ReactComponents;
 	return (
 		<section className="contentSpacing">
@@ -20,7 +19,7 @@ const PageContainer = (props: PageContainerProps) => {
 					<TextComponent as="h1" variant="canon" semanticColor="textBase">
 						{title}
 					</TextComponent>
-					{infoToCreatePlaylist ? <CreatePlaylistButton infoToCreatePlaylist={infoToCreatePlaylist} /> : null}
+					{createPlaylistButtonProps && <CreatePlaylistButton {...createPlaylistButtonProps} />}
 				</div>
 				<div className="header-right">{headerEls}</div>
 			</div>

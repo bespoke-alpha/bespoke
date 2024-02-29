@@ -1,9 +1,9 @@
 import ArtistsPage from "./pages/top_artists.js";
 import TracksPage from "./pages/top_tracks.js";
-import GenresPage from "./pages/top_genres.js";
-import LibraryPage from "./pages/library.js";
-import ChartsPage from "./pages/charts.js";
-import AlbumsPage from "./pages/top_albums.js";
+// import GenresPage from "./pages/top_genres.js";
+// import LibraryPage from "./pages/library.js";
+// import ChartsPage from "./pages/charts.js";
+// import AlbumsPage from "./pages/top_albums.js";
 import { STATS_VERSION, LATEST_RELEASE } from "./constants.js";
 
 import { S } from "/modules/std/index.js";
@@ -17,12 +17,12 @@ const checkForUpdates = () =>
 		.catch(err => console.log("Failed to check for updates", err));
 
 const pages = {
-	artists: <ArtistsPage />,
 	tracks: <TracksPage />,
-	albums: <AlbumsPage />,
-	genres: <GenresPage />,
-	library: <LibraryPage />,
-	charts: <ChartsPage />,
+	artists: <ArtistsPage />,
+	// albums: <AlbumsPage />,
+	// genres: <GenresPage />,
+	// library: <LibraryPage />,
+	// charts: <ChartsPage />,
 };
 
 const Q = ({ to, title, selected, onClick }) => (
@@ -72,7 +72,7 @@ export default function () {
 				</div>
 			)}
 			<S.ReactComponents.Routes>
-				<S.ReactComponents.Route path="/" element={pages.library} />
+				<S.ReactComponents.Route path="/" element={pages[categories[0]]} />
 				<S.ReactComponents.Route path=":category" element={<Page selectedCategory={selectedCategory} />} />
 			</S.ReactComponents.Routes>
 		</div>

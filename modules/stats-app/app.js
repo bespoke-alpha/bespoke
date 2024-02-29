@@ -1,9 +1,9 @@
 import ArtistsPage from "./pages/top_artists.js";
 import TracksPage from "./pages/top_tracks.js";
-import GenresPage from "./pages/top_genres.js";
-import LibraryPage from "./pages/library.js";
-import ChartsPage from "./pages/charts.js";
-import AlbumsPage from "./pages/top_albums.js";
+// import GenresPage from "./pages/top_genres.js";
+// import LibraryPage from "./pages/library.js";
+// import ChartsPage from "./pages/charts.js";
+// import AlbumsPage from "./pages/top_albums.js";
 import { STATS_VERSION, LATEST_RELEASE } from "./constants.js";
 import { S } from "/modules/std/index.js";
 const { React } = S;
@@ -12,12 +12,12 @@ const checkForUpdates = () => fetch(LATEST_RELEASE)
     .then(result => result[0].name.slice(1) !== STATS_VERSION)
     .catch(err => console.log("Failed to check for updates", err));
 const pages = {
-    artists: S.React.createElement(ArtistsPage, null),
     tracks: S.React.createElement(TracksPage, null),
-    albums: S.React.createElement(AlbumsPage, null),
-    genres: S.React.createElement(GenresPage, null),
-    library: S.React.createElement(LibraryPage, null),
-    charts: S.React.createElement(ChartsPage, null),
+    artists: S.React.createElement(ArtistsPage, null),
+    // albums: <AlbumsPage />,
+    // genres: <GenresPage />,
+    // library: <LibraryPage />,
+    // charts: <ChartsPage />,
 };
 const Q = ({ to, title, selected, onClick }) => (S.React.createElement(S.ReactComponents.NavTo, { replace: true, to: to, tabIndex: -1, onClick: onClick, className: "ZWI7JsjzJaR_G8Hy4W6J" },
     S.React.createElement(S.ReactComponents.Chip, { selected: selected, selectedColorSet: "invertedLight", tabIndex: -1 }, title)));
@@ -41,6 +41,6 @@ export default function () {
             S.React.createElement("a", { href: "https://github.com/harbassan/spicetify-stats/releases" }, "harbassan/spicetify-stats"),
             " to install.")),
         S.React.createElement(S.ReactComponents.Routes, null,
-            S.React.createElement(S.ReactComponents.Route, { path: "/", element: pages.library }),
+            S.React.createElement(S.ReactComponents.Route, { path: "/", element: pages[categories[0]] }),
             S.React.createElement(S.ReactComponents.Route, { path: ":category", element: S.React.createElement(Page, { selectedCategory: selectedCategory }) }))));
 }

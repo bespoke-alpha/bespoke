@@ -1,11 +1,9 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
-import useDropdown from "../shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../shared/components/dropdown/useDropdownMenu.js";
 import SpotifyCard from "../shared/components/spotify_card.js";
-import { apiRequest, convertAlbumData, updatePageCache } from "../funcs.js";
 import Status from "../shared/components/status.js";
 import PageContainer from "../shared/components/page_container.js";
-import { LASTFM } from "../endpoints.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import { storage } from "../index.js";

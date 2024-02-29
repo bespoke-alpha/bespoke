@@ -1,12 +1,10 @@
 import { S } from "/modules/std/index.js";
 const { React } = S;
 import Status from "../shared/components/status.js";
-import useDropdown from "../shared/dropdown/useDropdownMenu.js";
-import { apiRequest, checkLiked, convertArtistData, convertTrackData, updatePageCache } from "../funcs.js";
+import useDropdown from "../shared/components/dropdown/useDropdownMenu.js";
 import SpotifyCard from "../shared/components/spotify_card.js";
 import Tracklist from "../components/tracklist.js";
 import PageContainer from "../shared/components/page_container.js";
-import { LASTFM } from "../endpoints.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import { storage } from "../index.js";
@@ -89,7 +87,7 @@ const ChartsPage = () => {
     };
     const trackRows = chartData.map((track, index) => (S.React.createElement(S.ReactComponents.TracklistRow, { index: index + 1, uri: track.uri, name: track.name, artists: track.artists, imgUrl: track.image, isExplicit: track.explicit, albumOrShow: { type: "album", name: track.album, uri: track.album_uri }, isOwnedBySelf: track.liked, duration_ms: track.duration })));
     props.title = "Charts - Top Tracks";
-    return (S.React.createElement(PageContainer, { ...props, infoToCreatePlaylist: infoToCreatePlaylist },
+    return (S.React.createElement(PageContainer, { ...props, createPlaylistButtonProps: infoToCreatePlaylist },
         S.React.createElement(Tracklist, null, trackRows)));
 };
 export default React.memo(ChartsPage);

@@ -83,8 +83,9 @@ const exposeReactComponents = ({ require, chunks, exports, exportedFunctions, ex
         Menus,
         PlaylistMenu: Object.values(require(playlistMenuChunkID)).find(m => typeof m === "function" || typeof m === "object"),
         GenericModal: findBy("GenericModal")(exportedFCs),
-        Tracklist: findBy("nrValidItems")(exportedMemos),
-        TracklistRow: findBy("track-icon")(exportedMemos),
+        Tracklist: exportedMemos.find(f => f.type.toString().includes("nrValidItems")),
+        TracklistRow: exportedMemos.find(f => f.type.toString().includes("track-icon")),
+        TracklistColumnsContextProvider: findBy("columnType")(exportedFunctions),
     };
 };
 const exposeURI = ({ require, chunks }) => {
@@ -208,9 +209,11 @@ export function expose({ Snackbar, Platform }) {
         }
         return analysis;
     };
+    const getPlayContext = findBy("referrerIdentifier", "usePlayContextItem")(exportedFunctions);
     return {
         webpack,
         useMatch,
+        getPlayContext,
         useContextMenuState,
         enqueueCustomSnackbar,
         React,

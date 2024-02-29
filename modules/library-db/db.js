@@ -5,7 +5,7 @@ import { S } from "/modules/std/index.js";
 const { URI } = S;
 export const db = new (class extends Dexie {
     constructor() {
-        super("library-data");
+        super("library-db");
         this.version(1).stores({
             tracks: "&uri, external_ids.isrc",
             playlists: "&metadata.uri",

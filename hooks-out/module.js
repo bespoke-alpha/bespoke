@@ -1,6 +1,5 @@
 import { createRegisterTransform } from "./transforms/transform.js";
 import { readJSON } from "./util.js";
-import { _ } from "./deps.js";
 export class Module {
     constructor(path, metadata) {
         this.path = path;
@@ -74,7 +73,9 @@ export class Module {
     static async fromRelPath(relPath) {
         const path = `/modules/${relPath}`;
         const metadata = (await readJSON(`${path}/metadata.json`));
-        const statDefaultOrUndefined = (def) => fetch(def).then(_.constant(def)).catch(_.constant(undefined));
+        const statDefaultOrUndefined = (def) => fetch(def)
+            .then(() => def)
+            .catch(() => undefined);
         Object.assign(metadata.entries, {
             js: metadata.entries.js ?? statDefaultOrUndefined("index.js"),
             css: metadata.entries.css ?? statDefaultOrUndefined("index.css"),

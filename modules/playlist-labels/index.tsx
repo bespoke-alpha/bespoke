@@ -1,10 +1,10 @@
 import { S } from "/modules/std/index.js";
 import { _ } from "/modules/std/deps.js";
 import { onTrackListMutationListeners } from "/modules/delulib/listeners.js";
-import { PlaylistItems, useLivePlaylistItems } from "./listeners.js";
+import { PlaylistItems, useLivePlaylistItems } from "../library-db/listeners.js";
 import { createIconComponent } from "/modules/std/api/createIconComponent.js";
 import { useLiveQuery } from "/modules/dexie-react-query/index.js";
-import { db } from "./db.js";
+import { db } from "../library-db/db.js";
 
 const { ReactDOM, URI } = S;
 

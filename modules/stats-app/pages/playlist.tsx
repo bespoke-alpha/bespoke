@@ -7,9 +7,6 @@ import SpotifyCard from "../shared/components/spotify_card.js";
 import Status from "../shared/components/status.js";
 import InlineGrid from "../components/inline_grid.js";
 import Shelf from "../components/shelf.js";
-import { apiRequest, fetchAudioFeatures, fetchTopArtists, fetchTopAlbums } from "../funcs.js";
-import { Album, ArtistCardProps } from "../types/stats_types.js";
-import { SPOTIFY } from "../endpoints.js";
 
 interface LibraryProps {
 	audioFeatures: Record<string, number>;

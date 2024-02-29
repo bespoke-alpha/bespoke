@@ -12,7 +12,7 @@ export const db = new (class extends Dexie {
 	playlists!: Table;
 
 	constructor() {
-		super("library-data");
+		super("library-db");
 		this.version(1).stores({
 			tracks: "&uri, external_ids.isrc",
 			playlists: "&metadata.uri",

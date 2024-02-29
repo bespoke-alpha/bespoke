@@ -1,15 +1,13 @@
 import { S } from "/modules/std/index.js";
 const { React, URI } = S;
-import useDropdown from "../shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../shared/components/dropdown/useDropdownMenu.js";
 import StatCard from "../components/cards/stat_card.js";
 import GenresCard from "../components/cards/genres_card.js";
 import SpotifyCard from "../shared/components/spotify_card.js";
 import InlineGrid from "../components/inline_grid.js";
-import { apiRequest, updatePageCache, fetchAudioFeatures, fetchTopAlbums, fetchTopArtists } from "../funcs.js";
 import Status from "../shared/components/status.js";
 import PageContainer from "../shared/components/page_container.js";
 import Shelf from "../components/shelf.js";
-import { SPOTIFY } from "../endpoints.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import { storage } from "../index.js";
