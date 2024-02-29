@@ -1,19 +1,20 @@
 import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
-import useDropdown from "../components/shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../components/dropdown/useDropdownMenu.js";
 import StatCard from "../components/cards/stat_card.js";
 import ContributionChart from "../components/cards/contribution_chart.js";
 import InlineGrid from "../components/inline_grid.js";
 import PageContainer from "../components/shared/page_container.js";
 import Shelf from "../components/shelf.js";
-import RefreshButton from "../components/shared/buttons/refresh_button.js";
-import SettingsButton from "../components/shared/settings_button.js";
+import RefreshButton from "../components/buttons/refresh_button.js";
+import SettingsButton from "../components/buttons/settings_button.js";
 import { fetchTopTracks } from "./top_tracks.js";
 import { fetchTopArtists } from "./top_artists.js";
 import { calculateGenresFromArtists, fetchAudioFeaturesMeta } from "./playlist.js";
 import { getURI, toID } from "../util/parse.js";
 import { SpotifyTimeRange } from "../api/spotify.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
+import Status from "../components/shared/status.js";
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"];
 const OptionToTimeRange = {
     "Past Month": SpotifyTimeRange.Short,
@@ -34,12 +35,12 @@ export const calculateTracksMeta = (tracks) => {
         releaseDates[releaseDate]++;
     }
     const obscureTracks = tracks.toSorted((a, b) => a.popularity - b.popularity).slice(0, 5);
-    return { explicitness: (explicitCount / tracks.length) * 100, popularity: popularityTotal / tracks.length, releaseDates, obscureTracks };
+    return { explicitness: explicitCount / tracks.length, popularity: popularityTotal / tracks.length, releaseDates, obscureTracks };
 };
 const GenresPage = () => {
     const [dropdown, activeOption] = useDropdown(DropdownOptions, "top-genres");
     const timeRange = OptionToTimeRange[activeOption];
-    const { isLoading, error, data, refetch } = S.ReactQuery.useQuery({
+    const { status, error, data, refetch } = S.ReactQuery.useQuery({
         queryKey: ["topGenres", timeRange],
         queryFn: async () => {
             const topTracks = await fetchTopTracks(timeRange);
@@ -65,11 +66,15 @@ const GenresPage = () => {
     });
     const thisRef = React.useRef(null);
     const { usePlayContextItem } = S.getPlayContext({ uri: "" }, { featureIdentifier: "queue" });
-    if (isLoading) {
-        return "Loading";
-    }
-    if (error) {
-        return "Error";
+    switch (status) {
+        case "pending": {
+            return S.React.createElement(Status, { icon: "library", heading: "Loading", subheading: "This operation is taking longer than expected." });
+        }
+        case "error": {
+            // TODO: use module's logger
+            console.error(error);
+            return S.React.createElement(Status, { icon: "error", heading: "Problem occured", subheading: "Please make sure that all your settings are valid." });
+        }
     }
     const { genres, releaseDates, obscureTracks, audioFeatures } = data;
     const PageContainerProps = {

@@ -1,7 +1,7 @@
 import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 import Dropdown from "./dropdown.js";
-import { storage } from "../../../index.js";
+import { storage } from "../../index.js";
 // * Who doesn't love some Fixed Point (Functional) Programming?
 const Bluebird = (a) => (b) => (c) => a(b(c));
 const createStorage = (provider) => ({

@@ -45,6 +45,7 @@ export interface HiddenField<I extends string = any> extends BaseField<I> {
 
 import SettingsSectionRegistry from "../registers/settingsSection.js";
 
+// TODO: use module's identifier
 export class SettingsSection<A = Record<string, never>> {
 	public id: string;
 	public sectionFields: { [key: string]: JSX.Element } = {};

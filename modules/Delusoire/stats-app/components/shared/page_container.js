@@ -1,4 +1,4 @@
-import CreatePlaylistButton from "./buttons/create_playlist_button.js";
+import CreatePlaylistButton from "../buttons/create_playlist_button.js";
 import { S } from "/modules/Delusoire/std/index.js";
 const PageContainer = (props) => {
     const { title, createPlaylistButtonProps, headerEls, children } = props;

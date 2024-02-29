@@ -10,6 +10,7 @@ import { chunkify20, chunkify50 } from "/modules/Delusoire/delulib/fp.js";
 import { _, fp } from "/modules/Delusoire/std/deps.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
 import { getURI, toID } from "../util/parse.js";
+import Status from "../components/shared/status.js";
 const PlaylistAPI = S.Platform.getPlaylistAPI();
 export const fetchAudioFeaturesMeta = async (ids) => {
     const featureList = {
@@ -105,19 +106,19 @@ const PlaylistPage = ({ uri }) => {
         const { albums, releaseYears } = await fetchAlbumsMeta(albumIDs);
         return { tracks, duration, audioFeatures, artists, genres, albums, releaseYears };
     };
-    const { isLoading, error, data } = S.ReactQuery.useQuery({
+    const { status, error, data } = S.ReactQuery.useQuery({
         queryKey: ["playlistAnalysis"],
         queryFn,
     });
-    if (isLoading) {
-        return "Loading";
-    }
-    if (error) {
-        console.error("SOS", error);
-        return "Error";
-    }
-    if (!data) {
-        return "WTF";
+    switch (status) {
+        case "pending": {
+            return S.React.createElement(Status, { icon: "library", heading: "Loading", subheading: "This operation is taking longer than expected." });
+        }
+        case "error": {
+            // TODO: use module's logger
+            console.error(error);
+            return S.React.createElement(Status, { icon: "error", heading: "Problem occured", subheading: "Please make sure that all your settings are valid." });
+        }
     }
     const { audioFeatures, artists, tracks, duration, genres, albums, releaseYears } = data;
     const statCards = Object.entries(audioFeatures).map(([key, value]) => {

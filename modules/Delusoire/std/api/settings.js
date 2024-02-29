@@ -10,6 +10,7 @@ export var FieldType;
     FieldType["HIDDEN"] = "hidden";
 })(FieldType || (FieldType = {}));
 import SettingsSectionRegistry from "../registers/settingsSection.js";
+// TODO: use module's identifier
 export class SettingsSection {
     constructor(name) {
         this.name = name;

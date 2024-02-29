@@ -1,14 +1,14 @@
 import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
-import useDropdown from "../components/shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../components/dropdown/useDropdownMenu.js";
 import StatCard from "../components/cards/stat_card.js";
 import ContributionChart from "../components/cards/contribution_chart.js";
 import SpotifyCard from "../components/shared/spotify_card.js";
 import InlineGrid from "../components/inline_grid.js";
 import PageContainer from "../components/shared/page_container.js";
 import Shelf from "../components/shelf.js";
-import RefreshButton from "../components/shared/buttons/refresh_button.js";
-import SettingsButton from "../components/shared/settings_button.js";
+import RefreshButton from "../components/buttons/refresh_button.js";
+import SettingsButton from "../components/buttons/settings_button.js";
 import { SpotifyTimeRange } from "../api/spotify.js";
 import { getTracksFromURIs } from "/modules/Delusoire/library-db/db.js";
 import { PlaylistItems, SavedPlaylists } from "/modules/Delusoire/library-db/listeners.js";
@@ -16,6 +16,7 @@ import { fp } from "/modules/Delusoire/std/deps.js";
 import { fetchAlbumsMeta, fetchArtistsMeta, fetchAudioFeaturesMeta } from "./playlist.js";
 import { calculateTracksMeta } from "./top_genres.js";
 import { getURI, toID } from "../util/parse.js";
+import Status from "../components/shared/status.js";
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"];
 const OptionToTimeRange = {
     "Past Month": SpotifyTimeRange.Short,
@@ -25,7 +26,7 @@ const OptionToTimeRange = {
 const LibraryPage = () => {
     const [dropdown, activeOption] = useDropdown(DropdownOptions, "top-genres");
     const timeRange = OptionToTimeRange[activeOption];
-    const { isLoading, error, data, refetch } = S.ReactQuery.useQuery({
+    const { error, data, refetch, status } = S.ReactQuery.useQuery({
         queryKey: ["libraryAnaysis", timeRange],
         queryFn: async () => {
             const trackURIsInLibrary = Array.from(PlaylistItems)
@@ -57,12 +58,15 @@ const LibraryPage = () => {
             };
         },
     });
-    if (isLoading) {
-        return "Loading";
-    }
-    if (error) {
-        console.log("SOS", error);
-        return "Error";
+    switch (status) {
+        case "pending": {
+            return S.React.createElement(Status, { icon: "library", heading: "Loading", subheading: "This operation is taking longer than expected." });
+        }
+        case "error": {
+            // TODO: use module's logger
+            console.error(error);
+            return S.React.createElement(Status, { icon: "error", heading: "Problem occured", subheading: "Please make sure that all your settings are valid." });
+        }
     }
     const { genres, artists, albums, playlists, duration, releaseDates, tracks, audioFeatures } = data;
     const PageContainerProps = {
@@ -80,11 +84,11 @@ const LibraryPage = () => {
     });
     return (S.React.createElement(PageContainer, { ...PageContainerProps },
         S.React.createElement("section", { className: "stats-libraryOverview" },
-            S.React.createElement(StatCard, { label: "Total Playlists", value: playlists.length }),
-            S.React.createElement(StatCard, { label: "Total Tracks", value: tracks.length }),
-            S.React.createElement(StatCard, { label: "Total Artists", value: artists.length }),
-            S.React.createElement(StatCard, { label: "Total Minutes", value: Math.floor(duration / 60) }),
-            S.React.createElement(StatCard, { label: "Total Hours", value: duration / 60 / 60 })),
+            S.React.createElement(StatCard, { label: "Total Playlists", value: playlists.length.toString() }),
+            S.React.createElement(StatCard, { label: "Total Tracks", value: tracks.length.toString() }),
+            S.React.createElement(StatCard, { label: "Total Artists", value: artists.length.toString() }),
+            S.React.createElement(StatCard, { label: "Total Minutes", value: Math.floor(duration / 60).toString() }),
+            S.React.createElement(StatCard, { label: "Total Hours", value: (duration / 60 / 60).toFixed(1) })),
         S.React.createElement(Shelf, { title: "Most Frequent Genres" },
             S.React.createElement(ContributionChart, { contributions: genres }),
             S.React.createElement(InlineGrid, { special: true }, statCards)),

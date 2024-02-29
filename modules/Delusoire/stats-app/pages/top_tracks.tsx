@@ -2,13 +2,14 @@ import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 
 import PageContainer from "../components/shared/page_container.js";
-import useDropdown from "../components/shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../components/dropdown/useDropdownMenu.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
-import RefreshButton from "../components/shared/buttons/refresh_button.js";
-import SettingsButton from "../components/shared/settings_button.js";
+import RefreshButton from "../components/buttons/refresh_button.js";
+import SettingsButton from "../components/buttons/settings_button.js";
 import { spotifyApi } from "../../delulib/api.js";
 import type { Track } from "@fostertheweb/spotify-web-api-ts-sdk";
 import { SpotifyTimeRange } from "../api/spotify.js";
+import Status from "../components/shared/status.js";
 
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"] as const;
 const OptionToTimeRange = {
@@ -26,7 +27,7 @@ const TracksPage = () => {
 	const [dropdown, activeOption] = useDropdown(DropdownOptions, "top-tracks");
 	const timeRange = OptionToTimeRange[activeOption];
 
-	const { isLoading, error, data, refetch } = S.ReactQuery.useQuery({
+	const { status, error, data, refetch } = S.ReactQuery.useQuery({
 		queryKey: ["topTracks", timeRange],
 		queryFn: () => fetchTopTracks(timeRange),
 	});
@@ -35,12 +36,15 @@ const TracksPage = () => {
 
 	const { usePlayContextItem } = S.getPlayContext({ uri: "" }, { featureIdentifier: "queue" });
 
-	if (isLoading) {
-		return "Loading";
-	}
-
-	if (error) {
-		return "Error";
+	switch (status) {
+		case "pending": {
+			return <Status icon="library" heading="Loading" subheading="This operation is taking longer than expected." />;
+		}
+		case "error": {
+			// TODO: use module's logger
+			console.error(error);
+			return <Status icon="error" heading="Problem occured" subheading="Please make sure that all your settings are valid." />;
+		}
 	}
 
 	const topTracks = data.items;

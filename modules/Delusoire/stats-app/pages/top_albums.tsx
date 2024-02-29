@@ -1,17 +1,18 @@
 import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 
-import useDropdown from "../components/shared/dropdown/useDropdownMenu.js";
+import useDropdown from "../components/dropdown/useDropdownMenu.js";
 import SpotifyCard from "../components/shared/spotify_card.js";
 import PageContainer from "../components/shared/page_container.js";
-import RefreshButton from "../components/shared/buttons/refresh_button.js";
-import SettingsButton from "../components/shared/settings_button.js";
+import RefreshButton from "../components/buttons/refresh_button.js";
+import SettingsButton from "../components/buttons/settings_button.js";
 import { CONFIG } from "../settings.js";
 import { fetchLFMTopAlbums } from "../api/lastfm.js";
 import { spotifyApi } from "../../delulib/api.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
 
 import { SpotifyTimeRange } from "../api/spotify.js";
+import Status from "../components/shared/status.js";
 
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"] as const;
 const OptionToTimeRange = {
@@ -25,7 +26,7 @@ const AlbumsPage = () => {
 	const timeRange = OptionToTimeRange[activeOption];
 
 	const {
-		isLoading,
+		status,
 		error,
 		data: topAlbums,
 		refetch,
@@ -42,12 +43,15 @@ const AlbumsPage = () => {
 		},
 	});
 
-	if (isLoading) {
-		return "Loading";
-	}
-
-	if (error) {
-		return "Error";
+	switch (status) {
+		case "pending": {
+			return <Status icon="library" heading="Loading" subheading="This operation is taking longer than expected." />;
+		}
+		case "error": {
+			// TODO: use module's logger
+			console.error(error);
+			return <Status icon="error" heading="Problem occured" subheading="Please make sure that all your settings are valid." />;
+		}
 	}
 
 	const props = {

@@ -22,7 +22,7 @@ import type {
 	useQuery as useQueryT,
 	useQueryClient as useQueryClientT,
 	useInfiniteQuery as useInfiniteQueryT,
-} from "react-query";
+} from "@tanstack/react-query";
 import type MousetrapT from "mousetrap";
 
 export type EnqueueSnackbar = EnqueueSnackbarT;

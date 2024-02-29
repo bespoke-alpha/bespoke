@@ -19,23 +19,26 @@ const LibraryIcon = () => {
 	);
 };
 
-const Status = (props: { icon: "error" | "library"; heading: string; subheading: string }) => {
+type StatusProps = { icon: "error" | "library"; heading: string; subheading: string };
+const Status = (props: StatusProps) => {
 	const [isVisible, setIsVisible] = React.useState(false);
 
 	React.useEffect(() => {
-		const to = setTimeout(() => {
+		const timer = setTimeout(() => {
 			setIsVisible(true);
 		}, 500);
-		return () => clearTimeout(to);
+		return () => clearTimeout(timer);
 	}, []);
 
-	return isVisible ? (
-		<div className="loadingWrapper">
-			{props.icon === "error" ? <ErrorIcon /> : <LibraryIcon />}
-			<h1>{props.heading}</h1>
-			<h3>{props.subheading}</h3>
-		</div>
-	) : undefined;
+	return (
+		isVisible && (
+			<div className="loadingWrapper">
+				{props.icon === "error" ? <ErrorIcon /> : <LibraryIcon />}
+				<h1>{props.heading}</h1>
+				<h3>{props.subheading}</h3>
+			</div>
+		)
+	);
 };
 
 export default Status;
