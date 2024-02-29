@@ -99,7 +99,7 @@ const GenresPage = () => {
 
 	const PageContainerProps = {
 		title: "Top Genres",
-		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="stats" />],
+		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="Statistics" />],
 	};
 
 	const statsCards = Object.entries(audioFeatures).map(([key, value]) => <StatCard label={key} value={value} />);

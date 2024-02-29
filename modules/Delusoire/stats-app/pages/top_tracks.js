@@ -39,7 +39,7 @@ const TracksPage = () => {
     const topTracks = data.items;
     const pageContainerProps = {
         title: "Top Tracks",
-        headerEls: [dropdown, S.React.createElement(RefreshButton, { callback: refetch }), S.React.createElement(SettingsButton, { section: "stats" })],
+        headerEls: [dropdown, S.React.createElement(RefreshButton, { callback: refetch }), S.React.createElement(SettingsButton, { section: "Statistics" })],
         infoToCreatePlaylist: {
             playlistName: `Top Songs - ${activeOption}`,
             itemsUris: topTracks.map(track => track.uri),

@@ -84,7 +84,7 @@ const LibraryPage = () => {
 
 	const PageContainerProps = {
 		title: "Library Analysis",
-		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="stats" />],
+		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="Statistics" />],
 	};
 
 	const statCards = Object.entries(audioFeatures).map(([key, value]) => {

@@ -51,7 +51,7 @@ const TracksPage = () => {
 
 	const pageContainerProps = {
 		title: "Top Tracks",
-		headerEls: [dropdown, <RefreshButton callback={refetch} />, <SettingsButton section="stats" />],
+		headerEls: [dropdown, <RefreshButton callback={refetch} />, <SettingsButton section="Statistics" />],
 		infoToCreatePlaylist: {
 			playlistName: `Top Songs - ${activeOption}`,
 			itemsUris: topTracks.map(track => track.uri),

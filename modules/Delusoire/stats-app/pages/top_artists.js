@@ -36,7 +36,7 @@ const ArtistsPage = () => {
     const topArtists = data.items;
     const PageContainerProps = {
         title: "Top Artists",
-        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "stats" })],
+        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "Statistics" })],
     };
     return (S.React.createElement(PageContainer, { ...PageContainerProps },
         S.React.createElement("div", { className: "iKwGKEfAfW7Rkx2_Ba4E grid" }, topArtists.map((artist, index) => (S.React.createElement(SpotifyCard, { type: "artist", uri: artist.uri, header: artist.name, subheader: `#${index + 1} Artist`, imageUrl: artist.images.at(-1)?.url ?? DEFAULT_TRACK_IMG }))))));

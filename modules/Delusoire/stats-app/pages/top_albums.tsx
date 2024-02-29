@@ -56,7 +56,7 @@ const AlbumsPage = () => {
 
 	const props = {
 		title: "Top Albums",
-		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="stats" />],
+		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="Statistics" />],
 	};
 
 	const albumCards = topAlbums.map((album, index) => {

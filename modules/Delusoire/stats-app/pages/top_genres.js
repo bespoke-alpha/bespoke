@@ -79,7 +79,7 @@ const GenresPage = () => {
     const { genres, releaseDates, obscureTracks, audioFeatures } = data;
     const PageContainerProps = {
         title: "Top Genres",
-        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "stats" })],
+        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "Statistics" })],
     };
     const statsCards = Object.entries(audioFeatures).map(([key, value]) => S.React.createElement(StatCard, { label: key, value: value }));
     return (S.React.createElement(PageContainer, { ...PageContainerProps },

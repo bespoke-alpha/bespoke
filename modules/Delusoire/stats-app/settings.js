@@ -1,5 +1,5 @@
 import { SettingsSection } from "/modules/Delusoire/std/api/settings.js";
-const settings = new SettingsSection("Show The Genres")
+const settings = new SettingsSection("Statistics")
     .addInput({
     id: "LFMApiKey",
     desc: "Last.FM API Key",

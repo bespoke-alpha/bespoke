@@ -45,7 +45,7 @@ const ArtistsPage = () => {
 
 	const PageContainerProps = {
 		title: "Top Artists",
-		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="stats" />],
+		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="Statistics" />],
 	};
 
 	return (

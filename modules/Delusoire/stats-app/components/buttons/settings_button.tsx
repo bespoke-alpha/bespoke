@@ -26,13 +26,14 @@ function SettingsButton({ section }: SettingsButtonProps): React.ReactElement<HT
 					History.push("/preferences");
 					const searchButton = await waitForElement(".DQ9fp5DjBJxKHeHqtFwC .wCl7pMTEE68v1xuZeZiB");
 					const recUp = fiber => {
-						if (fiber._currentValue2?.setFilter) return fiber;
+						const { type } = fiber;
+						if (type.$$typeof === Symbol.for("react.provider") && type._context._currentValue.setFilter) return fiber;
 						return recUp(fiber.return);
 					};
 
 					const filterContext = recUp(searchButton[REACT_FIBER]);
 
-					const { setFilter } = filterContext._currentValue;
+					const { setFilter } = filterContext.pendingProps.value;
 					setFilter(section);
 				}}
 				aria-label="Settings"

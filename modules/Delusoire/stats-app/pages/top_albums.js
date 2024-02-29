@@ -42,7 +42,7 @@ const AlbumsPage = () => {
     }
     const props = {
         title: "Top Albums",
-        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "stats" })],
+        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "Statistics" })],
     };
     const albumCards = topAlbums.map((album, index) => {
         const type = album.uri.startsWith("https") ? "lastfm" : "album";

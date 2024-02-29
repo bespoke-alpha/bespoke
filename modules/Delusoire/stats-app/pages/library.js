@@ -71,7 +71,7 @@ const LibraryPage = () => {
     const { genres, artists, albums, playlists, duration, releaseDates, tracks, audioFeatures } = data;
     const PageContainerProps = {
         title: "Library Analysis",
-        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "stats" })],
+        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "Statistics" })],
     };
     const statCards = Object.entries(audioFeatures).map(([key, value]) => {
         return S.React.createElement(StatCard, { label: key, value: value });
