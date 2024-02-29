@@ -12,12 +12,16 @@ export const pMchain: async =
 	async (fa: A) =>
 		f(await fa);
 
-export const chunkify50 =
+export const chunkifyN =
+	(n: number) =>
 	<A, R>(fn: (a: Array<A>) => R) =>
 	async (args: Array<A>) => {
-		const a = await Promise.all(_(args).chunk(50).map(fn).value());
+		const a = await Promise.all(_(args).chunk(n).map(fn).value());
 		return a.flat();
 	};
+
+export const chunkify50 = chunkifyN(50);
+export const chunkify20 = chunkifyN(20);
 
 export const progressify = <F extends (...args: any) => any>(f: F, n: number) => {
 	let i = n;

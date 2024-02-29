@@ -1,12 +1,12 @@
-import { createQueueItem, setQueue as _setQueue } from "/modules/delulib/util.js";
-import { _, fp } from "/modules/std/deps.js";
-import { S, createRegistrar } from "/modules/std/index.js";
-import { Button } from "/modules/std/registers/topbarLeftButton.js";
+import { createQueueItem, setQueue as _setQueue } from "/modules/Delusoire/delulib/util.js";
+import { _, fp } from "/modules/Delusoire/std/deps.js";
+import { S, createRegistrar } from "/modules/Delusoire/std/index.js";
+import { Button } from "/modules/Delusoire/std/registers/topbarLeftButton.js";
 import { createPlaylistFromLastSortedQueue, reordedPlaylistLikeSortedQueue } from "./playlistsInterop.js";
 import { fillTracksFromLastFM, fillTracksFromSpotify } from "./populate.js";
 import { CONFIG } from "./settings.js";
 import { SEPARATOR_URI, SortAction, SortActionIcon, SortActionProp, URI_is_LikedTracks, getTracksFromUri } from "./util.js";
-import { SVGIcons } from "/modules/std/index.js";
+import { SVGIcons } from "/modules/Delusoire/std/index.js";
 const { URI } = S;
 const PlayerAPI = S.Platform.getPlayerAPI();
 export let lastFetchedUri;
@@ -54,8 +54,8 @@ const SubMenuItems = Object.values(SortAction).map(sortAction => (props) => S.Re
     ...props,
     sortAction,
 }));
-import { createIconComponent } from "/modules/std/api/createIconComponent.js";
-import { useMenuItem } from "/modules/std/registers/menu.js";
+import { createIconComponent } from "/modules/Delusoire/std/api/createIconComponent.js";
+import { useMenuItem } from "/modules/Delusoire/std/registers/menu.js";
 const SortByShuffleSubMenuItem = ({ descending }) => {
     const { props } = useMenuItem();
     const uri = props.uri;

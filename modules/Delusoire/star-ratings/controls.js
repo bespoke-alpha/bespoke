@@ -1,8 +1,8 @@
-import { _, fp } from "/modules/std/deps.js";
+import { _, fp } from "/modules/Delusoire/std/deps.js";
 import { getTracksFromUri } from "../sort-plus/util.js";
 import { Dropdown } from "./dropdown.js";
 import { getCollectionPlaylistButton, getNowPlayingBar, getPlaylistButton, getTrackListTrackUri, getTrackListTracks, getTrackLists } from "./util.js";
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { URI, Tippy, ReactDOM } = S;
 const UNSET_CSS = "invalid";
 const colorByRating = [UNSET_CSS, "#ED5564", "#FFCE54", "A0D568", "#4FC1E8", "#AC92EB"];

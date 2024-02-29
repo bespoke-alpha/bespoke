@@ -1,10 +1,10 @@
-import { addPlaylistTracks, createPlaylist, removePlaylistTracks, setPlaylistVisibility, setInLibrary } from "/modules/delulib/platformApi.js";
-import { SpotifyLoc } from "/modules/delulib/util.js";
+import { addPlaylistTracks, createPlaylist, removePlaylistTracks, setPlaylistVisibility, setInLibrary, } from "/modules/Delusoire/delulib/platformApi.js";
+import { SpotifyLoc } from "/modules/Delusoire/delulib/util.js";
 import { updateCollectionControls, updateNowPlayingControls, updateTrackListControls } from "./controls.js";
 import { CONFIG } from "./settings.js";
 import { getNowPlayingBar } from "./util.js";
-import { _ } from "/modules/std/deps.js";
-import { S } from "/modules/std/index.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { URI } = S;
 const History = S.Platform.getHistory();
 const PlayerAPI = S.Platform.getPlayerAPI();

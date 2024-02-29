@@ -1,6 +1,6 @@
-import { _ } from "/modules/std/deps.js";
-import { zip_n_uplets } from "/modules/delulib/fp.js";
-import { remapScalar, scalarLerp, vectorDist, vectorLerp } from "/modules/delulib/math.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
+import { zip_n_uplets } from "/modules/Delusoire/delulib/fp.js";
+import { remapScalar, scalarLerp, vectorDist, vectorLerp } from "/modules/Delusoire/delulib/math.js";
 class CatmullRomCurve {
     constructor(P, T) {
         this.P = P;

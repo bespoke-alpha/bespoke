@@ -1,6 +1,6 @@
 import { getLibrary, getLocalStorage, getLocalStoreAPI, getSettings } from "./backup.js";
 import { restoreLocalStorage, restoreLibrary, restoreSettings } from "./restore.js";
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const ClipboardAPI = S.Platform.getClipboardAPI();
 export const backup = async (silent = false) => {
     const library = await getLibrary();

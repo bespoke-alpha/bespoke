@@ -63,7 +63,7 @@ const AlbumsPage = () => {
 				uri={album.uri}
 				header={album.name}
 				subheader={`#${index + 1} Album`}
-				imageUrl={album.images[0].url ?? DEFAULT_TRACK_IMG}
+				imageUrl={album.images[0]?.url ?? DEFAULT_TRACK_IMG}
 			/>
 		);
 	});

@@ -1,5 +1,5 @@
-import { createFolder } from "/modules/delulib/platformApi.js";
-import { SettingsSection } from "/modules/std/api/settings.js";
+import { createFolder } from "/modules/Delusoire/delulib/platformApi.js";
+import { SettingsSection } from "/modules/Delusoire/std/api/settings.js";
 const SORTED_PLAYLISTS_FOLDER_NAME = "📀 Sorted Playlists";
 const settings = new SettingsSection("Sort Plus")
     .addToggle({ id: "preventDuplicates", desc: "Prevent Duplicates" }, () => true)

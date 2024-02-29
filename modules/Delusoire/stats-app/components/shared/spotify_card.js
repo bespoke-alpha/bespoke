@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 function SpotifyCard(props) {
     // @ts-ignore
     const { Cards, TextComponent, Menus, RightClickMenu } = S.ReactComponents;

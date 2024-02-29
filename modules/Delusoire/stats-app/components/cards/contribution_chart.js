@@ -1,5 +1,5 @@
-import { fp } from "/modules/std/deps.js";
-import { S } from "/modules/std/index.js";
+import { fp } from "/modules/Delusoire/std/deps.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const ContributionLine = (name, value, limit, total) => {
     return (S.React.createElement("div", { className: "stats-genreRow" },
         S.React.createElement("div", { className: "stats-genreRowFill", style: {

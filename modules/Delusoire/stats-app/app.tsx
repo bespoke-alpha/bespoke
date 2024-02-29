@@ -6,6 +6,8 @@ import AlbumsPage from "./pages/top_albums.js";
 
 import { S } from "/modules/Delusoire/std/index.js";
 
+const { ReactDOM } = S;
+
 const Pages = {
 	tracks: <TracksPage />,
 	artists: <ArtistsPage />,
@@ -14,7 +16,7 @@ const Pages = {
 	library: <LibraryPage />,
 };
 
-const Q = ({ to, title, selected, onClick }) => (
+const NavToChip = ({ to, title, selected, onClick }) => (
 	<S.ReactComponents.NavTo replace={true} to={to} tabIndex={-1} onClick={onClick} className="ZWI7JsjzJaR_G8Hy4W6J">
 		<S.ReactComponents.Chip selected={selected} selectedColorSet="invertedLight" tabIndex={-1}>
 			{title}
@@ -28,15 +30,24 @@ const NavBar = ({ categories, selectedCategory }) => (
 			<div className="VIeVCUUETJyYPCDpsBif">
 				<S.ReactComponents.Scrollable>
 					{categories.map(category => (
-						<Q to={`spotify:app:stats:${category}`} title={category} selected={category === selectedCategory}>
+						<NavToChip to={`spotify:app:stats:${category}`} title={category} selected={category === selectedCategory}>
 							{category}
-						</Q>
+						</NavToChip>
 					))}
 				</S.ReactComponents.Scrollable>
 			</div>
 		</div>
 	</div>
 );
+
+const TopbarMounted = ({ children }) => {
+	return ReactDOM.createPortal(
+		<div className="main-topbar-topbarContent" style={{ pointerEvents: "all" }}>
+			{children}
+		</div>,
+		document.querySelector(".main-topBar-topbarContentWrapper"),
+	);
+};
 
 const categories = Object.keys(Pages) as Array<keyof typeof Pages>;
 
@@ -48,7 +59,9 @@ export default function () {
 
 	return (
 		<div id="stats-app">
-			<NavBar categories={categories} selectedCategory={selectedCategory} />
+			<TopbarMounted>
+				<NavBar categories={categories} selectedCategory={selectedCategory} />
+			</TopbarMounted>
 			<S.ReactComponents.Routes>
 				{/* TODO: replace with redirect */}
 				<S.ReactComponents.Route path="/" element={Pages[categories[0]]} />

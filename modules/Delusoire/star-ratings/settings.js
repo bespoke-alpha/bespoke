@@ -1,5 +1,5 @@
-import { createFolder } from "/modules/delulib/platformApi.js";
-import { SettingsSection } from "/modules/std/api/settings.js";
+import { createFolder } from "/modules/Delusoire/delulib/platformApi.js";
+import { SettingsSection } from "/modules/Delusoire/std/api/settings.js";
 import { loadRatings } from "./util.js";
 const RATINGS_FOLDER_NAME = "®️ Ratings";
 const settings = new SettingsSection("Star Ratings")

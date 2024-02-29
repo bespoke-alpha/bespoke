@@ -1,6 +1,6 @@
 import { Subject, animationFrameScheduler, asyncScheduler } from "https://esm.sh/rxjs";
-import { S } from "/modules/std/index.js";
-import { Events } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
+import { Events } from "/modules/Delusoire/std/index.js";
 import { Song } from "./Song.js";
 const PlayerAPI = S.Platform.getPlayerAPI();
 export const PlayerW = new (class {

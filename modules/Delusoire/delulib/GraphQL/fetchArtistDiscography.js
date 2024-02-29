@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 export const fetchArtistDiscography = (uri, offset = 0, limit = 100) => {
     const _fetchArtistDiscography = async (offset, limit) => {
         const res = await S.Platform.getGraphQLLoader()(S.GraphQLDefinitions.queryArtistDiscographyAll, {

@@ -1,6 +1,6 @@
-import { _ } from "/modules/std/deps.js";
-import { zip_n_uplets } from "/modules/delulib/fp.js";
-import { S } from "/modules/std/index.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
+import { zip_n_uplets } from "/modules/Delusoire/delulib/fp.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { Cosmos } = S;
 const headers = {
     authority: "apic-desktop.musixmatch.com",

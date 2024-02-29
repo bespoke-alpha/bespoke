@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 import { PermanentMutationObserver, REACT_FIBER } from "./util.js";
 const { URI } = S;
 const History = S.Platform.getHistory();

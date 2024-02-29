@@ -53,7 +53,7 @@ const ArtistsPage = () => {
 						uri={artist.uri}
 						header={artist.name}
 						subheader={`#${index + 1} Artist`}
-						imageUrl={artist.images.at(-1).url ?? DEFAULT_TRACK_IMG}
+						imageUrl={artist.images.at(-1)?.url ?? DEFAULT_TRACK_IMG}
 					/>
 				))}
 			</div>

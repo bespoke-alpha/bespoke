@@ -1,5 +1,5 @@
 import { render } from "https://esm.sh/lit";
-import { PermanentMutationObserver } from "/modules/delulib/util.js";
+import { PermanentMutationObserver } from "/modules/Delusoire/delulib/util.js";
 import { PlayerW } from "./utils/PlayerW.js";
 import { LyricsWrapper } from "./components/components.js";
 const injectLyrics = (insertSelector, scrollSelector) => () => {

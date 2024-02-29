@@ -49,7 +49,11 @@ const triggerUpdate = (uris: string[]) => {
 	}
 };
 
+const { URI } = S;
+
 const onTracksAddedToPlaylist = async (playlist: string, uris: string[]) => {
+	// ! ugly hack to ignore local files & episodes; come up with better fix
+	uris = uris.filter(uri => URI.is.Track(uri));
 	mapAssocs(uris, o => o.add(playlist));
 	await getTracksFromURIs(uris);
 	triggerUpdate(uris);

@@ -1,7 +1,7 @@
 import Dexie from "https://esm.sh/dexie";
-import { chunkify50 } from "/modules/delulib/fp.js";
-import { spotifyApi } from "/modules/delulib/api.js";
-import { S } from "/modules/std/index.js";
+import { chunkify50 } from "/modules/Delusoire/delulib/fp.js";
+import { spotifyApi } from "/modules/Delusoire/delulib/api.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { URI } = S;
 export const db = new (class extends Dexie {
     constructor() {

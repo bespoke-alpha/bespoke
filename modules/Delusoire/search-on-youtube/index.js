@@ -1,9 +1,9 @@
-import { searchYoutube, spotifyApi } from "/modules/delulib/api.js";
-import { normalizeStr } from "/modules/delulib/util.js";
+import { searchYoutube, spotifyApi } from "/modules/Delusoire/delulib/api.js";
+import { normalizeStr } from "/modules/Delusoire/delulib/util.js";
 import { CONFIG } from "./settings.js";
-import { S, createRegistrar } from "/modules/std/index.js";
-import { useMenuItem } from "/modules/std/registers/menu.js";
-import { createIconComponent } from "/modules/std/api/createIconComponent.js";
+import { S, createRegistrar } from "/modules/Delusoire/std/index.js";
+import { useMenuItem } from "/modules/Delusoire/std/registers/menu.js";
+import { createIconComponent } from "/modules/Delusoire/std/api/createIconComponent.js";
 // import { Innertube, UniversalCache } from "https://esm.sh/youtubei.js/web.bundle.min";
 // const yt = await Innertube.create({
 // 	cache: new UniversalCache(false),

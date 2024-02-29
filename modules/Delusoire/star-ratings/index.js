@@ -1,12 +1,12 @@
 import { updateCollectionControls, updateNowPlayingControls, updateTrackControls } from "./controls.js";
 import { loadRatings } from "./util.js";
 import { CONFIG } from "./settings.js";
-import { _ } from "/modules/std/deps.js";
-import { onHistoryChanged, onTrackListMutationListeners } from "/modules/delulib/listeners.js";
-import { Events, SVGIcons, createRegistrar } from "/modules/std/index.js";
-import { S } from "/modules/std/index.js";
-import { useMenuItem } from "/modules/std/registers/menu.js";
-import { createIconComponent } from "/modules/std/api/createIconComponent.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
+import { onHistoryChanged, onTrackListMutationListeners } from "/modules/Delusoire/delulib/listeners.js";
+import { Events, SVGIcons, createRegistrar } from "/modules/Delusoire/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
+import { useMenuItem } from "/modules/Delusoire/std/registers/menu.js";
+import { createIconComponent } from "/modules/Delusoire/std/api/createIconComponent.js";
 const { URI } = S;
 globalThis.tracksRatings || (globalThis.tracksRatings = {});
 globalThis.playlistUris || (globalThis.playlistUris = []);

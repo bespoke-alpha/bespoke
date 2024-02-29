@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 const ErrorIcon = () => {
     return (S.React.createElement("svg", { "data-encore-id": "icon", role: "img", "aria-hidden": "true", viewBox: "0 0 24 24", className: "status-icon" },

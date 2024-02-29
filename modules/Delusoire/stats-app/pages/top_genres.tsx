@@ -12,7 +12,7 @@ import RefreshButton from "../components/shared/buttons/refresh_button.js";
 import SettingsButton from "../components/shared/settings_button.js";
 import { fetchTopTracks } from "./top_tracks.js";
 import { fetchTopArtists } from "./top_artists.js";
-import { fetchAudioFeaturesMeta } from "./playlist.js";
+import { calculateGenresFromArtists, fetchAudioFeaturesMeta } from "./playlist.js";
 import type { Track } from "@fostertheweb/spotify-web-api-ts-sdk";
 import { getURI, toID } from "../util/parse.js";
 import { SpotifyTimeRange } from "../api/spotify.js";
@@ -28,6 +28,23 @@ const OptionToTimeRange = {
 const columns = ["INDEX", "TITLE_AND_ARTIST", "ALBUM", "DURATION"];
 const allowedDropTypes = [];
 
+export const calculateTracksMeta = (tracks: Track[]) => {
+	let explicitCount = 0;
+	let popularityTotal = 0;
+	const releaseDates = {} as Record<string, number>;
+	for (const track of tracks) {
+		track.explicit && explicitCount++;
+		popularityTotal += track.popularity;
+		const releaseDate = new Date(track.album.release_date).getFullYear();
+		releaseDates[releaseDate] ??= 0;
+		releaseDates[releaseDate]++;
+	}
+
+	const obscureTracks = tracks.toSorted((a, b) => a.popularity - b.popularity).slice(0, 5);
+
+	return { explicitness: (explicitCount / tracks.length) * 100, popularity: popularityTotal / tracks.length, releaseDates, obscureTracks };
+};
+
 const GenresPage = () => {
 	const [dropdown, activeOption] = useDropdown(DropdownOptions, "top-genres");
 	const timeRange = OptionToTimeRange[activeOption];
@@ -42,38 +59,21 @@ const GenresPage = () => {
 			const artists = topArtists.items;
 
 			// ! very unscientific
-			const genres = {} as Record<string, number>;
-			artists.forEach((artist, i) => {
-				for (const genre of artist.genres) {
-					genres[genre] ??= 0;
-					genres[genre] += artists.length - i;
-				}
-			});
-
-			let explicitCount = 0;
-			let popularityTotal = 0;
-			const releaseDates = {} as Record<string, number>;
-			for (const track of tracks) {
-				track.explicit && explicitCount++;
-				popularityTotal += track.popularity;
-				const releaseDate = new Date(track.album.release_date).getFullYear();
-				releaseDates[releaseDate] ??= 0;
-				releaseDates[releaseDate]++;
-			}
-
-			const obscureTracks = tracks.toSorted((a, b) => a.popularity - b.popularity).slice(0, 5);
+			const genres = calculateGenresFromArtists(artists, i => artists.length - i);
 
 			const trackURIs = tracks.map(getURI);
 			const trackIDs = trackURIs.map(toID);
 			const audioFeatures = await fetchAudioFeaturesMeta(trackIDs);
+
+			const { explicitness, releaseDates, obscureTracks, popularity } = calculateTracksMeta(tracks);
 
 			return {
 				genres,
 				releaseDates,
 				obscureTracks,
 				audioFeatures: Object.assign(audioFeatures, {
-					popularity: popularityTotal / tracks.length,
-					explicitness: explicitCount / tracks.length,
+					popularity,
+					explicitness,
 				}),
 			};
 		},

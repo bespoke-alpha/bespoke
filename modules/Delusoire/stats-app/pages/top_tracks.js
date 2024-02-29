@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 import PageContainer from "../components/shared/page_container.js";
 import useDropdown from "../components/shared/dropdown/useDropdownMenu.js";

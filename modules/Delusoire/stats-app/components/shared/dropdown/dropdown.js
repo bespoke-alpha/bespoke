@@ -1,5 +1,5 @@
-import { createIconComponent } from "/modules/std/api/createIconComponent.js";
-import { S, SVGIcons } from "/modules/std/index.js";
+import { createIconComponent } from "/modules/Delusoire/std/api/createIconComponent.js";
+import { S, SVGIcons } from "/modules/Delusoire/std/index.js";
 const CheckIcon = () => createIconComponent({
     icon: SVGIcons.check,
 });

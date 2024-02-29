@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const queue = new Array();
 export const fetchAlbum = async (uri, offset = 0, limit = 415) => {
     let resolveOwn;

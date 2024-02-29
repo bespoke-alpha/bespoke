@@ -1,12 +1,12 @@
-import { fetchAlbum } from "/modules/delulib/GraphQL/fetchAlbum.js";
-import { fetchArtistDiscography } from "/modules/delulib/GraphQL/fetchArtistDiscography.js";
-import { fetchArtistOverview } from "/modules/delulib/GraphQL/fetchArtistOveriew.js";
-import { _, fp } from "/modules/std/deps.js";
-import { pMchain } from "/modules/delulib/fp.js";
-import { parseAlbumTrack, parseArtistLikedTrack, parseLibraryAPILikedTracks, parsePlaylistAPITrack, parseTopTrackFromArtist, } from "/modules/delulib/parse.js";
-import { fetchArtistLikedTracks, fetchLikedTracks, fetchPlaylistContents } from "/modules/delulib/platformApi.js";
+import { fetchAlbum } from "/modules/Delusoire/delulib/GraphQL/fetchAlbum.js";
+import { fetchArtistDiscography } from "/modules/Delusoire/delulib/GraphQL/fetchArtistDiscography.js";
+import { fetchArtistOverview } from "/modules/Delusoire/delulib/GraphQL/fetchArtistOveriew.js";
+import { _, fp } from "/modules/Delusoire/std/deps.js";
+import { pMchain } from "/modules/Delusoire/delulib/fp.js";
+import { parseAlbumTrack, parseArtistLikedTrack, parseLibraryAPILikedTracks, parsePlaylistAPITrack, parseTopTrackFromArtist, } from "/modules/Delusoire/delulib/parse.js";
+import { fetchArtistLikedTracks, fetchLikedTracks, fetchPlaylistContents } from "/modules/Delusoire/delulib/platformApi.js";
 import { CONFIG } from "./settings.js";
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { URI } = S;
 export const getTracksFromAlbum = async (uri) => {
     const albumRes = await fetchAlbum(uri);

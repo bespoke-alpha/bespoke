@@ -9,7 +9,7 @@ import { customElement, property } from "https://esm.sh/lit/decorators.js";
 import { map } from "https://esm.sh/lit/directives/map.js";
 import { styleMap } from "https://esm.sh/lit/directives/style-map.js";
 import { CLICKABLE_ELEMENT_SELECTOR, isElementInViewPort } from "./util.js";
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 export const mousetrapInst = S.Mousetrap();
 export const KEY_LIST = "abcdefghijklmnopqrstuvwxyz".split("");
 export let listeningToSneakBinds = false;

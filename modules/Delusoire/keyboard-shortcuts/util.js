@@ -1,6 +1,6 @@
-import { _ } from "/modules/std/deps.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
 import { listeningToSneakBinds } from "./sneak.js";
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const History = S.Platform.getHistory();
 const SCROLL_STEP = 25;
 const getApp = () => document.querySelector(".jEMA2gVoLgPQqAFrPhFw div.os-viewport");

@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 import { getPlaylistsFromURIs, getTracksFromURIs } from "./db.js";
 const RootlistAPI = S.Platform.getRootlistAPI();
 const PlaylistAPI = S.Platform.getPlaylistAPI();
@@ -41,7 +41,10 @@ const triggerUpdate = (uris) => {
         }
     }
 };
+const { URI } = S;
 const onTracksAddedToPlaylist = async (playlist, uris) => {
+    // ! ugly hack to ignore local files & episodes; come up with better fix
+    uris = uris.filter(uri => URI.is.Track(uri));
     mapAssocs(uris, o => o.add(playlist));
     await getTracksFromURIs(uris);
     triggerUpdate(uris);

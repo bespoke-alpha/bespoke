@@ -1,11 +1,11 @@
-import { _ } from "/modules/std/deps.js";
-import { progressify } from "/modules/delulib/fp.js";
-import { createPlaylistFromTracks, fetchFolder, fetchPlaylistContents, fetchRootFolder, movePlaylistTracks, setPlaylistVisibility, } from "/modules/delulib/platformApi.js";
-import { SpotifyLoc } from "/modules/delulib/util.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
+import { progressify } from "/modules/Delusoire/delulib/fp.js";
+import { createPlaylistFromTracks, fetchFolder, fetchPlaylistContents, fetchRootFolder, movePlaylistTracks, setPlaylistVisibility, } from "/modules/Delusoire/delulib/platformApi.js";
+import { SpotifyLoc } from "/modules/Delusoire/delulib/util.js";
 import { lastFetchedUri, lastSortAction } from "./index.js";
 import { CONFIG } from "./settings.js";
 import { ERROR, getNameFromUri } from "./util.js";
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { URI } = S;
 export const createPlaylistFromLastSortedQueue = async () => {
     if (globalThis.lastSortedQueue.length === 0) {

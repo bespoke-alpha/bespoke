@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 import useDropdown from "../components/shared/dropdown/useDropdownMenu.js";
 import StatCard from "../components/cards/stat_card.js";
@@ -10,9 +10,12 @@ import Shelf from "../components/shelf.js";
 import RefreshButton from "../components/shared/buttons/refresh_button.js";
 import SettingsButton from "../components/shared/settings_button.js";
 import { SpotifyTimeRange } from "../api/spotify.js";
-import { getTracksFromURIs } from "/modules/library-db/db.js";
-import { PlaylistItems } from "../../library-db/listeners.js";
-import { fp } from "/modules/std/deps.js";
+import { getTracksFromURIs } from "/modules/Delusoire/library-db/db.js";
+import { PlaylistItems, SavedPlaylists } from "/modules/Delusoire/library-db/listeners.js";
+import { fp } from "/modules/Delusoire/std/deps.js";
+import { fetchAlbumsMeta, fetchArtistsMeta, fetchAudioFeaturesMeta } from "./playlist.js";
+import { calculateTracksMeta } from "./top_genres.js";
+import { getURI, toID } from "../util/parse.js";
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"];
 const OptionToTimeRange = {
     "Past Month": SpotifyTimeRange.Short,
@@ -25,18 +28,40 @@ const LibraryPage = () => {
     const { isLoading, error, data, refetch } = S.ReactQuery.useQuery({
         queryKey: ["libraryAnaysis", timeRange],
         queryFn: async () => {
-            const trackURIsInLibrary = Object.entries(PlaylistItems)
-                .map(([k, v]) => v?.size && k)
+            const trackURIsInLibrary = Array.from(PlaylistItems)
+                .map(([k, v]) => v.size && k)
                 .filter(Boolean);
-            const tracksInLibrary = await getTracksFromURIs(trackURIsInLibrary);
-            const duration = tracksInLibrary.map(track => track.duration_ms).reduce(fp.add);
-            // duration, popularity, albums, artists
+            const tracks = await getTracksFromURIs(trackURIsInLibrary);
+            const duration = tracks.map(track => track.duration_ms).reduce(fp.add);
+            const { explicitness, obscureTracks, popularity, releaseDates } = calculateTracksMeta(tracks);
+            const trackURIs = tracks.map(getURI);
+            const trackIDs = trackURIs.map(toID);
+            const audioFeatures = fetchAudioFeaturesMeta(trackIDs);
+            const albumIDs = tracks.map(track => track.album.id);
+            const artistIDs = tracks.flatMap(track => track.artists.map(artist => artist.id));
+            const { albums } = await fetchAlbumsMeta(albumIDs);
+            const { artists, genres } = await fetchArtistsMeta(artistIDs);
+            const playlists = Array.from(SavedPlaylists.keys());
+            return {
+                duration,
+                releaseDates,
+                playlists,
+                genres,
+                tracks,
+                albums,
+                artists,
+                audioFeatures: Object.assign(audioFeatures, {
+                    explicitness,
+                    popularity,
+                }),
+            };
         },
     });
     if (isLoading) {
         return "Loading";
     }
     if (error) {
+        console.log("SOS", error);
         return "Error";
     }
     const { genres, artists, albums, playlists, duration, releaseDates, tracks, audioFeatures } = data;
@@ -48,10 +73,10 @@ const LibraryPage = () => {
         return S.React.createElement(StatCard, { label: key, value: value });
     });
     const artistCards = artists.slice(0, 10).map(artist => {
-        return S.React.createElement(SpotifyCard, { type: "artist", uri: artist.uri, header: artist.name, subheader: `Appears in ${artist.freq} tracks`, imageUrl: artist.image });
+        return (S.React.createElement(SpotifyCard, { type: "artist", uri: artist.uri, header: artist.name, subheader: `Appears in ${artist.multiplicity} tracks`, imageUrl: artist.image }));
     });
     const albumCards = albums.map(album => {
-        return S.React.createElement(SpotifyCard, { type: "album", uri: album.uri, header: album.name, subheader: `Appears in ${album.freq} tracks`, imageUrl: album.image });
+        return (S.React.createElement(SpotifyCard, { type: "album", uri: album.uri, header: album.name, subheader: `Appears in ${album.multiplicity} tracks`, imageUrl: album.image }));
     });
     return (S.React.createElement(PageContainer, { ...PageContainerProps },
         S.React.createElement("section", { className: "stats-libraryOverview" },

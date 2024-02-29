@@ -1,10 +1,10 @@
-import { S, SVGIcons, createStorage, createRegistrar, createLogger } from "/modules/std/index.js";
-import { NavLink } from "/modules/std/registers/navlink.js";
+import { S, SVGIcons, createStorage, createRegistrar, createLogger } from "/modules/Delusoire/std/index.js";
+import { NavLink } from "/modules/Delusoire/std/registers/navlink.js";
 import { ACTIVE_ICON, ICON } from "./static.js";
 import PlaylistPage from "./pages/playlist.js";
 import { STATS_VERSION } from "./static.js";
-import { onHistoryChanged } from "/modules/delulib/listeners.js";
-import { display } from "/modules/std/api/modal.js";
+import { onHistoryChanged } from "/modules/Delusoire/delulib/listeners.js";
+import { display } from "/modules/Delusoire/std/api/modal.js";
 import { Button } from "../std/registers/topbarLeftButton.js";
 const { React, URI } = S;
 const History = S.Platform.getHistory();

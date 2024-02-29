@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 import useDropdown from "../components/shared/dropdown/useDropdownMenu.js";
 import SpotifyCard from "../components/shared/spotify_card.js";
@@ -41,7 +41,7 @@ const AlbumsPage = () => {
     };
     const albumCards = topAlbums.map((album, index) => {
         const type = album.uri.startsWith("https") ? "lastfm" : "album";
-        return (S.React.createElement(SpotifyCard, { type: type, uri: album.uri, header: album.name, subheader: `#${index + 1} Album`, imageUrl: album.images[0].url ?? DEFAULT_TRACK_IMG }));
+        return (S.React.createElement(SpotifyCard, { type: type, uri: album.uri, header: album.name, subheader: `#${index + 1} Album`, imageUrl: album.images[0]?.url ?? DEFAULT_TRACK_IMG }));
     });
     return (S.React.createElement(PageContainer, { ...props },
         S.React.createElement("div", { className: "iKwGKEfAfW7Rkx2_Ba4E grid" }, albumCards)));

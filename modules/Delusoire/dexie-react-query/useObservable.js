@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 export function useObservable(observableFactory, arg2, arg3) {
     // Resolve vars from overloading variants of this function:

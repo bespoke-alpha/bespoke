@@ -1,0 +1,10 @@
+{
+	"name": "library-db",
+	"authors": ["Delusoire"],
+	"entries": {
+		"js": false,
+		"css": false,
+		"mixin": false
+	},
+	"dependencies": ["Delusoire/std", "Delusoire/delulib"]
+}

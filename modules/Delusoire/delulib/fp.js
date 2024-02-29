@@ -1,11 +1,13 @@
-import { _ } from "/modules/std/deps.js";
-import { S } from "/modules/std/index.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { Snackbar } = S;
 export const pMchain = (f) => async (fa) => f(await fa);
-export const chunkify50 = (fn) => async (args) => {
-    const a = await Promise.all(_(args).chunk(50).map(fn).value());
+export const chunkifyN = (n) => (fn) => async (args) => {
+    const a = await Promise.all(_(args).chunk(n).map(fn).value());
     return a.flat();
 };
+export const chunkify50 = chunkifyN(50);
+export const chunkify20 = chunkifyN(20);
 export const progressify = (f, n) => {
     let i = n;
     let lastProgress = 0;

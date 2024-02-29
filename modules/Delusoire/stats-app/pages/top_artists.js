@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 import useDropdown from "../components/shared/dropdown/useDropdownMenu.js";
 import SpotifyCard from "../components/shared/spotify_card.js";
@@ -34,6 +34,6 @@ const ArtistsPage = () => {
         headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "stats" })],
     };
     return (S.React.createElement(PageContainer, { ...PageContainerProps },
-        S.React.createElement("div", { className: "iKwGKEfAfW7Rkx2_Ba4E grid" }, topArtists.map((artist, index) => (S.React.createElement(SpotifyCard, { type: "artist", uri: artist.uri, header: artist.name, subheader: `#${index + 1} Artist`, imageUrl: artist.images.at(-1).url ?? DEFAULT_TRACK_IMG }))))));
+        S.React.createElement("div", { className: "iKwGKEfAfW7Rkx2_Ba4E grid" }, topArtists.map((artist, index) => (S.React.createElement(SpotifyCard, { type: "artist", uri: artist.uri, header: artist.name, subheader: `#${index + 1} Artist`, imageUrl: artist.images.at(-1)?.url ?? DEFAULT_TRACK_IMG }))))));
 };
 export default React.memo(ArtistsPage);

@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { consume } from "https://esm.sh/@lit/context";
 import { html } from "https://esm.sh/lit";
 import { property, queryAssignedElements } from "https://esm.sh/lit/decorators.js";
-import { _ } from "/modules/std/deps.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
 import { scrollTimeoutCtx, scrollContainerCtx } from "./contexts.js";
 export const SyncedMixin = (superClass) => {
     class mixedClass extends superClass {

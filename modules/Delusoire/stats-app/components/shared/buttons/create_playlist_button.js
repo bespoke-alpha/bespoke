@@ -1,4 +1,4 @@
-import { S } from "/modules/std/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const RootlistAPI = S.Platform.getRootlistAPI();
 const PlaylistAPI = S.Platform.getPlaylistAPI();
 async function createPlaylist({ name, tracks }) {
