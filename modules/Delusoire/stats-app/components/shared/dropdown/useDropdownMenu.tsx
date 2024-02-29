@@ -1,4 +1,4 @@
-import { S } from "/modules/Delusoirestd/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 import Dropdown from "./dropdown.js";
 import { storage } from "../../../index.js";

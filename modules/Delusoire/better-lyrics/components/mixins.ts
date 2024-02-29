@@ -2,7 +2,7 @@ import { consume } from "https://esm.sh/@lit/context";
 import { LitElement, html } from "https://esm.sh/lit";
 import { property, queryAssignedElements } from "https://esm.sh/lit/decorators.js";
 
-import { _ } from "/modules/Delusoirestd/deps.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
 
 import { scrollTimeoutCtx, scrollContainerCtx } from "./contexts.js";
 

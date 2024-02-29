@@ -1,6 +1,6 @@
 import { render } from "https://esm.sh/lit";
 
-import { PermanentMutationObserver } from "/modules/Delusoiredelulib/util.js";
+import { PermanentMutationObserver } from "/modules/Delusoire/delulib/util.js";
 
 import { PlayerW } from "./utils/PlayerW.js";
 import { LyricsWrapper } from "./components/components.js";

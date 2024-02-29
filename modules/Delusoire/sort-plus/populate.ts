@@ -1,8 +1,8 @@
-import { fetchLastFMTrack, spotifyApi } from "/modules/Delusoiredelulib/api.js";
-import { _, fp } from "/modules/Delusoirestd/deps.js";
-import { S } from "/modules/Delusoirestd/index.js";
-import { chunkify50, progressify } from "/modules/Delusoiredelulib/fp.js";
-import { TrackData, parseWebAPITrack } from "/modules/Delusoiredelulib/parse.js";
+import { fetchLastFMTrack, spotifyApi } from "/modules/Delusoire/delulib/api.js";
+import { _, fp } from "/modules/Delusoire/std/deps.js";
+import { S } from "/modules/Delusoire/std/index.js";
+import { chunkify50, progressify } from "/modules/Delusoire/delulib/fp.js";
+import { TrackData, parseWebAPITrack } from "/modules/Delusoire/delulib/parse.js";
 
 import { getTracksFromAlbum } from "./fetch.js";
 import { CONFIG } from "./settings.js";

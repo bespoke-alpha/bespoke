@@ -1,9 +1,9 @@
 import Dexie, { Table } from "https://esm.sh/dexie";
 import type { Track } from "https://esm.sh/v135/@fostertheweb/spotify-web-api-ts-sdk/dist/mjs/types.js";
-import { chunkify50 } from "/modules/Delusoiredelulib/fp.js";
-import { spotifyApi } from "/modules/Delusoiredelulib/api.js";
-import { S } from "/modules/Delusoirestd/index.js";
-import { _ } from "/modules/Delusoirestd/deps.js";
+import { chunkify50 } from "/modules/Delusoire/delulib/fp.js";
+import { spotifyApi } from "/modules/Delusoire/delulib/api.js";
+import { S } from "/modules/Delusoire/std/index.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
 
 const { URI } = S;
 

@@ -1,7 +1,7 @@
 import { Subject, animationFrameScheduler, asyncScheduler } from "https://esm.sh/rxjs";
-import { S } from "/modules/Delusoirestd/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 
-import { Events } from "/modules/Delusoirestd/index.js";
+import { Events } from "/modules/Delusoire/std/index.js";
 
 import { Song } from "./Song.js";
 

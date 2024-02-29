@@ -1,5 +1,5 @@
-import { createFolder } from "/modules/Delusoiredelulib/platformApi.js";
-import { SettingsSection } from "/modules/Delusoirestd/api/settings.js";
+import { createFolder } from "/modules/Delusoire/delulib/platformApi.js";
+import { SettingsSection } from "/modules/Delusoire/std/api/settings.js";
 
 const SORTED_PLAYLISTS_FOLDER_NAME = "📀 Sorted Playlists";
 

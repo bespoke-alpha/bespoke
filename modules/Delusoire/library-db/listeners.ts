@@ -1,4 +1,4 @@
-import { S } from "/modules/Delusoirestd/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 import { getPlaylistsFromURIs, getTracksFromURIs } from "./db.js";
 
 const RootlistAPI = S.Platform.getRootlistAPI();

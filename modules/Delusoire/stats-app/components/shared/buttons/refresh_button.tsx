@@ -1,5 +1,5 @@
-import { createIconComponent } from "/modules/Delusoirestd/api/createIconComponent.js";
-import { S } from "/modules/Delusoirestd/index.js";
+import { createIconComponent } from "/modules/Delusoire/std/api/createIconComponent.js";
+import { S } from "/modules/Delusoire/std/index.js";
 
 interface RefreshButtonProps {
 	refresh: () => void;

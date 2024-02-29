@@ -1,9 +1,9 @@
-import { fetchAlbum } from "/modules/Delusoiredelulib/GraphQL/fetchAlbum.js";
-import { fetchArtistDiscography } from "/modules/Delusoiredelulib/GraphQL/fetchArtistDiscography.js";
-import { fetchArtistOverview } from "/modules/Delusoiredelulib/GraphQL/fetchArtistOveriew.js";
-import { ItemMin, ItemsReleases, ItemsReleasesWithCount, ItemsWithCount } from "/modules/Delusoiredelulib/GraphQL/sharedTypes.js";
-import { _, fp } from "/modules/Delusoirestd/deps.js";
-import { pMchain } from "/modules/Delusoiredelulib/fp.js";
+import { fetchAlbum } from "/modules/Delusoire/delulib/GraphQL/fetchAlbum.js";
+import { fetchArtistDiscography } from "/modules/Delusoire/delulib/GraphQL/fetchArtistDiscography.js";
+import { fetchArtistOverview } from "/modules/Delusoire/delulib/GraphQL/fetchArtistOveriew.js";
+import { ItemMin, ItemsReleases, ItemsReleasesWithCount, ItemsWithCount } from "/modules/Delusoire/delulib/GraphQL/sharedTypes.js";
+import { _, fp } from "/modules/Delusoire/std/deps.js";
+import { pMchain } from "/modules/Delusoire/delulib/fp.js";
 import {
 	TrackData,
 	parseAlbumTrack,
@@ -11,12 +11,12 @@ import {
 	parseLibraryAPILikedTracks,
 	parsePlaylistAPITrack,
 	parseTopTrackFromArtist,
-} from "/modules/Delusoiredelulib/parse.js";
-import { fetchArtistLikedTracks, fetchLikedTracks, fetchPlaylistContents } from "/modules/Delusoiredelulib/platformApi.js";
+} from "/modules/Delusoire/delulib/parse.js";
+import { fetchArtistLikedTracks, fetchLikedTracks, fetchPlaylistContents } from "/modules/Delusoire/delulib/platformApi.js";
 
 import { CONFIG } from "./settings.js";
 
-import { S } from "/modules/Delusoirestd/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 
 const { URI } = S;
 

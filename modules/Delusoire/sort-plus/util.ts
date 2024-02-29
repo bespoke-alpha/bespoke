@@ -1,10 +1,10 @@
-import { _, fp } from "/modules/Delusoirestd/deps.js";
-import { S } from "/modules/Delusoirestd/index.js";
-import { spotifyApi } from "/modules/Delusoiredelulib/api.js";
-import { TrackData } from "/modules/Delusoiredelulib/parse.js";
+import { _, fp } from "/modules/Delusoire/std/deps.js";
+import { S } from "/modules/Delusoire/std/index.js";
+import { spotifyApi } from "/modules/Delusoire/delulib/api.js";
+import { TrackData } from "/modules/Delusoire/delulib/parse.js";
 
 import { getLikedTracks, getTracksFromAlbum, getTracksFromArtist, getTracksFromPlaylist } from "./fetch.js";
-import { URIClass } from "/modules/Delusoirestd/expose/webpack.js";
+import { URIClass } from "/modules/Delusoire/std/expose/webpack.js";
 
 const { URI } = S;
 

@@ -4,14 +4,14 @@ import {
 	removePlaylistTracks,
 	setPlaylistVisibility,
 	setInLibrary,
-} from "/modules/Delusoiredelulib/platformApi.js";
-import { SpotifyLoc } from "/modules/Delusoiredelulib/util.js";
+} from "/modules/Delusoire/delulib/platformApi.js";
+import { SpotifyLoc } from "/modules/Delusoire/delulib/util.js";
 
 import { updateCollectionControls, updateNowPlayingControls, updateTrackListControls } from "./controls.js";
 import { CONFIG } from "./settings.js";
 import { getNowPlayingBar } from "./util.js";
-import { _ } from "/modules/Delusoirestd/deps.js";
-import { S } from "/modules/Delusoirestd/index.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
+import { S } from "/modules/Delusoire/std/index.js";
 
 const { URI } = S;
 const History = S.Platform.getHistory();

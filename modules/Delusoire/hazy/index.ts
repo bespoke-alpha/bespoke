@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { S, Events } from "/modules/Delusoirestd/index.js";
+import { S, Events } from "/modules/Delusoire/std/index.js";
 
 const PlayerAPI = S.Platform.getPlayerAPI();
 const History = S.Platform.getHistory();

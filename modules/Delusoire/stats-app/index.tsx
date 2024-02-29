@@ -1,12 +1,12 @@
-import { type NamespacedStorage, S, SVGIcons, createStorage, createRegistrar, NamespacedLogger, createLogger } from "/modules/Delusoirestd/index.js";
-import { NavLink } from "/modules/Delusoirestd/registers/navlink.js";
+import { type NamespacedStorage, S, SVGIcons, createStorage, createRegistrar, NamespacedLogger, createLogger } from "/modules/Delusoire/std/index.js";
+import { NavLink } from "/modules/Delusoire/std/registers/navlink.js";
 import { ACTIVE_ICON, ICON } from "./static.js";
 import { Module } from "/hooks/module.js";
 
 import PlaylistPage from "./pages/playlist.js";
 import { STATS_VERSION } from "./static.js";
-import { onHistoryChanged } from "/modules/Delusoiredelulib/listeners.js";
-import { display } from "/modules/Delusoirestd/api/modal.js";
+import { onHistoryChanged } from "/modules/Delusoire/delulib/listeners.js";
+import { display } from "/modules/Delusoire/std/api/modal.js";
 import { Button } from "../std/registers/topbarLeftButton.js";
 
 const { React, URI } = S;

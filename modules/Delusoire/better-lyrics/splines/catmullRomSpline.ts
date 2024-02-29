@@ -1,6 +1,6 @@
-import { _ } from "/modules/Delusoirestd/deps.js";
-import { TwoUplet, zip_n_uplets } from "/modules/Delusoiredelulib/fp.js";
-import { remapScalar, scalarLerp, vector, vectorDist, vectorLerp } from "/modules/Delusoiredelulib/math.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
+import { TwoUplet, zip_n_uplets } from "/modules/Delusoire/delulib/fp.js";
+import { remapScalar, scalarLerp, vector, vectorDist, vectorLerp } from "/modules/Delusoire/delulib/math.js";
 
 export type vectorWithTime = readonly [number, vector];
 

@@ -1,14 +1,14 @@
-import { TrackData } from "/modules/Delusoiredelulib/parse.js";
-import { createQueueItem, setQueue as _setQueue } from "/modules/Delusoiredelulib/util.js";
-import { _, fp } from "/modules/Delusoirestd/deps.js";
-import { S, createRegistrar } from "/modules/Delusoirestd/index.js";
-import { Button } from "/modules/Delusoirestd/registers/topbarLeftButton.js";
+import { TrackData } from "/modules/Delusoire/delulib/parse.js";
+import { createQueueItem, setQueue as _setQueue } from "/modules/Delusoire/delulib/util.js";
+import { _, fp } from "/modules/Delusoire/std/deps.js";
+import { S, createRegistrar } from "/modules/Delusoire/std/index.js";
+import { Button } from "/modules/Delusoire/std/registers/topbarLeftButton.js";
 
 import { createPlaylistFromLastSortedQueue, reordedPlaylistLikeSortedQueue } from "./playlistsInterop.js";
 import { fillTracksFromLastFM, fillTracksFromSpotify } from "./populate.js";
 import { CONFIG } from "./settings.js";
 import { AsyncTracksOperation, SEPARATOR_URI, SortAction, SortActionIcon, SortActionProp, URI_is_LikedTracks, getTracksFromUri } from "./util.js";
-import { SVGIcons } from "/modules/Delusoirestd/index.js";
+import { SVGIcons } from "/modules/Delusoire/std/index.js";
 
 declare global {
 	// biome-ignore lint/style/noVar: global scope
@@ -88,9 +88,9 @@ const SubMenuItems = Object.values(SortAction).map(
 		}),
 );
 
-import { createIconComponent } from "/modules/Delusoirestd/api/createIconComponent.js";
+import { createIconComponent } from "/modules/Delusoire/std/api/createIconComponent.js";
 import { Module } from "/hooks/module.js";
-import { useMenuItem } from "/modules/Delusoirestd/registers/menu.js";
+import { useMenuItem } from "/modules/Delusoire/std/registers/menu.js";
 
 const SortByShuffleSubMenuItem = ({ descending }: SortBySubMenuItemProps) => {
 	const { props } = useMenuItem();

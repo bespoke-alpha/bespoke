@@ -4,7 +4,7 @@ import GenresPage from "./pages/top_genres.js";
 import LibraryPage from "./pages/library.js";
 import AlbumsPage from "./pages/top_albums.js";
 
-import { S } from "/modules/Delusoirestd/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 
 const Pages = {
 	tracks: <TracksPage />,

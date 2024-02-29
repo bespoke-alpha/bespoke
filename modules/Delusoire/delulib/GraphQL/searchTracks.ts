@@ -1,6 +1,6 @@
 import { Items } from "./sharedTypes.js";
 import { searchTracksDefinition } from "./Definitions/searchTracks.js";
-import { S } from "/modules/Delusoirestd/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 
 type Track = {
 	__typename: "Track";

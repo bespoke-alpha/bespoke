@@ -1,8 +1,8 @@
-import { _ } from "/modules/Delusoirestd/deps.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
 
 import { listeningToSneakBinds } from "./sneak.js";
 
-import { S } from "/modules/Delusoirestd/index.js";
+import { S } from "/modules/Delusoire/std/index.js";
 
 const History = S.Platform.getHistory();
 

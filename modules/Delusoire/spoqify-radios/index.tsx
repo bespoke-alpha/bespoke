@@ -1,10 +1,10 @@
-import { _ } from "/modules/Delusoirestd/deps.js";
-import { SpotifyLoc } from "/modules/Delusoiredelulib/util.js";
+import { _ } from "/modules/Delusoire/std/deps.js";
+import { SpotifyLoc } from "/modules/Delusoire/delulib/util.js";
 
 import { CONFIG } from "./settings.js";
-import { S, SVGIcons, createRegistrar } from "/modules/Delusoirestd/index.js";
-import { useMenuItem } from "/modules/Delusoirestd/registers/menu.js";
-import { createIconComponent } from "/modules/Delusoirestd/api/createIconComponent.js";
+import { S, SVGIcons, createRegistrar } from "/modules/Delusoire/std/index.js";
+import { useMenuItem } from "/modules/Delusoire/std/registers/menu.js";
+import { createIconComponent } from "/modules/Delusoire/std/api/createIconComponent.js";
 import type { Module } from "/hooks/module.js";
 
 const { URI } = S;
