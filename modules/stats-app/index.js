@@ -40,7 +40,7 @@ export default function (mod) {
     onHistoryChanged(() => true, uri => {
         const isPlaylistPage = URI.is.PlaylistV1OrV2(uri);
         setPlaylistEditHidden?.(!isPlaylistPage);
-    }, false);
+    }, true);
     registrar.register("topbarLeftButton", S.React.createElement(PlaylistEdit, null));
     const LazyStatsApp = S.React.lazy(() => import("./app.js"));
     registrar.register("route", S.React.createElement(S.ReactComponents.Route, { path: "/stats/*", element: S.React.createElement(LazyStatsApp, null) }));

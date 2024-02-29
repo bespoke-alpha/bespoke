@@ -32,7 +32,7 @@ const fetchAudioFeaturesMeta = async (ids: string[]) => {
 		tempo: new Array<number>(),
 		time_signature: new Array<number>(),
 	};
-	const audioFeaturess = await chunkify50(spotifyApi.tracks.audioFeatures)(ids);
+	const audioFeaturess = await chunkify50(chunk => spotifyApi.tracks.audioFeatures(chunk))(ids);
 
 	for (const audioFeatures of audioFeaturess) {
 		for (const f of Object.keys(featureList)) {
@@ -49,7 +49,7 @@ const fetchArtistsMeta = async (ids: string[]) => {
 		.mapValues(ids => ids.length)
 		.value();
 	const uniqIds = _.uniq(ids);
-	const artistsRes = await chunkify50(spotifyApi.artists.get)(uniqIds);
+	const artistsRes = await chunkify50(chunk => spotifyApi.artists.get(chunk))(uniqIds);
 	const genres = {} as Record<string, number>;
 	const artists = artistsRes.map(artist => {
 		const multiplicity = idToMult[artist.id];
@@ -70,25 +70,60 @@ const fetchArtistsMeta = async (ids: string[]) => {
 	return { artists, genres };
 };
 
+const fetchAlbumsMeta = async (ids: string[]) => {
+	const idToMult = _(ids)
+		.groupBy(_.identity)
+		.mapValues(ids => ids.length)
+		.value();
+	const uniqIds = _.uniq(ids);
+	const albumsRes = await chunkify50(chunk => spotifyApi.albums.get(chunk))(uniqIds);
+	const releaseYears = {} as Record<string, number>;
+	const albums = albumsRes.map(album => {
+		const multiplicity = idToMult[album.id];
+
+		const releaseYear = new Date(album.release_date).getYear() + 1900;
+
+		releaseYears[releaseYear] ??= 0;
+		releaseYears[releaseYear] += multiplicity;
+
+		return {
+			name: album.name,
+			uri: album.uri,
+			image: album.images.at(-1).url ?? DEFAULT_TRACK_IMG,
+			releaseYear,
+			multiplicity,
+		};
+	});
+
+	return { albums, releaseYears };
+};
+
 const PlaylistPage = ({ uri }: { uri: string }) => {
 	const queryFn = async () => {
 		const playlist = await PlaylistAPI.getPlaylist(uri);
 		const { metadata, contents } = playlist;
-		const tracks = contents.items as any[];
-		const trackURIs = tracks.map(item => item.uri as string);
 
+		const getURI = ({ uri }) => uri as string;
 		const toID = (uri: URIClass<any>) => URI.fromString(uri).id as string;
 
+		const tracks = contents.items as any[];
 		const duration = tracks.map(track => track.duration.milliseconds as number).reduce(fp.add);
 
+		const trackURIs = tracks.map(getURI);
 		const trackIDs = trackURIs.map(toID);
 		const audioFeatures = await fetchAudioFeaturesMeta(trackIDs);
 
-		const artistURIs = tracks.map(artist => artist.uri as string);
+		const artistObjs = tracks.flatMap(track => track.artists as any[]);
+		const artistURIs = artistObjs.map(getURI);
 		const artistIDs = artistURIs.map(toID);
 		const { artists, genres } = await fetchArtistsMeta(artistIDs);
 
-		return { tracks, duration, audioFeatures, artists, genres } as const;
+		const albumObjs = tracks.map(track => track.album);
+		const albumURIs = albumObjs.map(getURI);
+		const albumIDs = albumURIs.map(toID);
+		const { albums, releaseYears } = await fetchAlbumsMeta(albumIDs);
+
+		return { tracks, duration, audioFeatures, artists, genres, albums, releaseYears } as const;
 	};
 
 	const { isLoading, error, data } = S.ReactQuery.useQuery({
@@ -109,7 +144,7 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 		return "WTF";
 	}
 
-	const { audioFeatures, artists, tracks, duration, genres } = data;
+	const { audioFeatures, artists, tracks, duration, genres, albums, releaseYears } = data;
 
 	const statCards = Object.entries(audioFeatures).map(([key, value]) => {
 		return <StatCard label={key} value={value} />;
@@ -127,13 +162,15 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 		);
 	});
 
-	// const albumCards = albums.map(album => {
-	// 	return <SpotifyCard type="album" uri={album.uri} header={album.name} subheader={`Appears in ${album.freq} tracks`} imageUrl={album.image} />;
-	// });
+	const albumCards = albums.map(album => {
+		return (
+			<SpotifyCard type="album" uri={album.uri} header={album.name} subheader={`Appears in ${album.multiplicity} tracks`} imageUrl={album.image} />
+		);
+	});
 
 	return (
 		<div className="page-content encore-dark-theme encore-base-set">
-			{/* <section className="stats-libraryOverview">
+			<section className="stats-libraryOverview">
 				<StatCard label="Total Tracks" value={tracks.length} />
 				<StatCard label="Total Artists" value={artists.length} />
 				<StatCard label="Total Minutes" value={Math.floor(duration / 60)} />
@@ -145,13 +182,13 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 			</Shelf>
 			<Shelf title="Most Frequent Artists">
 				<InlineGrid>{artistCards}</InlineGrid>
-			</Shelf> */}
-			{/* <Shelf title="Most Frequent Albums">
+			</Shelf>
+			<Shelf title="Most Frequent Albums">
 				<InlineGrid>{albumCards}</InlineGrid>
-			</Shelf> */}
-			{/* <Shelf title="Release Year Distribution">
-				<GenresCard genres={years} />
-			</Shelf> */}
+			</Shelf>
+			<Shelf title="Release Year Distribution">
+				<GenresCard genres={releaseYears} />
+			</Shelf>
 		</div>
 	);
 };

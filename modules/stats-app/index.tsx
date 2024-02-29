@@ -60,7 +60,7 @@ export default function (mod: Module) {
 			const isPlaylistPage = URI.is.PlaylistV1OrV2(uri);
 			setPlaylistEditHidden?.(!isPlaylistPage);
 		},
-		false,
+		true,
 	);
 
 	registrar.register("topbarLeftButton", <PlaylistEdit />);
