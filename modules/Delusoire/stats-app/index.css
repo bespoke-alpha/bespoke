@@ -1,12 +1,23 @@
 @import url(./components/shared/shared.css);
-#stats-app {
-  --spice-button: var(--essential-bright-accent);
+.encore-dark-theme {
   --spice-text: var(--text-base);
   --spice-subtext: var(--text-subdued);
-  --spice-rgb-selected-row: var(--background-elevated-highlight);
-  --spice-rgb-card: var(--background-elevated-base);
-  --spice-main: var(--essential-bright-accent);
-  --spice-player: var(--spice-main);
+  --spice-main: var(--background-base);
+  --spice-main-elevated: var(--background-elevated-base);
+  --spice-highlight: var(--background-highlight);
+  --spice-highlight-elevated: var(--background-elevated-highlight);
+  --spice-sidebar: var(--background-press);
+  --spice-player: var(--background-highlight);
+  --spice-card: var(--decorative-subdued);
+  --spice-shadow: var(--background-elevated-press);
+  --spice-selected-row: var(--decorative-base);
+  --spice-button: var(--text-bright-accent);
+  --spice-button-active: var(--essential-bright-accent);
+  --spice-button-disabled: var(--essential-subdued);
+  --spice-tab-active: var(--background-elevated-highlight);
+  --spice-notification: var(--text-announcement);
+  --spice-notification-error: var(--essential-negative);
+  --spice-misc: var(--essential-subdued);
 }
 
 #stats-app .stats-gridInline {
