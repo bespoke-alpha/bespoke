@@ -1,6 +1,6 @@
-import { SettingsSection } from "/modules/Delusoire/std/api/settings.js";
+import { Settings } from "/modules/Delusoire/std/api/settings.js";
 import { RestoreScope, backup, restoreFactory } from "./index.js";
-const settings = new SettingsSection("Vaultify")
+const settings = new Settings("Vaultify")
     .addButton({
     id: "backup",
     desc: "Backup Library, LocalStorage and Settings",

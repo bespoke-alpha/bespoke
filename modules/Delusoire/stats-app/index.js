@@ -4,14 +4,17 @@ import { ACTIVE_ICON, ICON } from "./static.js";
 import PlaylistPage from "./pages/playlist.js";
 import { onHistoryChanged } from "/modules/Delusoire/delulib/listeners.js";
 import { display } from "/modules/Delusoire/std/api/modal.js";
-import { Button } from "../std/registers/topbarLeftButton.js";
+import { Button } from "/modules/Delusoire/std/registers/topbarLeftButton.js";
+import { createSettingsSection } from "/modules/Delusoire/std/api/settings.js";
 const { React, URI } = S;
 const History = S.Platform.getHistory();
 export let storage = undefined;
 export let logger = undefined;
+export let settings = undefined;
 export default function (mod) {
     storage = createStorage(mod);
     logger = createLogger(mod);
+    settings = createSettingsSection(mod);
     const registrar = createRegistrar(mod);
     let setPlaylistEditHidden = undefined;
     const PlaylistEdit = () => {

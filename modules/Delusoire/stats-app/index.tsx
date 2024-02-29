@@ -1,24 +1,26 @@
-import { type NamespacedStorage, S, SVGIcons, createStorage, createRegistrar, NamespacedLogger, createLogger } from "/modules/Delusoire/std/index.js";
+import { S, SVGIcons, createStorage, createRegistrar, createLogger } from "/modules/Delusoire/std/index.js";
 import { NavLink } from "/modules/Delusoire/std/registers/navlink.js";
 import { ACTIVE_ICON, ICON } from "./static.js";
 import { Module } from "/hooks/module.js";
 
 import PlaylistPage from "./pages/playlist.js";
-import { STATS_VERSION } from "./static.js";
 import { onHistoryChanged } from "/modules/Delusoire/delulib/listeners.js";
 import { display } from "/modules/Delusoire/std/api/modal.js";
-import { Button } from "../std/registers/topbarLeftButton.js";
+import { Button } from "/modules/Delusoire/std/registers/topbarLeftButton.js";
+import { createSettingsSection, type Settings } from "/modules/Delusoire/std/api/settings.js";
 
 const { React, URI } = S;
 
 const History = S.Platform.getHistory();
 
-export let storage: NamespacedStorage = undefined;
-export let logger: NamespacedLogger = undefined;
+export let storage: Storage = undefined;
+export let logger: Console = undefined;
+export let settings: Settings = undefined;
 
 export default function (mod: Module) {
 	storage = createStorage(mod);
 	logger = createLogger(mod);
+	settings = createSettingsSection(mod);
 	const registrar = createRegistrar(mod);
 
 	let setPlaylistEditHidden: React.Dispatch<React.SetStateAction<boolean>> | undefined = undefined;

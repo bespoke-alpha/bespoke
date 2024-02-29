@@ -3,46 +3,46 @@ import { S as _S } from "./expose/expose.js";
 export const S = _S;
 import { Registrar } from "./registers/registers.js";
 export const createRegistrar = (mod) => {
-    let registrar = mod.registrar;
-    if (registrar) {
-        return registrar;
+    if (!mod.registrar) {
+        mod.registrar = new Registrar(mod.getIdentifier());
+        const unloadJS = mod.unloadJS;
+        mod.unloadJS = () => {
+            mod.registrar.dispose();
+            return unloadJS();
+        };
     }
-    registrar = new Registrar(mod.getIdentifier());
-    const unloadJS = mod.unloadJS;
-    mod.unloadJS = () => {
-        mod.registrar.dispose();
-        return unloadJS();
-    };
-    return registrar;
+    return mod.registrar;
 };
-export class NamespacedStorage {
-    constructor(name) {
-        this.name = name;
+export const createStorage = (mod) => {
+    if (!mod.storage) {
+        const hookedMethods = new Set(["getItem", "setItem", "removeItem"]);
+        mod.storage = new Proxy(globalThis.localStorage, {
+            get(target, p, receiver) {
+                const method = Reflect.get(target, p, receiver);
+                if (typeof p === "string" && hookedMethods.has(p)) {
+                    return (key, ...data) => method(`module:${mod.getIdentifier()}:${key}`, ...data);
+                }
+                return method;
+            },
+        });
     }
-    getNamespacedKey(key) {
-        return `module:${this.name}:${key}`;
+    return mod.storage;
+};
+export const createLogger = (mod) => {
+    if (!mod.logger) {
+        const hookedMethods = new Set(["debug", "error", "info", "log", "warn"]);
+        mod.logger = new Proxy(globalThis.console, {
+            get(target, p, receiver) {
+                const method = Reflect.get(target, p, receiver);
+                if (typeof p === "string" && hookedMethods.has(p)) {
+                    return (...data) => method(`[${mod.getIdentifier()}]:`, ...data);
+                }
+                return method;
+            },
+        });
     }
-    getItem(keyName) {
-        return localStorage.getItem(this.getNamespacedKey(keyName));
-    }
-    setItem(keyName, keyValue) {
-        return localStorage.setItem(this.getNamespacedKey(keyName), keyValue);
-    }
-    removeItem(keyName) {
-        return localStorage.removeItem(this.getNamespacedKey(keyName));
-    }
-}
-export const createStorage = (mod) => (mod.storage ??= new NamespacedStorage(mod.getIdentifier()));
-console.log();
-export class NamespacedLogger {
-    constructor(name) {
-        this.name = name;
-    }
-    log(...data) {
-        return console.log(`[${this.name}]`, ...data);
-    }
-}
-export const createLogger = (mod) => (mod.logger ??= new NamespacedLogger(mod.getIdentifier()));
+    return mod.logger;
+};
 class Event {
     constructor(getArg) {
         this.getArg = getArg;

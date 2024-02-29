@@ -1,5 +1,4 @@
 import { S } from "../expose/expose.js";
-import { kebabCase } from "../deps.js";
 const { React } = S;
 const { ButtonSecondary } = S.ReactComponents;
 export var FieldType;
@@ -10,24 +9,15 @@ export var FieldType;
     FieldType["HIDDEN"] = "hidden";
 })(FieldType || (FieldType = {}));
 import SettingsSectionRegistry from "../registers/settingsSection.js";
-// TODO: use module's identifier
-export class SettingsSection {
-    constructor(name) {
+export class Settings {
+    constructor(name, id) {
         this.name = name;
+        this.id = id;
         this.sectionFields = {};
-        this.pushSettings = () => {
+        this.finalize = () => {
             SettingsSectionRegistry.register(S.React.createElement(this.SettingsSection, null), () => true);
+            return this;
         };
-        this.toObject = () => new Proxy({}, {
-            get: (target, prop) => SettingsSection.getFieldValue(this.getId(prop.toString())),
-            set: (target, prop, newValue) => {
-                const id = this.getId(prop.toString());
-                if (SettingsSection.getFieldValue(id) === newValue)
-                    return false;
-                SettingsSection.setFieldValue(id, newValue);
-                return true;
-            },
-        });
         this.addButton = (props) => {
             this.addField(FieldType.BUTTON, props, this.ButtonField);
             return this;
@@ -42,13 +32,13 @@ export class SettingsSection {
         };
         this.getId = (nameId) => ["settings", this.id, nameId].join(":");
         this.useStateFor = (id) => {
-            const [value, setValueState] = React.useState(SettingsSection.getFieldValue(id));
+            const [value, setValueState] = React.useState(Settings.getFieldValue(id));
             return [
                 value,
                 (newValue) => {
                     if (newValue !== undefined) {
                         setValueState(newValue);
-                        SettingsSection.setFieldValue(id, newValue);
+                        Settings.setFieldValue(id, newValue);
                     }
                 },
             ];
@@ -66,7 +56,7 @@ export class SettingsSection {
             const id = this.getId(field.id);
             const [value, setValue] = this.useStateFor(id);
             return (S.React.createElement(this.SettingField, { field: field },
-                S.React.createElement(S.ReactComponents.SettingToggle, { id: field.id, value: SettingsSection.getFieldValue(id), onSelected: (checked) => {
+                S.React.createElement(S.ReactComponents.SettingToggle, { id: field.id, value: Settings.getFieldValue(id), onSelected: (checked) => {
                         setValue(checked);
                         field.onSelected?.(checked);
                     }, className: "rFFJg1UIumqUUFDgo6n7" })));
@@ -75,18 +65,33 @@ export class SettingsSection {
             const id = this.getId(field.id);
             const [value, setValue] = this.useStateFor(id);
             return (S.React.createElement(this.SettingField, { field: field },
-                S.React.createElement("input", { className: "SkbGMKYv49KtJNB5XxdX", id: field.id, dir: "ltr", value: SettingsSection.getFieldValue(id), type: field.inputType, onChange: e => {
+                S.React.createElement("input", { className: "SkbGMKYv49KtJNB5XxdX", id: field.id, dir: "ltr", value: Settings.getFieldValue(id), type: field.inputType, onChange: e => {
                         const value = e.currentTarget.value;
                         setValue(value);
                         field.onChange?.(value);
                     } })));
         };
-        this.id = kebabCase(name);
+        this.proxy = new Proxy({}, {
+            get: (target, prop) => Settings.getFieldValue(this.getId(prop.toString())),
+            set: (target, prop, newValue) => {
+                const id = this.getId(prop.toString());
+                if (Settings.getFieldValue(id) === newValue)
+                    return false;
+                Settings.setFieldValue(id, newValue);
+                return true;
+            },
+        });
+    }
+    static fromModule(mod) {
+        return new Settings(mod.getName(), mod.getIdentifier());
+    }
+    get cfg() {
+        return this.proxy;
     }
     addField(type, opts, fieldComponent, defaultValue) {
         if (defaultValue !== undefined) {
             const settingId = this.getId(opts.id);
-            SettingsSection.setDefaultFieldValue(settingId, defaultValue);
+            Settings.setDefaultFieldValue(settingId, defaultValue);
         }
         const field = Object.assign({}, opts, { type });
         this.sectionFields[opts.id] = React.createElement(fieldComponent, field);
@@ -96,7 +101,13 @@ export class SettingsSection {
         localStorage[id] = JSON.stringify(newValue ?? null);
     }; }
     static { this.setDefaultFieldValue = async (id, defaultValue) => {
-        if (SettingsSection.getFieldValue(id) === null)
-            SettingsSection.setFieldValue(id, await defaultValue());
+        if (Settings.getFieldValue(id) === null)
+            Settings.setFieldValue(id, await defaultValue());
     }; }
 }
+export const createSettingsSection = (mod) => {
+    if (!mod.settings) {
+        mod.settings = Settings.fromModule(mod);
+    }
+    return mod.settings;
+};

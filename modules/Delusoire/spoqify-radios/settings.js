@@ -1,7 +1,7 @@
 import { createFolder } from "/modules/Delusoire/delulib/platformApi.js";
-import { SettingsSection } from "/modules/Delusoire/std/api/settings.js";
+import { Settings } from "/modules/Delusoire/std/api/settings.js";
 const ANONIMYZED_RADIOS_FOLDER_NAME = "🎭 Anonymized Radios";
-const settings = new SettingsSection("Spoqify Radios").addInput({
+const settings = new Settings("Spoqify Radios").addInput({
     id: "anonymizedRadiosFolderUri",
     desc: "Anonymized Radios folder uri",
     inputType: "text",
