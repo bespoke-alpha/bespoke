@@ -1,5 +1,16 @@
 @import url(./components/shared/shared.css);
 
+// TODO: figure out the right colors
+#stats-app {
+    --spice-button: var(--essential-bright-accent);
+    --spice-text: var(--text-base);
+    --spice-subtext: var(--text-subdued);
+    --spice-rgb-selected-row: var(--background-elevated-highlight);
+    --spice-rgb-card: var(--background-elevated-base);
+    --spice-main: var(--essential-bright-accent);
+    --spice-player: var(--spice-main);
+}
+
 #stats-app {
     .stats-gridInline {
         --grid-gap: 24px;
