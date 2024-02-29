@@ -1,10 +1,10 @@
 {
 	"name": "stats-app",
-	"authors": ["Delusoire"],
+	"authors": ["Delusoire", "harbassan"],
 	"entries": {
 		"js": "index.js",
 		"css": "index.css",
 		"mixin": false
 	},
-	"dependencies": ["Delusoire/std", "Delusoire/delulib"]
+	"dependencies": ["Delusoire/std", "Delusoire/delulib", "Delusoire/library-db"]
 }
