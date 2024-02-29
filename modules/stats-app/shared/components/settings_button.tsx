@@ -12,6 +12,8 @@ interface SettingsButtonProps {
 	section: string;
 }
 
+const History = S.Platform.getHistory();
+
 function SettingsButton({ section }: SettingsButtonProps): React.ReactElement<HTMLButtonElement> {
 	const { Tooltip, ButtonTertiary } = S.ReactComponents;
 
@@ -20,7 +22,12 @@ function SettingsButton({ section }: SettingsButtonProps): React.ReactElement<HT
 			<ButtonTertiary
 				buttonSize="sm"
 				onClick={() => {
-					// TODO: open settings page on specified section
+					History.push("/preferences");
+					// TODO: implement this
+					// querySelector with the search button's selector
+					// get element's fiber
+					// travel up the fiber tree till we hit a context with _currentValue2?.setFilter
+					// setFilter(section)
 				}}
 				aria-label="Settings"
 				iconOnly={SettingsIcon}
