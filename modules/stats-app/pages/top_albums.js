@@ -2,68 +2,42 @@ import { S } from "/modules/std/index.js";
 const { React } = S;
 import useDropdown from "../shared/components/dropdown/useDropdownMenu.js";
 import SpotifyCard from "../shared/components/spotify_card.js";
-import Status from "../shared/components/status.js";
 import PageContainer from "../shared/components/page_container.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
-import { storage } from "../index.js";
 import { CONFIG } from "../settings.js";
-export const topAlbumsReq = async (time_range) => {
-    if (!CONFIG.LFMApiKey || !CONFIG.LFMUsername)
-        return 300;
-    const response = await apiRequest("lastfm", LASTFM.topalbums(CONFIG.LFMUsername, CONFIG.LFMApiKey, time_range));
-    if (!response)
-        return 200;
-    return await convertAlbumData(response.topalbums.album);
+import { fetchLFMTopAlbums } from "../api/lastfm.js";
+import { spotifyApi } from "../../delulib/api.js";
+import { DEFAULT_TRACK_IMG } from "../static.js";
+const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"];
+const OptionToTimeRange = {
+    "Past Month": "short_term",
+    "Past 6 Months": "medium_term",
+    "All Time": "long_term",
 };
-const DropdownOptions = [
-    { id: "short_term", name: "Past Month" },
-    { id: "medium_term", name: "Past 6 Months" },
-    { id: "long_term", name: "All Time" },
-];
 const AlbumsPage = () => {
-    const [topAlbums, setTopAlbums] = React.useState(100);
-    const [dropdown, activeOption] = useDropdown(DropdownOptions, "top-albums");
-    const fetchTopAlbums = async (time_range, force, set = true) => {
-        if (!force) {
-            const storedData = storage.getItem(`top-albums:${time_range}`);
-            if (storedData)
-                return setTopAlbums(JSON.parse(storedData));
-        }
-        const start = window.performance.now();
-        const topAlbums = await topAlbumsReq(time_range);
-        if (set)
-            setTopAlbums(topAlbums);
-        storage.setItem(`top-albums:${time_range}`, JSON.stringify(topAlbums));
-        console.log("total albums fetch time:", window.performance.now() - start);
-    };
-    React.useEffect(() => {
-        updatePageCache(5, fetchTopAlbums, activeOption.id);
-    }, []);
-    React.useEffect(() => {
-        fetchTopAlbums(activeOption.id);
-    }, [activeOption]);
-    const refresh = () => {
-        fetchTopAlbums(activeOption.id, true);
-    };
+    const [dropdown, activeOption] = useDropdown(DropdownOptions, "top-artists");
+    const timeRange = OptionToTimeRange[activeOption];
+    const { isLoading, error, data: topAlbums, refetch, } = S.ReactQuery.useQuery({
+        queryKey: ["topAlbums", activeOption],
+        queryFn: () => fetchLFMTopAlbums(CONFIG.LFMApiKey)(CONFIG.LFMUsername, timeRange).then(async (data) => await Promise.all(data.topalbums.album.map(async (album) => {
+            const matchingSpotifyAlbums = await spotifyApi.search(`${album.name}+artist:${encodeURIComponent(album.artist.name)}`, ["album"]);
+            return matchingSpotifyAlbums.albums.items[0];
+        }))),
+    });
+    if (isLoading) {
+        return "Loading";
+    }
+    if (error) {
+        return "Error";
+    }
     const props = {
         title: "Top Albums",
-        headerEls: [dropdown, S.React.createElement(RefreshButton, { callback: refresh }), S.React.createElement(SettingsButton, { section: "stats" })],
+        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "stats" })],
     };
-    switch (topAlbums) {
-        case 300:
-            return (S.React.createElement(PageContainer, { ...props },
-                S.React.createElement(Status, { icon: "error", heading: "No API Key or Username", subheading: "Please enter these in the settings menu" })));
-        case 200:
-            return (S.React.createElement(PageContainer, { ...props },
-                S.React.createElement(Status, { icon: "error", heading: "Failed to Fetch Top Artists", subheading: "An error occurred while fetching the data" })));
-        case 100:
-            return (S.React.createElement(PageContainer, { ...props },
-                S.React.createElement(Status, { icon: "library", heading: "Loading", subheading: "Fetching data..." })));
-    }
     const albumCards = topAlbums.map((album, index) => {
         const type = album.uri.startsWith("https") ? "lastfm" : "album";
-        return S.React.createElement(SpotifyCard, { type: type, uri: album.uri, header: album.name, subheader: `#${index + 1} Album`, imageUrl: album.image });
+        return (S.React.createElement(SpotifyCard, { type: type, uri: album.uri, header: album.name, subheader: `#${index + 1} Album`, imageUrl: album.images[0].url ?? DEFAULT_TRACK_IMG }));
     });
     return (S.React.createElement(PageContainer, { ...props },
         S.React.createElement("div", { className: "iKwGKEfAfW7Rkx2_Ba4E grid" }, albumCards)));

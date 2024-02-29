@@ -3,7 +3,7 @@ import { S } from "/modules/std/index.js";
 const { Snackbar } = S;
 export const pMchain = (f) => async (fa) => f(await fa);
 export const chunkify50 = (fn) => async (args) => {
-    const a = await Promise.all(_.chunk(args, 50).map(fn));
+    const a = await Promise.all(_(args).chunk(50).map(fn).value());
     return a.flat();
 };
 export const progressify = (f, n) => {

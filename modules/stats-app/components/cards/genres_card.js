@@ -1,3 +1,4 @@
+import { fp } from "/modules/std/deps.js";
 import { S } from "/modules/std/index.js";
 const genreLine = (name, value, limit, total) => {
     return (S.React.createElement("div", { className: "stats-genreRow" },
@@ -12,8 +13,11 @@ const genreLines = (genres, total) => {
         return genreLine(genre, value, genres[0][1], total);
     });
 };
-const genresCard = ({ genres, total }) => {
-    const genresArray = genres.sort(([, a], [, b]) => b - a).slice(0, 10);
-    return S.React.createElement("div", { className: "LunqxlFIupJw_Dkx6mNx stats-genreCard" }, genreLines(genresArray, total));
+const genresCard = ({ genres }) => {
+    const genresTotal = Object.values(genres).reduce(fp.add);
+    const sortedTopGenres = Object.entries(genres)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+    return S.React.createElement("div", { className: "LunqxlFIupJw_Dkx6mNx stats-genreCard" }, genreLines(sortedTopGenres, genresTotal));
 };
 export default genresCard;

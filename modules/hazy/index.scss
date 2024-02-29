@@ -15,7 +15,7 @@ svg {
 
 .Root__top-container::before {
     content: "";
-    // background-image: var(--image_url);
+    background-image: var(--image_url, "");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;

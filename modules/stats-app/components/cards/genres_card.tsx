@@ -1,3 +1,4 @@
+import { fp } from "/modules/std/deps.js";
 import { S } from "/modules/std/index.js";
 
 const genreLine = (name: string, value: number, limit: number, total: number) => {
@@ -22,10 +23,13 @@ const genreLines = (genres: [string, number][], total: number) => {
 	});
 };
 
-const genresCard = ({ genres, total }: { genres: [string, number][]; total: number }) => {
-	const genresArray = genres.sort(([, a]: [string, any], [, b]: [string, any]) => b - a).slice(0, 10);
+const genresCard = ({ genres }: { genres: Record<string, number> }) => {
+	const genresTotal = Object.values(genres).reduce(fp.add);
+	const sortedTopGenres = Object.entries(genres)
+		.sort((a, b) => b[1] - a[1])
+		.slice(0, 10);
 
-	return <div className={"main-card-card stats-genreCard"}>{genreLines(genresArray, total)}</div>;
+	return <div className={"main-card-card stats-genreCard"}>{genreLines(sortedTopGenres, genresTotal)}</div>;
 };
 
 export default genresCard;

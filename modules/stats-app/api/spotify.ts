@@ -2,7 +2,7 @@ export const SpotifyTimerange = {
 	Short: "short_term",
 	Medium: "medium_term",
 	Long: "long_term",
-};
+} as const;
 
 const WEB_API_URL = "https://api.spotify.com";
 const SPCLIENT_WG_URL = "https://spclient.wg.spotify.com";

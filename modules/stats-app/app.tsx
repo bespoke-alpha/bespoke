@@ -2,9 +2,8 @@ import ArtistsPage from "./pages/top_artists.js";
 import TracksPage from "./pages/top_tracks.js";
 // import GenresPage from "./pages/top_genres.js";
 // import LibraryPage from "./pages/library.js";
-// import ChartsPage from "./pages/charts.js";
-// import AlbumsPage from "./pages/top_albums.js";
-import { STATS_VERSION, LATEST_RELEASE } from "./constants.js";
+import AlbumsPage from "./pages/top_albums.js";
+import { STATS_VERSION, LATEST_RELEASE } from "./static.js";
 
 import { S } from "/modules/std/index.js";
 
@@ -19,10 +18,9 @@ const checkForUpdates = () =>
 const pages = {
 	tracks: <TracksPage />,
 	artists: <ArtistsPage />,
-	// albums: <AlbumsPage />,
+	albums: <AlbumsPage />,
 	// genres: <GenresPage />,
 	// library: <LibraryPage />,
-	// charts: <ChartsPage />,
 };
 
 const Q = ({ to, title, selected, onClick }) => (

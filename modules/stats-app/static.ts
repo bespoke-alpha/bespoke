@@ -15,4 +15,4 @@ C22.98,2.59,23.14,1.97,22.86,1.5z"/>
 `;
 
 export const ACTIVE_ICON = ICON;
-export const PLACEHOLDER = "https://raw.githubusercontent.com/harbassan/spicetify-stats/main/src/styles/placeholder.png";
+export const DEFAULT_TRACK_IMG = "https://raw.githubusercontent.com/harbassan/spicetify-stats/main/src/styles/placeholder.png";

@@ -15,7 +15,7 @@ export const pMchain: async =
 export const chunkify50 =
 	<A, R>(fn: (a: Array<A>) => R) =>
 	async (args: Array<A>) => {
-		const a = await Promise.all(_.chunk(args, 50).map(fn));
+		const a = await Promise.all(_(args).chunk(50).map(fn).value());
 		return a.flat();
 	};
 

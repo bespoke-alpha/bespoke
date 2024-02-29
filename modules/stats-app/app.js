@@ -2,9 +2,8 @@ import ArtistsPage from "./pages/top_artists.js";
 import TracksPage from "./pages/top_tracks.js";
 // import GenresPage from "./pages/top_genres.js";
 // import LibraryPage from "./pages/library.js";
-// import ChartsPage from "./pages/charts.js";
-// import AlbumsPage from "./pages/top_albums.js";
-import { STATS_VERSION, LATEST_RELEASE } from "./constants.js";
+import AlbumsPage from "./pages/top_albums.js";
+import { STATS_VERSION, LATEST_RELEASE } from "./static.js";
 import { S } from "/modules/std/index.js";
 const { React } = S;
 const checkForUpdates = () => fetch(LATEST_RELEASE)
@@ -14,10 +13,9 @@ const checkForUpdates = () => fetch(LATEST_RELEASE)
 const pages = {
     tracks: S.React.createElement(TracksPage, null),
     artists: S.React.createElement(ArtistsPage, null),
-    // albums: <AlbumsPage />,
+    albums: S.React.createElement(AlbumsPage, null),
     // genres: <GenresPage />,
     // library: <LibraryPage />,
-    // charts: <ChartsPage />,
 };
 const Q = ({ to, title, selected, onClick }) => (S.React.createElement(S.ReactComponents.NavTo, { replace: true, to: to, tabIndex: -1, onClick: onClick, className: "ZWI7JsjzJaR_G8Hy4W6J" },
     S.React.createElement(S.ReactComponents.Chip, { selected: selected, selectedColorSet: "invertedLight", tabIndex: -1 }, title)));

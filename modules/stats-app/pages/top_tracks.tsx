@@ -3,24 +3,24 @@ const { React } = S;
 
 import PageContainer from "../shared/components/page_container.js";
 import useDropdown from "../shared/components/dropdown/useDropdownMenu.js";
-import { DEFAULT_TRACK_IMG } from "../constants.js";
+import { DEFAULT_TRACK_IMG } from "../static.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../shared/components/settings_button.js";
 import { spotifyApi } from "../../delulib/api.js";
 
-const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"];
+const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"] as const;
 const OptionToTimeRange = {
 	"Past Month": "short_term",
 	"Past 6 Months": "medium_term",
 	"All Time": "long_term",
-};
+} as const;
 
 const TracksPage = () => {
 	const [dropdown, activeOption] = useDropdown(DropdownOptions, "top-tracks");
 	const timeRange = OptionToTimeRange[activeOption];
 
 	const { isLoading, error, data, refetch } = S.ReactQuery.useQuery({
-		queryKey: ["topTracks"],
+		queryKey: ["topTracks", activeOption],
 		queryFn: () => spotifyApi.currentUser.topItems("tracks", timeRange, 50, 0),
 	});
 
@@ -28,6 +28,8 @@ const TracksPage = () => {
 	const allowedDropTypes = React.useMemo(() => [], []);
 
 	const thisRef = React.useRef(null);
+
+	const { usePlayContextItem } = S.getPlayContext({ uri: "" }, { featureIdentifier: "queue" });
 
 	if (isLoading) {
 		return "Loading";
@@ -47,8 +49,6 @@ const TracksPage = () => {
 			itemsUris: topTracks.map(track => track.uri),
 		},
 	};
-
-	const { usePlayContextItem } = S.getPlayContext({ uri: "" }, { featureIdentifier: "queue" });
 
 	return (
 		<PageContainer {...pageContainerProps}>

@@ -32,7 +32,7 @@ const DropdownMenuItem = (props: MenuItemProps) => {
 };
 
 interface DropdownMenuProps {
-	options: string[];
+	options: readonly string[];
 	activeOption: string;
 	switchCallback: (option: string) => void;
 }

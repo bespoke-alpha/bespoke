@@ -16,10 +16,10 @@ const createStorage = (provider) => ({
 });
 const usePersistedState = ({ getItem, setItem }) => (key) => (initialState) => {
     const [state, setState] = React.useState(() => getItem(key, initialState));
-    const persistentSetState = React.useCallback(newStateGen => {
-        const newStateValue = newStateGen(state);
-        setItem(key, newStateValue);
-        setState(newStateValue);
+    const persistentSetState = React.useCallback((reducer) => {
+        const nextState = reducer(state);
+        setItem(key, nextState);
+        setState(nextState);
     }, [state, setItem, key]);
     return [state, persistentSetState];
 };

@@ -61,7 +61,7 @@ type ParsableAsURI = any;
 
 type IsThisURIType<A extends keyof URITypes> = (url: ParsableAsURI) => url is URIClass<A>;
 
-type URIClass<A extends keyof URITypes> = any;
+export type URIClass<A extends keyof URITypes> = any;
 
 export type URITypes = {
 	AD: "ad";

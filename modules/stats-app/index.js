@@ -1,8 +1,8 @@
 import { S, SVGIcons, createStorage, createRegistrar, createLogger } from "/modules/std/index.js";
 import { NavLink } from "/modules/std/registers/navlink.js";
-import { ACTIVE_ICON, ICON } from "./constants.js";
+import { ACTIVE_ICON, ICON } from "./static.js";
 import PlaylistPage from "./pages/playlist.js";
-import { STATS_VERSION } from "./constants.js";
+import { STATS_VERSION } from "./static.js";
 import { onHistoryChanged } from "/modules/delulib/listeners.js";
 import { display } from "/modules/std/api/modal.js";
 import { Button } from "../std/registers/topbarLeftButton.js";
@@ -33,7 +33,7 @@ export default function (mod) {
         if (hidden)
             return;
         return (S.React.createElement(Button, { label: "playlist-stats", icon: SVGIcons.visualizer, onClick: () => {
-                const playlistUri = URI.fromString(History.location.pathname);
+                const playlistUri = URI.fromString(History.location.pathname).toURI();
                 display({ title: "Playlist Stats", content: S.React.createElement(PlaylistPage, { uri: playlistUri }), isLarge: false });
             } }));
     };

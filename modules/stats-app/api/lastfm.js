@@ -3,7 +3,7 @@ const SpotifyToLFMTimerange = {
     medium_term: "6month",
     long_term: "overall",
 };
-const LFMEndpoint = "http://ws.audioscrobbler.com/2.0/";
+const LFMEndpoint = "https://ws.audioscrobbler.com/2.0/";
 // TODO: add return types
 export const fetchLFMTopTracks = (key) => (username, range) => {
     const url = new URL(LFMEndpoint);

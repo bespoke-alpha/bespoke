@@ -27,14 +27,14 @@ const usePersistedState =
 	({ getItem, setItem }: ReturnType<typeof createStorage>) =>
 	<K extends string>(key: K) =>
 	<A,>(initialState: Thunk<A>) => {
-		const [state, setState] = React.useState(() => getItem(key, initialState));
+		const [state, setState] = React.useState<A>(() => getItem(key, initialState));
 
 		const persistentSetState = React.useCallback(
-			newStateGen => {
-				const newStateValue = newStateGen(state);
+			(reducer: (state: A) => A) => {
+				const nextState = reducer(state);
 
-				setItem(key, newStateValue);
-				setState(newStateValue);
+				setItem(key, nextState);
+				setState(nextState);
 			},
 			[state, setItem, key],
 		);
@@ -44,8 +44,8 @@ const usePersistedState =
 
 const createPersistedState = Bluebird(usePersistedState)(createStorage);
 
-const useDropdown = (options: string[], storageVariable: string) => {
-	const [activeOption, setActiveOption] = createPersistedState(storage)(`drop-down:${storageVariable}`)(() => options[0]);
+const useDropdown = <O extends readonly string[]>(options: O, storageVariable: string) => {
+	const [activeOption, setActiveOption] = createPersistedState(storage)(`drop-down:${storageVariable}`)<O[number]>(() => options[0]);
 
 	const dropdown = <Dropdown options={options} activeOption={activeOption} switchCallback={setActiveOption} />;
 

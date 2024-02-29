@@ -42,6 +42,7 @@ const exposeReactComponents = ({ require, chunks, exports, exportedFunctions, ex
     const Nav = exportedMemoFRefs.find(m => m.type.render.toString().includes("navigationalRoot"));
     const NavTo = exportedMemoFRefs.find(m => m.type.render.toString().includes("pageId"));
     return {
+        SnackbarProvider: findBy("enqueueSnackbar called with invalid argument")(exportedFunctions),
         SettingColumn: findBy("setSectionFilterMatchQueryValue", "filterMatchQuery")(exportedFCs),
         SettingText: findBy("textSubdued", "dangerouslySetInnerHTML")(exportedFCs),
         SettingToggle: findBy("condensed", "onSelected")(exportedFCs),
@@ -192,7 +193,6 @@ export function expose({ Snackbar, Platform }) {
         Flipper: exportedFunctions.find(m => m.prototype?.getSnapshotBeforeUpdate),
         Flipped: exportedFunctions.find(m => m.displayName === "Flipped"),
     };
-    const SnackbarProvider = findBy("enqueueSnackbar called with invalid argument")(exportedFunctions);
     const useSnackbar = findBy(/^function\(\)\{return\(0,[\w$]+\.useContext\)\([\w$]+\)\}$/)(exportedFunctions);
     const _reservedPanelIds = exports.find(m => m.BuddyFeed);
     const Mousetrap = modules.find(m => m.addKeycodes);
@@ -210,10 +210,12 @@ export function expose({ Snackbar, Platform }) {
         return analysis;
     };
     const getPlayContext = findBy("referrerIdentifier", "usePlayContextItem")(exportedFunctions);
+    const FilterContext = exportedContexts.find(c => c._currentValue2?.setFilter);
     return {
         webpack,
         useMatch,
         getPlayContext,
+        FilterContext,
         useContextMenuState,
         enqueueCustomSnackbar,
         React,
@@ -226,7 +228,6 @@ export function expose({ Snackbar, Platform }) {
         ReactHooks,
         ReactQuery,
         ReactFlipToolkit,
-        SnackbarProvider,
         useSnackbar,
         _reservedPanelIds,
         Mousetrap,
