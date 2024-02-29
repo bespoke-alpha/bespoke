@@ -168,25 +168,27 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 
 	return (
 		<div className="page-content encore-dark-theme encore-base-set">
-			<section className="stats-libraryOverview">
-				<StatCard label="Total Tracks" value={tracks.length} />
-				<StatCard label="Total Artists" value={artists.length} />
-				<StatCard label="Total Minutes" value={Math.floor(duration / 60)} />
-				<StatCard label="Total Hours" value={duration / 60 / 60} />
-			</section>
-			<Shelf title="Most Frequent Genres">
-				<ContributionChart contributions={genres} />
-				<InlineGrid special>{statCards}</InlineGrid>
-			</Shelf>
-			<Shelf title="Most Frequent Artists">
-				<InlineGrid>{artistCards}</InlineGrid>
-			</Shelf>
-			<Shelf title="Most Frequent Albums">
-				<InlineGrid>{albumCards}</InlineGrid>
-			</Shelf>
-			<Shelf title="Release Year Distribution">
-				<ContributionChart contributions={releaseYears} />
-			</Shelf>
+			<div id="stats-app">
+				<section className="stats-libraryOverview">
+					<StatCard label="Total Tracks" value={tracks.length.toString()} />
+					<StatCard label="Total Artists" value={artists.length.toString()} />
+					<StatCard label="Total Minutes" value={Math.floor(duration / 60).toString()} />
+					<StatCard label="Total Hours" value={(duration / 60 / 60).toFixed(1)} />
+				</section>
+				<Shelf title="Most Frequent Genres">
+					<ContributionChart contributions={genres} />
+					<InlineGrid special>{statCards}</InlineGrid>
+				</Shelf>
+				<Shelf title="Most Frequent Artists">
+					<InlineGrid>{artistCards}</InlineGrid>
+				</Shelf>
+				<Shelf title="Most Frequent Albums">
+					<InlineGrid>{albumCards}</InlineGrid>
+				</Shelf>
+				<Shelf title="Release Year Distribution">
+					<ContributionChart contributions={releaseYears} />
+				</Shelf>
+			</div>
 		</div>
 	);
 };

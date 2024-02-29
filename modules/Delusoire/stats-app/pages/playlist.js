@@ -131,19 +131,20 @@ const PlaylistPage = ({ uri }) => {
         return (S.React.createElement(SpotifyCard, { type: "album", uri: album.uri, header: album.name, subheader: `Appears in ${album.multiplicity} tracks`, imageUrl: album.image }));
     });
     return (S.React.createElement("div", { className: "page-content encore-dark-theme encore-base-set" },
-        S.React.createElement("section", { className: "stats-libraryOverview" },
-            S.React.createElement(StatCard, { label: "Total Tracks", value: tracks.length }),
-            S.React.createElement(StatCard, { label: "Total Artists", value: artists.length }),
-            S.React.createElement(StatCard, { label: "Total Minutes", value: Math.floor(duration / 60) }),
-            S.React.createElement(StatCard, { label: "Total Hours", value: duration / 60 / 60 })),
-        S.React.createElement(Shelf, { title: "Most Frequent Genres" },
-            S.React.createElement(ContributionChart, { contributions: genres }),
-            S.React.createElement(InlineGrid, { special: true }, statCards)),
-        S.React.createElement(Shelf, { title: "Most Frequent Artists" },
-            S.React.createElement(InlineGrid, null, artistCards)),
-        S.React.createElement(Shelf, { title: "Most Frequent Albums" },
-            S.React.createElement(InlineGrid, null, albumCards)),
-        S.React.createElement(Shelf, { title: "Release Year Distribution" },
-            S.React.createElement(ContributionChart, { contributions: releaseYears }))));
+        S.React.createElement("div", { id: "stats-app" },
+            S.React.createElement("section", { className: "stats-libraryOverview" },
+                S.React.createElement(StatCard, { label: "Total Tracks", value: tracks.length.toString() }),
+                S.React.createElement(StatCard, { label: "Total Artists", value: artists.length.toString() }),
+                S.React.createElement(StatCard, { label: "Total Minutes", value: Math.floor(duration / 60).toString() }),
+                S.React.createElement(StatCard, { label: "Total Hours", value: (duration / 60 / 60).toFixed(1) })),
+            S.React.createElement(Shelf, { title: "Most Frequent Genres" },
+                S.React.createElement(ContributionChart, { contributions: genres }),
+                S.React.createElement(InlineGrid, { special: true }, statCards)),
+            S.React.createElement(Shelf, { title: "Most Frequent Artists" },
+                S.React.createElement(InlineGrid, null, artistCards)),
+            S.React.createElement(Shelf, { title: "Most Frequent Albums" },
+                S.React.createElement(InlineGrid, null, albumCards)),
+            S.React.createElement(Shelf, { title: "Release Year Distribution" },
+                S.React.createElement(ContributionChart, { contributions: releaseYears })))));
 };
 export default React.memo(PlaylistPage);

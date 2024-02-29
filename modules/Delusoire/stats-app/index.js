@@ -2,7 +2,6 @@ import { S, SVGIcons, createStorage, createRegistrar, createLogger } from "/modu
 import { NavLink } from "/modules/Delusoire/std/registers/navlink.js";
 import { ACTIVE_ICON, ICON } from "./static.js";
 import PlaylistPage from "./pages/playlist.js";
-import { STATS_VERSION } from "./static.js";
 import { onHistoryChanged } from "/modules/Delusoire/delulib/listeners.js";
 import { display } from "/modules/Delusoire/std/api/modal.js";
 import { Button } from "../std/registers/topbarLeftButton.js";
@@ -14,18 +13,6 @@ export default function (mod) {
     storage = createStorage(mod);
     logger = createLogger(mod);
     const registrar = createRegistrar(mod);
-    {
-        const version = storage.getItem("version");
-        if (!version || version !== STATS_VERSION) {
-            for (const k of Object.keys(globalThis.localStorage)) {
-                if (k.startsWith("stats:") && !k.startsWith("stats:config:")) {
-                    globalThis.localStorage.removeItem(k);
-                }
-            }
-            storage.setItem("version", STATS_VERSION);
-        }
-    }
-    storage.setItem("cache-info", JSON.stringify([0, 0, 0, 0, 0, 0]));
     let setPlaylistEditHidden = undefined;
     const PlaylistEdit = () => {
         const [hidden, setHidden] = React.useState(true);

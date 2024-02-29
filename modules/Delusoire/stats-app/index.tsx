@@ -21,20 +21,6 @@ export default function (mod: Module) {
 	logger = createLogger(mod);
 	const registrar = createRegistrar(mod);
 
-	{
-		const version = storage.getItem("version");
-		if (!version || version !== STATS_VERSION) {
-			for (const k of Object.keys(globalThis.localStorage)) {
-				if (k.startsWith("stats:") && !k.startsWith("stats:config:")) {
-					globalThis.localStorage.removeItem(k);
-				}
-			}
-			storage.setItem("version", STATS_VERSION);
-		}
-	}
-
-	storage.setItem("cache-info", JSON.stringify([0, 0, 0, 0, 0, 0]));
-
 	let setPlaylistEditHidden: React.Dispatch<React.SetStateAction<boolean>> | undefined = undefined;
 
 	const PlaylistEdit = () => {
