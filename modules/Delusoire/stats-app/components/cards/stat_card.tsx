@@ -5,7 +5,9 @@ interface StatCardProps {
 	value: number | string;
 }
 
-function formatValue(name: string, value: number): string {
+function formatValue(name: string, value: string | number): string {
+	if (typeof value === "string") return value;
+
 	switch (name) {
 		case "tempo":
 			return `${Math.round(value)} bpm`;
@@ -27,7 +29,7 @@ function StatCard(props: StatCardProps): React.ReactElement<HTMLDivElement> {
 	return (
 		<div className="main-card-card">
 			<TextComponent as="div" semanticColor="textBase" variant="alto">
-				{typeof value === "number" ? formatValue(label, value) : value}
+				{formatValue(label, value)}
 			</TextComponent>
 			<TextComponent as="div" semanticColor="textBase" variant="balladBold">
 				{normalizeString(label)}
