@@ -1,7 +1,7 @@
 import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 
-import useDropdown from "../components/dropdown/useDropdownMenu.js";
+import useDropdown from "../components/dropdown/useDropdown.js";
 import SpotifyCard from "../components/shared/spotify_card.js";
 import PageContainer from "../components/shared/page_container.js";
 import RefreshButton from "../components/buttons/refresh_button.js";

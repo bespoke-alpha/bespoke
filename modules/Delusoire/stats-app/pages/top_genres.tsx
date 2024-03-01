@@ -1,7 +1,7 @@
 import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 
-import useDropdown from "../components/dropdown/useDropdownMenu.js";
+import useDropdown from "../components/dropdown/useDropdown.js";
 import StatCard from "../components/cards/stat_card.js";
 import ContributionChart from "../components/cards/contribution_chart.js";
 import InlineGrid from "../components/inline_grid.js";

@@ -1,6 +1,6 @@
 import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
-import Dropdown from "./dropdown.js";
+import Dropdown from "./Dropdown.js";
 import { storage } from "../../index.js";
 
 // * Who doesn't love some Fixed Point (Functional) Programming?
@@ -47,7 +47,7 @@ const createPersistedState = Bluebird(usePersistedState)(createStorage);
 const useDropdown = <O extends readonly string[]>(options: O, storageVariable: string) => {
 	const [activeOption, setActiveOption] = createPersistedState(storage)(`drop-down:${storageVariable}`)<O[number]>(() => options[0]);
 
-	const dropdown = <Dropdown options={options} activeOption={activeOption} switchCallback={setActiveOption} />;
+	const dropdown = <Dropdown options={options} activeOption={activeOption} switchCallback={o => setActiveOption(() => o)} />;
 
 	return [dropdown, activeOption, setActiveOption] as const;
 };

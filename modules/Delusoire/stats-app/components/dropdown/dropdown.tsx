@@ -31,12 +31,12 @@ const DropdownMenuItem = (props: MenuItemProps) => {
 	);
 };
 
-interface DropdownMenuProps {
-	options: readonly string[];
-	activeOption: string;
-	switchCallback: (option: string) => void;
+interface DropdownMenuProps<O extends string[]> {
+	options: O;
+	activeOption: O[number];
+	switchCallback: (option: O[number]) => void;
 }
-const Dropdown = (props: DropdownMenuProps) => {
+const Dropdown = <O extends readonly string[]>(props: DropdownMenuProps<O>) => {
 	const { ContextMenu, Menu, TextComponent } = S.ReactComponents;
 	const { options, activeOption, switchCallback } = props;
 

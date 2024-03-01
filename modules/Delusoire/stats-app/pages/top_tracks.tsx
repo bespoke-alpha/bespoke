@@ -2,7 +2,7 @@ import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 
 import PageContainer from "../components/shared/page_container.js";
-import useDropdown from "../components/dropdown/useDropdownMenu.js";
+import useDropdown from "../components/dropdown/useDropdown.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../components/buttons/settings_button.js";
