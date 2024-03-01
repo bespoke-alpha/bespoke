@@ -132,22 +132,13 @@ export function expose(registerTransform: RegisterTransformFN) {
 				/(=new [\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*\("(\w+)","(query|mutation)","[\w\d]{64}",null\))/,
 				'=__GraphQLDefinitions.$3.$2$1',
 			);
-			const createProxyForType = (type: string) => new Proxy(
-				{},
-				{
-					set(_, key, value) {
-						S.GraphQLDefinitions[type][key as string] = value;
-						return true;
-					},
-				},
-			)
-			globalThis.__GraphQLDefinitions = {
-				query: createProxyForType("query"),
-				mutation: createProxyForType("mutation")
-			};
 			S.GraphQLDefinitions = {
 				query: {},
 				mutation: {}
+			};
+			globalThis.__GraphQLDefinitions = {
+				query: S.GraphQLDefinitions.query,
+				mutation: S.GraphQLDefinitions.mutation
 			};
 			emit();
 			return str;
