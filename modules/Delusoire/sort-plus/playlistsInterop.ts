@@ -10,7 +10,7 @@ import {
 } from "/modules/Delusoire/delulib/platformApi.js";
 import { SpotifyLoc } from "/modules/Delusoire/delulib/util.js";
 
-import { lastFetchedUri, lastSortAction } from "./index.js";
+import { lastFetchedUri, lastSortAction } from "./sortPlus.js";
 import { CONFIG } from "./settings.js";
 import { ERROR, getNameFromUri } from "./util.js";
 

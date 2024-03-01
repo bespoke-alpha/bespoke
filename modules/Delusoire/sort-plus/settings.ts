@@ -1,9 +1,9 @@
 import { createFolder } from "/modules/Delusoire/delulib/platformApi.js";
-import { Settings } from "/modules/Delusoire/std/api/settings.js";
+import { settings } from "./index.js";
 
 const SORTED_PLAYLISTS_FOLDER_NAME = "📀 Sorted Playlists";
 
-const settings = new Settings("Sort Plus")
+export const CONFIG = settings
 	.addToggle({ id: "preventDuplicates", desc: "Prevent Duplicates" }, () => true)
 	.addToggle({ id: "descending", desc: "Descending" }, () => true)
 	.addToggle({ id: "artistAllDiscography", desc: "All of the artist's Discography" })
@@ -23,8 +23,5 @@ const settings = new Settings("Sort Plus")
 			inputType: "text",
 		},
 		async () => (await createFolder(SORTED_PLAYLISTS_FOLDER_NAME)).uri,
-	);
-
-settings.pushSettings();
-
-export const CONFIG = settings.toObject();
+	)
+	.finalize().cfg;

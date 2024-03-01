@@ -2,6 +2,7 @@ export * from "./static.js";
 import { S as _S } from "./expose/expose.js";
 export const S = _S;
 import { Registrar } from "./registers/registers.js";
+export { createSettings } from "./api/settings.js";
 export const createRegistrar = (mod) => {
     if (!mod.registrar) {
         mod.registrar = new Registrar(mod.getIdentifier());

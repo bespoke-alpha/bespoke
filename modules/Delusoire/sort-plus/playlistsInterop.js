@@ -2,7 +2,7 @@ import { _ } from "/modules/Delusoire/std/deps.js";
 import { progressify } from "/modules/Delusoire/delulib/fp.js";
 import { createPlaylistFromTracks, fetchFolder, fetchPlaylistContents, fetchRootFolder, movePlaylistTracks, setPlaylistVisibility, } from "/modules/Delusoire/delulib/platformApi.js";
 import { SpotifyLoc } from "/modules/Delusoire/delulib/util.js";
-import { lastFetchedUri, lastSortAction } from "./index.js";
+import { lastFetchedUri, lastSortAction } from "./sortPlus.js";
 import { CONFIG } from "./settings.js";
 import { ERROR, getNameFromUri } from "./util.js";
 import { S } from "/modules/Delusoire/std/index.js";

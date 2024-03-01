@@ -47,11 +47,11 @@ export class Settings {
             S.React.createElement(S.SettingsSectionTitle, null, this.name),
             Object.values(this.sectionFields)));
         this.SettingField = ({ field, children }) => (S.React.createElement(S.ReactComponents.SettingColumn, { filterMatchQuery: field.id },
-            S.React.createElement("div", { className: "x-settings-firstColumn" },
+            S.React.createElement("div", { className: "GMGmbx5FRBd6DOVvzSgk" },
                 S.React.createElement(S.ReactComponents.SettingText, { htmlFor: field.id }, field.desc)),
-            S.React.createElement("div", { className: "x-settings-secondColumn" }, children)));
+            S.React.createElement("div", { className: "yNitN64xoLNhzJlkfzOh" }, children)));
         this.ButtonField = (field) => (S.React.createElement(this.SettingField, { field: field },
-            S.React.createElement(ButtonSecondary, { id: field.id, buttonSize: "sm", onClick: field.onClick, className: "x-settings-button" }, field.text)));
+            S.React.createElement(ButtonSecondary, { id: field.id, buttonSize: "sm", onClick: field.onClick, className: "rFFJg1UIumqUUFDgo6n7" }, field.text)));
         this.ToggleField = (field) => {
             const id = this.getId(field.id);
             const [value, setValue] = this.useStateFor(id);
@@ -59,13 +59,13 @@ export class Settings {
                 S.React.createElement(S.ReactComponents.SettingToggle, { id: field.id, value: Settings.getFieldValue(id), onSelected: (checked) => {
                         setValue(checked);
                         field.onSelected?.(checked);
-                    }, className: "x-settings-button" })));
+                    }, className: "rFFJg1UIumqUUFDgo6n7" })));
         };
         this.InputField = (field) => {
             const id = this.getId(field.id);
             const [value, setValue] = this.useStateFor(id);
             return (S.React.createElement(this.SettingField, { field: field },
-                S.React.createElement("input", { className: "x-settings-input", id: field.id, dir: "ltr", value: Settings.getFieldValue(id), type: field.inputType, onChange: e => {
+                S.React.createElement("input", { className: "SkbGMKYv49KtJNB5XxdX", id: field.id, dir: "ltr", value: Settings.getFieldValue(id), type: field.inputType, onChange: e => {
                         const value = e.currentTarget.value;
                         setValue(value);
                         field.onChange?.(value);
@@ -105,7 +105,7 @@ export class Settings {
             Settings.setFieldValue(id, await defaultValue());
     }; }
 }
-export const createSettingsSection = (mod) => {
+export const createSettings = (mod) => {
     if (!mod.settings) {
         mod.settings = Settings.fromModule(mod);
     }

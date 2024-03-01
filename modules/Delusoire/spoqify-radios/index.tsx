@@ -1,29 +1,19 @@
 import { _ } from "/modules/Delusoire/std/deps.js";
-import { SpotifyLoc } from "/modules/Delusoire/delulib/util.js";
 
-import { CONFIG } from "./settings.js";
-import { S, SVGIcons, createRegistrar } from "/modules/Delusoire/std/index.js";
+import { S, SVGIcons, createRegistrar, createSettings } from "/modules/Delusoire/std/index.js";
 import { useMenuItem } from "/modules/Delusoire/std/registers/menu.js";
 import { createIconComponent } from "/modules/Delusoire/std/api/createIconComponent.js";
 import type { Module } from "/hooks/module.js";
+import type { Settings } from "/modules/Delusoire/std/api/settings.js";
 
 const { URI } = S;
-const History = S.Platform.getHistory();
-const RootlistAPI = S.Platform.getRootlistAPI();
 
-const createAnonRadio = (uri: string) => {
-	const sse = new EventSource(`https://open.spoqify.com/anonymize?url=${uri.substring(8)}`);
-	sse.addEventListener("done", e => {
-		sse.close();
-		const anonUri = URI.fromString(e.data);
-
-		History.push(anonUri.toURLPath(true));
-		RootlistAPI.add([anonUri.toURI()], SpotifyLoc.after.fromUri(CONFIG.anonymizedRadiosFolderUri));
-	});
-};
-
-export default function (mod: Module) {
+export let settings: Settings;
+export default async function (mod: Module) {
 	const registrar = createRegistrar(mod);
+	settings = createSettings(mod);
+
+	const { createAnonRadio, FolderPickerMenuItem } = await import("./spoqifyRadios.js");
 
 	registrar.register(
 		"menu",
@@ -49,27 +39,7 @@ export default function (mod: Module) {
 		},
 	);
 
-	registrar.register(
-		"menu",
-		S.React.createElement(() => {
-			const { props } = useMenuItem();
-			const { uri } = props.reference;
-			return (
-				<S.ReactComponents.MenuItem
-					disabled={false}
-					onClick={() => {
-						CONFIG.anonymizedRadiosFolderUri = uri;
-					}}
-					leadingIcon={createIconComponent({
-						icon: SVGIcons["playlist-folder"],
-					})}
-				>
-					Choose for Anonymized Radios
-				</S.ReactComponents.MenuItem>
-			);
-		}),
-		({ props }) => {
-			return URI.is.Folder(props?.reference?.uri);
-		},
-	);
+	registrar.register("menu", <FolderPickerMenuItem />, ({ props }) => {
+		return URI.is.Folder(props?.reference?.uri);
+	});
 }

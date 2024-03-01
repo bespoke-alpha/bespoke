@@ -1,8 +1,8 @@
-import { Settings } from "/modules/Delusoire/std/api/settings.js";
-const settings = new Settings("Search On YouTube").addInput({
+import { settings } from "./index.js";
+export const CONFIG = settings
+    .addInput({
     id: "YouTubeApiKey",
     desc: "YouTube API Key",
     inputType: "text",
-}, () => "***************************************");
-settings.pushSettings();
-export const CONFIG = settings.toObject();
+}, () => "***************************************")
+    .finalize().cfg;

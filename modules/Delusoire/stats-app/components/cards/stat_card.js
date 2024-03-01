@@ -17,7 +17,7 @@ function normalizeString(inputString) {
 function StatCard(props) {
     const { TextComponent } = S.ReactComponents;
     const { label, value } = props;
-    return (S.React.createElement("div", { className: "main-card-card" },
+    return (S.React.createElement("div", { className: "LunqxlFIupJw_Dkx6mNx" },
         S.React.createElement(TextComponent, { as: "div", semanticColor: "textBase", variant: "alto" }, formatValue(label, value)),
         S.React.createElement(TextComponent, { as: "div", semanticColor: "textBase", variant: "balladBold" }, normalizeString(label))));
 }

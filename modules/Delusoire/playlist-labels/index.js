@@ -9,7 +9,7 @@ onTrackListMutationListeners.push(async (tracklist, tracks) => {
     tracks.map(async (track, i) => {
         if (track.querySelector(".playlist-labels-container"))
             return;
-        const lastColumn = track.querySelector(".main-trackList-rowSectionEnd");
+        const lastColumn = track.querySelector(".HcMOFLaukKJdK5LfdHh0");
         const labelContainer = document.createElement("div");
         labelContainer.classList.add("playlist-labels-container");
         const { uri } = track.props;

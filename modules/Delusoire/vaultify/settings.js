@@ -1,6 +1,6 @@
-import { Settings } from "/modules/Delusoire/std/api/settings.js";
-import { RestoreScope, backup, restoreFactory } from "./index.js";
-const settings = new Settings("Vaultify")
+import { settings } from "./index.js";
+import { RestoreScope, backup, restoreFactory } from "./vaultify.js";
+export const CONFIG = settings
     .addButton({
     id: "backup",
     desc: "Backup Library, LocalStorage and Settings",
@@ -24,5 +24,5 @@ const settings = new Settings("Vaultify")
     desc: "Restore Settings",
     text: "Restore from clipboard",
     onClick: restoreFactory(RestoreScope.SETTINGS),
-});
-settings.pushSettings();
+})
+    .finalize().cfg;

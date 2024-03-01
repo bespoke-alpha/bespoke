@@ -4,7 +4,10 @@ import { S as _S } from "./expose/expose.js";
 export const S = _S;
 
 import type { Module } from "/hooks/module.js";
+
 import { Registrar } from "./registers/registers.js";
+
+export { createSettings } from "./api/settings.js";
 
 export const createRegistrar = (mod: Module & { registrar?: Registrar }) => {
 	if (!mod.registrar) {

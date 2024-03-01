@@ -194,7 +194,7 @@ export class Settings<A = Record<string, never>> {
 	};
 }
 
-export const createSettingsSection = (mod: Module & { settings?: Settings }) => {
+export const createSettings = (mod: Module & { settings?: Settings }) => {
 	if (!mod.settings) {
 		mod.settings = Settings.fromModule(mod);
 	}
