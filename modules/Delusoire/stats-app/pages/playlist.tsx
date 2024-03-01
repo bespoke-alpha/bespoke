@@ -12,7 +12,8 @@ import { _, fp } from "/modules/Delusoire/std/deps.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
 import { getURI, toID } from "../util/parse.js";
 import type { Artist } from "@fostertheweb/spotify-web-api-ts-sdk";
-import Status from "../components/shared/status.js";
+import { useStatus } from "../components/status/useStatus.js";
+import { logger } from "../index.js";
 
 const PlaylistAPI = S.Platform.getPlaylistAPI();
 
@@ -131,15 +132,9 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 		queryFn,
 	});
 
-	switch (status) {
-		case "pending": {
-			return <Status icon="library" heading="Loading" subheading="This operation is taking longer than expected." />;
-		}
-		case "error": {
-			// TODO: use module's logger
-			console.error(error);
-			return <Status icon="error" heading="Problem occured" subheading="Please make sure that all your settings are valid." />;
-		}
+	const Status = useStatus({ status, error, logger });
+	if (Status) {
+		return Status;
 	}
 
 	const { audioFeatures, artists, tracks, duration, genres, albums, releaseYears } = data;

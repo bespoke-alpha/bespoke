@@ -10,7 +10,8 @@ import { chunkify20, chunkify50 } from "/modules/Delusoire/delulib/fp.js";
 import { _, fp } from "/modules/Delusoire/std/deps.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
 import { getURI, toID } from "../util/parse.js";
-import Status from "../components/shared/status.js";
+import { useStatus } from "../components/status/useStatus.js";
+import { logger } from "../index.js";
 const PlaylistAPI = S.Platform.getPlaylistAPI();
 export const fetchAudioFeaturesMeta = async (ids) => {
     const featureList = {
@@ -110,15 +111,9 @@ const PlaylistPage = ({ uri }) => {
         queryKey: ["playlistAnalysis"],
         queryFn,
     });
-    switch (status) {
-        case "pending": {
-            return S.React.createElement(Status, { icon: "library", heading: "Loading", subheading: "This operation is taking longer than expected." });
-        }
-        case "error": {
-            // TODO: use module's logger
-            console.error(error);
-            return S.React.createElement(Status, { icon: "error", heading: "Problem occured", subheading: "Please make sure that all your settings are valid." });
-        }
+    const Status = useStatus({ status, error, logger });
+    if (Status) {
+        return Status;
     }
     const { audioFeatures, artists, tracks, duration, genres, albums, releaseYears } = data;
     const statCards = Object.entries(audioFeatures).map(([key, value]) => {

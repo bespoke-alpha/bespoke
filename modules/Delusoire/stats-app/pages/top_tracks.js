@@ -1,13 +1,14 @@
 import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 import PageContainer from "../components/shared/page_container.js";
-import useDropdown from "../components/dropdown/useDropdownMenu.js";
+import useDropdown from "../components/dropdown/useDropdown.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import SettingsButton from "../components/buttons/settings_button.js";
 import { spotifyApi } from "../../delulib/api.js";
 import { SpotifyTimeRange } from "../api/spotify.js";
-import Status from "../components/shared/status.js";
+import { useStatus } from "../components/status/useStatus.js";
+import { logger } from "../index.js";
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"];
 const OptionToTimeRange = {
     "Past Month": SpotifyTimeRange.Short,
@@ -26,20 +27,14 @@ const TracksPage = () => {
     });
     const thisRef = React.useRef(null);
     const { usePlayContextItem } = S.getPlayContext({ uri: "" }, { featureIdentifier: "queue" });
-    switch (status) {
-        case "pending": {
-            return S.React.createElement(Status, { icon: "library", heading: "Loading", subheading: "This operation is taking longer than expected." });
-        }
-        case "error": {
-            // TODO: use module's logger
-            console.error(error);
-            return S.React.createElement(Status, { icon: "error", heading: "Problem occured", subheading: "Please make sure that all your settings are valid." });
-        }
+    const Status = useStatus({ status, error, logger });
+    if (Status) {
+        return Status;
     }
     const topTracks = data.items;
     const pageContainerProps = {
         title: "Top Tracks",
-        headerEls: [dropdown, S.React.createElement(RefreshButton, { callback: refetch }), S.React.createElement(SettingsButton, { section: "Statistics" })],
+        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "stats-app" })],
         infoToCreatePlaylist: {
             playlistName: `Top Songs - ${activeOption}`,
             itemsUris: topTracks.map(track => track.uri),

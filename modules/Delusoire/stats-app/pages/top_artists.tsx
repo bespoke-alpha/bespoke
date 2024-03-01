@@ -10,7 +10,8 @@ import RefreshButton from "../components/buttons/refresh_button.js";
 import { spotifyApi } from "../../delulib/api.js";
 
 import { SpotifyTimeRange } from "../api/spotify.js";
-import Status from "../components/shared/status.js";
+import { useStatus } from "../components/status/useStatus.js";
+import { logger } from "../index.js";
 
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"] as const;
 const OptionToTimeRange = {
@@ -30,22 +31,16 @@ const ArtistsPage = () => {
 		queryFn: () => fetchTopArtists(timeRange),
 	});
 
-	switch (status) {
-		case "pending": {
-			return <Status icon="library" heading="Loading" subheading="This operation is taking longer than expected." />;
-		}
-		case "error": {
-			// TODO: use module's logger
-			console.error(error);
-			return <Status icon="error" heading="Problem occured" subheading="Please make sure that all your settings are valid." />;
-		}
+	const Status = useStatus({ status, error, logger });
+	if (Status) {
+		return Status;
 	}
 
 	const topArtists = data.items;
 
 	const PageContainerProps = {
 		title: "Top Artists",
-		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="Statistics" />],
+		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="stats-app" />],
 	};
 
 	return (

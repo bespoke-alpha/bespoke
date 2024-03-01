@@ -17,7 +17,8 @@ import { fp } from "/modules/Delusoire/std/deps.js";
 import { fetchAlbumsMeta, fetchArtistsMeta, fetchAudioFeaturesMeta } from "./playlist.js";
 import { calculateTracksMeta } from "./top_genres.js";
 import { getURI, toID } from "../util/parse.js";
-import Status from "../components/shared/status.js";
+import { useStatus } from "../components/status/useStatus.js";
+import { logger } from "../index.js";
 
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"] as const;
 const OptionToTimeRange = {
@@ -69,22 +70,16 @@ const LibraryPage = () => {
 		},
 	});
 
-	switch (status) {
-		case "pending": {
-			return <Status icon="library" heading="Loading" subheading="This operation is taking longer than expected." />;
-		}
-		case "error": {
-			// TODO: use module's logger
-			console.error(error);
-			return <Status icon="error" heading="Problem occured" subheading="Please make sure that all your settings are valid." />;
-		}
+	const Status = useStatus({ status, error, logger });
+	if (Status) {
+		return Status;
 	}
 
 	const { genres, artists, albums, playlists, duration, releaseDates, tracks, audioFeatures } = data;
 
 	const PageContainerProps = {
 		title: "Library Analysis",
-		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="Statistics" />],
+		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="stats-app" />],
 	};
 
 	const statCards = Object.entries(audioFeatures).map(([key, value]) => {
