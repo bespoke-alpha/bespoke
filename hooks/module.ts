@@ -125,7 +125,7 @@ export class Module {
 
 export const internalModule = new Module(undefined, undefined);
 
-const lock = (await readJSON("/modules/lock.json")) as Lock;
+const lock = (await readJSON("/modules/vault.json")) as Lock;
 export const modules = await Promise.all(lock.modules.map(Module.fromRelPath));
 export const modulesMap = Object.fromEntries(modules.map(m => [m.getIdentifier(), m] as const));
 
