@@ -28,7 +28,7 @@ export function display({
 		if (isEmbedWidgetGeneratorOrTrackCreditsModal) {
 			return (
 				<GenericModal isOpen={isOpen} contentLabel={contentLabel}>
-					<div className="uUYNnjSt8m3EqVjsnHgh">
+					<div className="uUYNnjSt8m3EqVjsnHgh" style={{ overflow: "scroll", width: "60vw" }}>
 						<div className="bOIRpQiHUAEfp8ntStTo">
 							<Text as="h1" variant="titleSmall">
 								{contentLabel}

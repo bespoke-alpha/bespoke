@@ -12,7 +12,7 @@ export function display({ title: contentLabel, content: children, isLarge: isEmb
         close = () => setIsOpen(false);
         if (isEmbedWidgetGeneratorOrTrackCreditsModal) {
             return (S.React.createElement(GenericModal, { isOpen: isOpen, contentLabel: contentLabel },
-                S.React.createElement("div", { className: "uUYNnjSt8m3EqVjsnHgh" },
+                S.React.createElement("div", { className: "uUYNnjSt8m3EqVjsnHgh", style: { overflow: "scroll", width: "60vw" } },
                     S.React.createElement("div", { className: "bOIRpQiHUAEfp8ntStTo" },
                         S.React.createElement(Text, { as: "h1", variant: "titleSmall" }, contentLabel),
                         S.React.createElement("button", { className: "oBoIIlKrwQjxXpvOiOa0", onClick: close }, createIconComponent({
