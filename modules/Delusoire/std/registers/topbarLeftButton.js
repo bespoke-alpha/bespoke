@@ -39,4 +39,4 @@ internalRegisterTransform({
     glob: /^\/xpui\.js/,
 });
 export const Button = ({ label, disabled = false, onClick, icon }) => (S.React.createElement(S.ReactComponents.Tooltip, { label: label },
-    S.React.createElement("button", { "aria-label": label, disabled: disabled, className: "ql0zZd7giPXSnPg75NR0", onClick: onClick }, icon && createIconComponent({ icon, className: "IYDlXmBmmUKHveMzIPCF" }))));
+    S.React.createElement("button", { "aria-label": label, disabled: disabled, className: "main-topBar-button", onClick: onClick }, icon && createIconComponent({ icon, className: "main-topBar-icon" }))));

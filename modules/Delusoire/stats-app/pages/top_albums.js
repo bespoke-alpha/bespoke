@@ -49,6 +49,6 @@ const AlbumsPage = () => {
         return (S.React.createElement(SpotifyCard, { type: type, uri: album.uri, header: album.name, subheader: `#${index + 1} Album`, imageUrl: album.images[0]?.url ?? DEFAULT_TRACK_IMG }));
     });
     return (S.React.createElement(PageContainer, { ...props },
-        S.React.createElement("div", { className: "iKwGKEfAfW7Rkx2_Ba4E grid" }, albumCards)));
+        S.React.createElement("div", { className: "main-gridContainer-gridContainer grid" }, albumCards)));
 };
 export default React.memo(AlbumsPage);

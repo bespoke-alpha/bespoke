@@ -17,7 +17,7 @@ const Dropdown = (props) => {
         return (S.React.createElement(Menu, { ...props }, options.map(option => (S.React.createElement(DropdownMenuItem, { option: option, isActive: option === activeOption, switchCallback: switchCallback })))));
     };
     return (S.React.createElement(ContextMenu, { menu: S.React.createElement(DropdownMenu, null), trigger: "click" },
-        S.React.createElement("button", { className: "w6j_vX6SF5IxSXrrkYw5", type: "button", role: "combobox", "aria-expanded": "false" },
+        S.React.createElement("button", { className: "x-sortBox-sortDropdown", type: "button", role: "combobox", "aria-expanded": "false" },
             S.React.createElement(TextComponent, { variant: "mesto", semanticColor: "textSubdued" }, activeOption),
             S.React.createElement("svg", { role: "img", height: "16", width: "16", "aria-hidden": "true", className: "Svg-img-16 Svg-img-16-icon Svg-img-icon Svg-img-icon-small", viewBox: "0 0 16 16", "data-encore-id": "icon" },
                 S.React.createElement("path", { d: "m14 6-6 6-6-6h12z" })))));

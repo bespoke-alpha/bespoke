@@ -83,7 +83,7 @@ const GenresPage = () => {
     };
     const statsCards = Object.entries(audioFeatures).map(([key, value]) => S.React.createElement(StatCard, { label: key, value: value }));
     return (S.React.createElement(PageContainer, { ...PageContainerProps },
-        S.React.createElement("section", { className: "QyANtc_r7ff_tqrf5Bvc Shelf" },
+        S.React.createElement("section", { className: "main-shelf-shelf Shelf" },
             S.React.createElement(ContributionChart, { contributions: genres }),
             S.React.createElement(InlineGrid, { special: true }, statsCards)),
         S.React.createElement(Shelf, { title: "Release Year Distribution" },

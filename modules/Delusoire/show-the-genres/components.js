@@ -57,7 +57,7 @@ let _ArtistGenreContainer = class _ArtistGenreContainer extends LitElement {
                     --genre-link-size: ${this.isSmall ? "12px" : "1rem"};
                 }
             </style>
-            <div className="Ydwa1P5GkCggtLlSvphs genre-container">
+            <div className="main-entityHeader-detailsText genre-container">
                 ${this.name && html `<span>${this.name} : </span>`} ${join(artistGenreLinks, divider)}
             </div>`;
     }

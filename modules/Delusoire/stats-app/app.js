@@ -19,7 +19,7 @@ const NavBar = ({ categories, selectedCategory }) => (S.React.createElement("div
         S.React.createElement("div", { className: "VIeVCUUETJyYPCDpsBif" },
             S.React.createElement(S.ReactComponents.Scrollable, null, categories.map(category => (S.React.createElement(NavToChip, { to: `spotify:app:stats:${category}`, title: category, selected: category === selectedCategory }, category))))))));
 const TopbarMounted = ({ children }) => {
-    return ReactDOM.createPortal(S.React.createElement("div", { className: "main-topbar-topbarContent", style: { pointerEvents: "all" } }, children), document.querySelector(".rovbQsmAS_mwvpKHaVhQ"));
+    return ReactDOM.createPortal(S.React.createElement("div", { className: "main-topbar-topbarContent", style: { pointerEvents: "all" } }, children), document.querySelector(".main-topBar-topbarContentWrapper"));
 };
 const categories = Object.keys(Pages);
 const Page = ({ selectedCategory }) => Pages[selectedCategory];

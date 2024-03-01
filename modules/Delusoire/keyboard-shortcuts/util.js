@@ -3,7 +3,7 @@ import { listeningToSneakBinds } from "./sneak.js";
 import { S } from "/modules/Delusoire/std/index.js";
 const History = S.Platform.getHistory();
 const SCROLL_STEP = 25;
-const getApp = () => document.querySelector(".jEMA2gVoLgPQqAFrPhFw div.os-viewport");
+const getApp = () => document.querySelector(".Root__main-view div.os-viewport");
 export const appScroll = (s) => {
     const app = getApp();
     if (!app)
@@ -18,10 +18,10 @@ export const openPage = (page) => History.push({ pathname: page });
 export const rotateSidebar = (offset) => {
     if (offset === 0)
         return;
-    const navLinks = Array.from(Array.from(document.querySelectorAll(".UYeKN11KAw61rZoyjcgZ")).values());
+    const navLinks = Array.from(Array.from(document.querySelectorAll(".main-yourLibraryX-navLink")).values());
     if (navLinks.length === 0)
         return;
-    const activeNavLink = document.querySelector(".DzWw3g4E_66wu9ktqn36");
+    const activeNavLink = document.querySelector(".main-yourLibraryX-navLinkActive");
     let activeNavLinkIndex = navLinks.findIndex(e => e === activeNavLink);
     if (activeNavLinkIndex === -1 && offset < 0)
         activeNavLinkIndex = navLinks.length;
@@ -52,4 +52,4 @@ export const isElementInViewPort = (e) => {
     const f = (top) => _.flow(_.mean, within(0, top));
     return f(c.clientHeight)([bound.top, bound.bottom]) && f(c.clientWidth)([bound.left, bound.right]);
 };
-export const CLICKABLE_ELEMENT_SELECTOR = `.ZQftYELq0aOsg6tPbVbV [href]:not(link),.ZQftYELq0aOsg6tPbVbV button,.ZQftYELq0aOsg6tPbVbV [role="button"]`;
+export const CLICKABLE_ELEMENT_SELECTOR = `.Root__top-container [href]:not(link),.Root__top-container button,.Root__top-container [role="button"]`;
