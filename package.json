@@ -7,7 +7,7 @@
 		"watch:js": "cd modules && bun tsc-watch.ts",
 		"watch:css": "cd modules && bun sass-watch.ts",
 		"watch": "conc -n watch-js,watch-css \"bun run watch:js\" \"bun run watch:css\"",
-		"run": "bespoke run -- --disable-web-security",
+		"run": "bespoke run -- ",
 		"dev": "bespoke dev && bun run run --remote-debugging-port=9222 --remote-allow-origins=*"
 	},
 	"workspaces": [],
