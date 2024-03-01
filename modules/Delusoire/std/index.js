@@ -2,7 +2,6 @@ export * from "./static.js";
 import { S as _S } from "./expose/expose.js";
 export const S = _S;
 import { Registrar } from "./registers/registers.js";
-export { createSettings } from "./api/settings.js";
 export const createRegistrar = (mod) => {
     if (!mod.registrar) {
         mod.registrar = new Registrar(mod.getIdentifier());
@@ -19,11 +18,10 @@ export const createStorage = (mod) => {
         const hookedMethods = new Set(["getItem", "setItem", "removeItem"]);
         mod.storage = new Proxy(globalThis.localStorage, {
             get(target, p, receiver) {
-                const method = Reflect.get(target, p, receiver);
                 if (typeof p === "string" && hookedMethods.has(p)) {
-                    return (key, ...data) => method(`module:${mod.getIdentifier()}:${key}`, ...data);
+                    return (key, ...data) => target[p](`module:${mod.getIdentifier()}:${key}`, ...data);
                 }
-                return method;
+                return target[p];
             },
         });
     }
@@ -34,11 +32,10 @@ export const createLogger = (mod) => {
         const hookedMethods = new Set(["debug", "error", "info", "log", "warn"]);
         mod.logger = new Proxy(globalThis.console, {
             get(target, p, receiver) {
-                const method = Reflect.get(target, p, receiver);
                 if (typeof p === "string" && hookedMethods.has(p)) {
-                    return (...data) => method(`[${mod.getIdentifier()}]:`, ...data);
+                    return (...data) => target[p](`[${mod.getIdentifier()}]:`, ...data);
                 }
-                return method;
+                return target[p];
             },
         });
     }

@@ -172,8 +172,8 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 				<section className="stats-libraryOverview">
 					<StatCard label="Total Tracks" value={tracks.length.toString()} />
 					<StatCard label="Total Artists" value={artists.length.toString()} />
-					<StatCard label="Total Minutes" value={Math.floor(duration / 60).toString()} />
-					<StatCard label="Total Hours" value={(duration / 60 / 60).toFixed(1)} />
+					<StatCard label="Total Minutes" value={Math.floor(duration / 1000 / 60).toString()} />
+					<StatCard label="Total Hours" value={(duration / 1000 / 60 / 60).toFixed(1)} />
 				</section>
 				<Shelf title="Most Frequent Genres">
 					<ContributionChart contributions={genres} />

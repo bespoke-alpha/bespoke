@@ -1,7 +1,7 @@
 import type { RegisterTransformFN } from "/hooks/transforms/transform.js";
 
 import type { ExposedPlatform, Platform } from "./platform.js";
-import type { ExposedWebpack, React, Snackbar } from "./webpack.js";
+import type { ExposedWebpack, Snackbar } from "./webpack.js";
 import type { Tippy } from "tippy.js";
 import type { spring } from "react-flip-toolkit";
 import type { Store } from "redux";
@@ -11,11 +11,9 @@ export type GraphQLDefinitions = Record<string, GraphQLDefinition>;
 export type ReduxStore = Store;
 export type ReactFlipToolkitSpring = typeof spring;
 export type SettingsSectionProps = { filterMatchQuery: string };
-export type SettingsSection = React.FC<any>;
-<SettingsSectionProps>;
+export type SettingsSection = React.FC<SettingsSectionProps>;
 export type SettingsSectionTitleProps = {};
-export type SettingsSectionTitle = React.FC<any>;
-<SettingsSectionTitleProps>;
+export type SettingsSectionTitle = React.FC<SettingsSectionTitleProps>;
 
 export type ExposedOther = {
 	GraphQLDefinitions: GraphQLDefinitions;

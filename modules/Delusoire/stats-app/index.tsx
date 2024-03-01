@@ -1,4 +1,6 @@
-import { S, SVGIcons, createStorage, createRegistrar, createLogger, createSettings } from "/modules/Delusoire/std/index.js";
+import { S, SVGIcons, createStorage, createRegistrar, createLogger } from "/modules/Delusoire/std/index.js";
+import { createSettings } from "/modules/Delusoire/std/api/settings.js";
+
 import { NavLink } from "/modules/Delusoire/std/registers/navlink.js";
 import { ACTIVE_ICON, ICON } from "./static.js";
 import { Module } from "/hooks/module.js";
@@ -36,7 +38,7 @@ export default function (mod: Module) {
 				icon={SVGIcons.visualizer}
 				onClick={() => {
 					const playlistUri = URI.fromString(History.location.pathname).toURI();
-					display({ title: "Playlist Stats", content: <PlaylistPage uri={playlistUri} />, isLarge: false });
+					display({ title: "Playlist Stats", content: <PlaylistPage uri={playlistUri} />, isLarge: true });
 				}}
 			/>
 		);

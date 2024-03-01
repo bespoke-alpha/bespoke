@@ -1,4 +1,5 @@
-import { S, createRegistrar, createSettings } from "/modules/Delusoire/std/index.js";
+import { S, createRegistrar } from "/modules/Delusoire/std/index.js";
+import { createSettings } from "/modules/Delusoire/std/api/settings.js";
 import { useMenuItem } from "/modules/Delusoire/std/registers/menu.js";
 import { createIconComponent } from "/modules/Delusoire/std/api/createIconComponent.js";
 import type { Module } from "/hooks/module.js";

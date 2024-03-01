@@ -7,8 +7,6 @@ import type { Module } from "/hooks/module.js";
 
 import { Registrar } from "./registers/registers.js";
 
-export { createSettings } from "./api/settings.js";
-
 export const createRegistrar = (mod: Module & { registrar?: Registrar }) => {
 	if (!mod.registrar) {
 		mod.registrar = new Registrar(mod.getIdentifier());
@@ -28,13 +26,11 @@ export const createStorage = <M extends Module>(mod: M & { storage?: Storage }) 
 
 		mod.storage = new Proxy(globalThis.localStorage, {
 			get(target, p, receiver) {
-				const method = Reflect.get(target, p, receiver);
-
 				if (typeof p === "string" && hookedMethods.has(p)) {
-					return (key: string, ...data: Array<any | void>) => method(`module:${mod.getIdentifier()}:${key}`, ...data);
+					return (key: string, ...data: any[]) => target[p](`module:${mod.getIdentifier()}:${key}`, ...data);
 				}
 
-				return method;
+				return target[p as keyof typeof target];
 			},
 		});
 	}
@@ -48,13 +44,11 @@ export const createLogger = (mod: Module & { logger?: Console }) => {
 
 		mod.logger = new Proxy(globalThis.console, {
 			get(target, p, receiver) {
-				const method = Reflect.get(target, p, receiver);
-
 				if (typeof p === "string" && hookedMethods.has(p)) {
-					return (...data: any[]) => method(`[${mod.getIdentifier()}]:`, ...data);
+					return (...data: any[]) => target[p](`[${mod.getIdentifier()}]:`, ...data);
 				}
 
-				return method;
+				return target[p as keyof typeof target];
 			},
 		});
 	}

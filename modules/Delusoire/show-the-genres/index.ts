@@ -1,4 +1,4 @@
-import { createSettings } from "/modules/Delusoire/std/index.js";
+import { createSettings } from "/modules/Delusoire/std/api/settings.js";
 import type { Module } from "/hooks/module.js";
 import type { Settings } from "/modules/Delusoire/std/api/settings.js";
 

@@ -83,8 +83,14 @@ export class Module {
         });
         return new Module(path, metadata);
     }
+    getAuthor() {
+        return this.metadata.authors[0];
+    }
+    getName() {
+        return this.metadata.name;
+    }
     getIdentifier() {
-        return `${this.metadata.authors[0]}/${this.metadata.name}`;
+        return `${this.getAuthor()}/${this.getName()}`;
     }
 }
 export const internalModule = new Module(undefined, undefined);
