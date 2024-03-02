@@ -3,7 +3,7 @@ import { readJSON } from "./util.js";
 
 type Vault = {
 	modules: Array<{
-		metadataURL: string;
+		metadataURL?: string;
 		identifier: string;
 		enabled: boolean;
 	}>;

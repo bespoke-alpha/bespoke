@@ -1,12 +1,12 @@
 .DS_Store
 
+tmp/
 node_modules/
 bun.lockb
 config.yaml
 
 cli/bespoke*
 
-apps/
 #modules/vault.json
 # TODO: use git submodules for all modules
 #modules/*/
