@@ -1,5 +1,8 @@
 //go:build unix
 
+/*
+Copyright © 2024 Delusoire <deluso7re@outlook.com>
+*/
 package paths
 
 import (

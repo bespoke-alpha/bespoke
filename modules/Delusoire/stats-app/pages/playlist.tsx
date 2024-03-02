@@ -139,27 +139,15 @@ const PlaylistPage = ({ uri }: { uri: string }) => {
 
 	const { audioFeatures, artists, tracks, duration, genres, albums, releaseYears } = data;
 
-	const statCards = Object.entries(audioFeatures).map(([key, value]) => {
-		return <StatCard label={key} value={value} />;
-	});
+	const statCards = Object.entries(audioFeatures).map(([key, value]) => <StatCard label={key} value={value} />);
 
-	const artistCards = artists.map(artist => {
-		return (
-			<SpotifyCard
-				type="artist"
-				uri={artist.uri}
-				header={artist.name}
-				subheader={`Appears in ${artist.multiplicity} tracks`}
-				imageUrl={artist.image}
-			/>
-		);
-	});
+	const artistCards = artists.map(artist => (
+		<SpotifyCard type="artist" uri={artist.uri} header={artist.name} subheader={`Appears in ${artist.multiplicity} tracks`} imageUrl={artist.image} />
+	));
 
-	const albumCards = albums.map(album => {
-		return (
-			<SpotifyCard type="album" uri={album.uri} header={album.name} subheader={`Appears in ${album.multiplicity} tracks`} imageUrl={album.image} />
-		);
-	});
+	const albumCards = albums.map(album => (
+		<SpotifyCard type="album" uri={album.uri} header={album.name} subheader={`Appears in ${album.multiplicity} tracks`} imageUrl={album.image} />
+	));
 
 	return (
 		<div className="page-content encore-dark-theme encore-base-set">

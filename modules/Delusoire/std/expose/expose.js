@@ -88,14 +88,15 @@ export function expose(registerTransform) {
     });
     registerTransform({
         transform: emit => str => {
-            str = str.replace(/((?:\w+ ?)?[\w_\$][\w_\$\d]*=)(\{kind:"Document",definitions:\[\{(?:\w+:[\w"]+,)+name:\{(?:\w+:[\w"]+,?)+value:("\w+"))/, "$1__GraphQLDefinitions[$3]=$2");
-            globalThis.__GraphQLDefinitions = new Proxy({}, {
-                set(_, key, value) {
-                    S.GraphQLDefinitions[key] = value;
-                    return true;
-                },
-            });
-            S.GraphQLDefinitions = {};
+            str = str.replace(/(=new [\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*\("(\w+)","(query|mutation)","[\w\d]{64}",null\))/, '=__GraphQLDefinitions.$3.$2$1');
+            S.GraphQLDefinitions = {
+                query: {},
+                mutation: {}
+            };
+            globalThis.__GraphQLDefinitions = {
+                query: S.GraphQLDefinitions.query,
+                mutation: S.GraphQLDefinitions.mutation
+            };
             emit();
             return str;
         },

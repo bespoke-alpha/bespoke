@@ -70,14 +70,13 @@ function windowControls() {
 }
 
 async function controlDimensions() {
-	const zoomLevelPref = await getPlayerAPIPref("app.browser.zoom-level");
-	const zoomLevel = Number(zoomLevelPref.number);
-	const multiplier = Math.abs(zoomLevel) / 50;
-	const constant = 0.912872807;
-	const final_width = 135 * constant ** multiplier;
-	const final_height = 31 * constant ** multiplier;
-	style.setProperty("--control-width", `${final_width}px`);
-	style.setProperty("--control-height", `${final_height}px`);
+	let ratio = 3.375;
+	const height = document.querySelector(".ZQftYELq0aOsg6tPbVbV").computedStyleMap().get("padding-top").value / devicePixelRatio;
+	if (devicePixelRatio > 1.5) {
+		ratio = 2.95;
+	}
+	style.setProperty("--control-height", `${height}px`);
+	style.setProperty("--control-width", `${height * ratio}px`);
 }
 
 window.addEventListener("resize", () => {

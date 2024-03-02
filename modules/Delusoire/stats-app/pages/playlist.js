@@ -116,15 +116,9 @@ const PlaylistPage = ({ uri }) => {
         return Status;
     }
     const { audioFeatures, artists, tracks, duration, genres, albums, releaseYears } = data;
-    const statCards = Object.entries(audioFeatures).map(([key, value]) => {
-        return S.React.createElement(StatCard, { label: key, value: value });
-    });
-    const artistCards = artists.map(artist => {
-        return (S.React.createElement(SpotifyCard, { type: "artist", uri: artist.uri, header: artist.name, subheader: `Appears in ${artist.multiplicity} tracks`, imageUrl: artist.image }));
-    });
-    const albumCards = albums.map(album => {
-        return (S.React.createElement(SpotifyCard, { type: "album", uri: album.uri, header: album.name, subheader: `Appears in ${album.multiplicity} tracks`, imageUrl: album.image }));
-    });
+    const statCards = Object.entries(audioFeatures).map(([key, value]) => S.React.createElement(StatCard, { label: key, value: value }));
+    const artistCards = artists.map(artist => (S.React.createElement(SpotifyCard, { type: "artist", uri: artist.uri, header: artist.name, subheader: `Appears in ${artist.multiplicity} tracks`, imageUrl: artist.image })));
+    const albumCards = albums.map(album => (S.React.createElement(SpotifyCard, { type: "album", uri: album.uri, header: album.name, subheader: `Appears in ${album.multiplicity} tracks`, imageUrl: album.image })));
     return (S.React.createElement("div", { className: "page-content encore-dark-theme encore-base-set" },
         S.React.createElement("div", { id: "stats-app" },
             S.React.createElement("section", { className: "stats-libraryOverview" },
