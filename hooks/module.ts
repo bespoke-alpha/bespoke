@@ -1,7 +1,13 @@
 import { createRegisterTransform } from "./transforms/transform.js";
 import { readJSON } from "./util.js";
 
-type Vault = { modules: string[] };
+type Vault = {
+	modules: Array<{
+		metadataURL: string;
+		identifier: string;
+		enabled: boolean;
+	}>;
+};
 
 type Metadata = {
 	name: string;
@@ -24,11 +30,11 @@ export class Module {
 	public awaitedMixins = new Array<Promise<void>>();
 	private registerTransform = createRegisterTransform(this);
 	private priority = 0;
-	private disabled = false;
 
 	constructor(
 		public path: string,
 		public metadata: Metadata,
+		private enabled = true,
 	) {}
 
 	getPriority() {
@@ -43,19 +49,19 @@ export class Module {
 				module.incPriority();
 			} else {
 				console.info("Disabling", this.getIdentifier(), "for lack of dependency:", dep);
-				this.disabled = true;
+				this.enabled = false;
 			}
 		});
 	}
 
 	loadMixin() {
-		if (this.disabled) return;
+		if (!this.enabled) return;
 		const entry = this.metadata.entries.mixin;
 		return entry && (import(`${this.path}/${entry}`).then(m => m.default(this.registerTransform)) as Promise<void>);
 	}
 
 	async loadJS() {
-		if (this.disabled) return;
+		if (!this.enabled) return;
 		this.unloadJS?.();
 		const entry = this.metadata.entries.js;
 		if (entry) {
@@ -72,7 +78,7 @@ export class Module {
 	}
 
 	loadCSS() {
-		if (this.disabled) return;
+		if (!this.enabled) return;
 		this.unloadCSS?.();
 		const entry = this.metadata.entries.css;
 		if (entry) {
@@ -91,7 +97,7 @@ export class Module {
 		}
 	}
 
-	static async fromRelPath(relPath: string) {
+	static async fromRelPath(relPath: string, enabled = true) {
 		const path = `/modules/${relPath}`;
 
 		const metadata = (await readJSON(`${path}/metadata.json`)) as Metadata;
@@ -107,7 +113,7 @@ export class Module {
 			mixin: metadata.entries.mixin ?? statDefaultOrUndefined("mixin.js"),
 		});
 
-		return new Module(path, metadata);
+		return new Module(path, metadata, enabled);
 	}
 
 	getAuthor() {
@@ -126,7 +132,7 @@ export class Module {
 export const internalModule = new Module(undefined, undefined);
 
 const lock = (await readJSON("/modules/vault.json")) as Vault;
-export const modules = await Promise.all(lock.modules.map(Module.fromRelPath));
+export const modules = await Promise.all(lock.modules.map(mod => Module.fromRelPath(mod.identifier, mod.enabled)));
 export const modulesMap = Object.fromEntries(modules.map(m => [m.getIdentifier(), m] as const));
 
 for (const module of modules) {
