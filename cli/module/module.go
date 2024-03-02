@@ -63,6 +63,7 @@ type Module struct {
 type MinimalModule struct {
 	metadataURL MetadataURL
 	identifier  Identifier
+	enabled     bool
 }
 
 type Vault struct {
@@ -76,6 +77,30 @@ type MetadataURL = string
 type Identifier = string
 
 var modulesFolder = filepath.Join(paths.ConfigPath, "modules")
+
+func parseVault() (Vault, error) {
+	vaultFile := filepath.Join(modulesFolder, "vault.json")
+	file, err := os.Open(vaultFile)
+	if err != nil {
+		return Vault{}, err
+	}
+	defer file.Close()
+
+	var vault Vault
+	err = json.NewDecoder(file).Decode(&vault)
+	return vault, err
+}
+
+var vault *Vault
+
+func GetVault() (Vault, error) {
+	if vault != nil {
+		return *vault, nil
+	}
+	_vault, err := parseVault()
+	vault = &_vault
+	return _vault, err
+}
 
 func parseMetadata(r io.Reader) (Metadata, error) {
 	var metadata Metadata
@@ -209,7 +234,7 @@ func downloadModule(module Module) error {
 	return nil
 }
 
-func installModule(metadataURL MetadataURL) error {
+func InstallModuleMURL(metadataURL MetadataURL) error {
 	module, err := fetchModule(metadataURL)
 	if err != nil {
 		return err
@@ -218,12 +243,28 @@ func installModule(metadataURL MetadataURL) error {
 	return downloadModule(module)
 }
 
-func deleteLocaleModule(identifier Identifier) error {
+func InstallModule(identifier Identifier) error {
+	metadataURL, err := getMonoManifestMURLFromIdentifier(identifier)
+	if err != nil {
+		return err
+	}
+	return InstallModuleMURL(metadataURL)
+}
+
+func DeleteModule(identifier Identifier) error {
 	moduleFolder := filepath.Join(modulesFolder, identifier)
 	return os.RemoveAll(moduleFolder)
 }
 
-func updateModule(metadataURL MetadataURL) error {
+func UpdateModule(identifier Identifier) error {
+	metadataURL, err := getVaultMURLFromIdentifier(identifier)
+	if err != nil {
+		return err
+	}
+	return UpdateModuleMURL(metadataURL)
+}
+
+func UpdateModuleMURL(metadataURL MetadataURL) error {
 	metadata, err := fetchMetadata(metadataURL)
 	if err != nil {
 		return err
@@ -240,7 +281,7 @@ func updateModule(metadataURL MetadataURL) error {
 		return nil
 	}
 
-	if err := deleteLocaleModule(identifier); err != nil {
+	if err := DeleteModule(identifier); err != nil {
 		return err
 	}
 
@@ -255,18 +296,38 @@ func updateModule(metadataURL MetadataURL) error {
 	})
 }
 
-func parseVault() (Vault, error) {
-	vaultFile := filepath.Join(modulesFolder, "vault.json")
-	file, err := os.Open(vaultFile)
-	if err != nil {
-		return Vault{}, err
-	}
-	defer file.Close()
-
-	var vault Vault
-	err = json.NewDecoder(file).Decode(&vault)
-	return vault, err
+// TODO:
+func EnableModule(identifier Identifier) error {
+	return errors.ErrUnsupported
 }
 
-// This would need a centralized manifest to match possible identifiers
-// func identifierToMetadataURL(identifier Identifier) (MetadataURL, error) {}
+// TODO:
+func DisableModule(identifier Identifier) error {
+	return errors.ErrUnsupported
+}
+
+// TODO:
+func getMonoManifestMURLFromIdentifier(identifier Identifier) (MetadataURL, error) {
+	return "", errors.ErrUnsupported
+}
+
+func getVaultMURLFromIdentifier(identifier Identifier) (MetadataURL, error) {
+	vault, err := GetVault()
+	if err != nil {
+		return "", err
+	}
+
+	var metadataURL MetadataURL
+	for module := range vault.modules {
+		if vault.modules[module].identifier == identifier {
+			metadataURL = vault.modules[module].metadataURL
+			break
+		}
+	}
+
+	if metadataURL == "" {
+		err = errors.New("Can't find a module for the identifier " + identifier)
+	}
+
+	return metadataURL, err
+}
