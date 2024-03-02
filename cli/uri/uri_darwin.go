@@ -7,6 +7,7 @@ package uri
 
 import "errors"
 
+// TODO
 func RegisterURIScheme() error {
 	return errors.ErrUnsupported
 }
