@@ -6,6 +6,7 @@ package cmd
 import (
 	"bespoke/archive"
 	"bespoke/paths"
+	"bespoke/uri"
 	"fmt"
 	"log"
 	"os"
@@ -19,6 +20,9 @@ var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "initialize bespoke for Spotify",
 	Run: func(cmd *cobra.Command, args []string) {
+		if err := uri.RegisterURIScheme(); err != nil {
+			log.Println(err.Error())
+		}
 		execInit()
 	},
 }
