@@ -1,13 +1,28 @@
 {
 	"modules": [
-		"Delusoire/std",
-		"Delusoire/delulib",
-
-		"Delusoire/library-db",
-		"Delusoire/dexie-react-query",
-
-		"Delusoire/hazy",
-
-		"Delusoire/stats-app"
+		{
+			"identifier": "Delusoire/std",
+			"enabled": true
+		},
+		{
+			"identifier": "Delusoire/delulib",
+			"enabled": true
+		},
+		{
+			"identifier": "Delusoire/library-db",
+			"enabled": true
+		},
+		{
+			"identifier": "Delusoire/dexie-react-query",
+			"enabled": true
+		},
+		{
+			"identifier": "Delusoire/hazy-theme",
+			"enabled": true
+		},
+		{
+			"identifier": "Delusoire/stats-app",
+			"enabled": true
+		}
 	]
 }
