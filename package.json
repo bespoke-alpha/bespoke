@@ -10,7 +10,6 @@
 		"run": "bespoke run --",
 		"dev": "bespoke dev && bun run run --remote-debugging-port=9222 --remote-allow-origins=*"
 	},
-	"workspaces": ["modules/*"],
 	"dependencies": {},
 	"devDependencies": {
 		"@adaskothebeast/splines": "^4.0.0",
