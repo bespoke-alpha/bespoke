@@ -1,20 +1,4 @@
 {
     "extends": "../tsconfig.json",
-    "compilerOptions": {
-        "paths": {
-            "/*": ["../*"],
-            "https://esm.sh/@fostertheweb/spotify-web-api-ts-sdk": [
-                "../node_modules/@fostertheweb/spotify-web-api-ts-sdk/dist/mjs"
-            ],
-            "https://esm.sh/lodash": ["../node_modules/@types/lodash"],
-            "https://esm.sh/lodash/*": ["../node_modules/@types/lodash/*"],
-            "https://esm.sh/youtubei.js/web.bundle.min": ["../node_modules/youtubei.js/dist/src/platform/lib.d.ts"],
-            "https://esm.sh/v135/@adaskothebeast/splines/es2022/splines.mjs": [
-                "../node_modules/@adaskothebeast/splines/"
-            ],
-            "https://esm.sh/v135/*": ["../node_modules/*"],
-            "https://esm.sh/*": ["../node_modules/*"]
-        }
-    },
     "exclude": ["*.ts"]
 }
