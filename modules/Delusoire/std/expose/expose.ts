@@ -142,7 +142,7 @@ export function expose(registerTransform: RegisterTransformFN) {
 				mutation: {},
 			};
 			for (const match of matches) {
-				const { name, operation, sha256Hash } = match as any;
+				const { name, operation, sha256Hash } = match.groups;
 				S.GraphQLDefinitions[operation][name] = { name, operation, sha256Hash, value: null };
 			}
 			emit();
