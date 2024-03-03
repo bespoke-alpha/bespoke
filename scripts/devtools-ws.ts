@@ -29,6 +29,7 @@ function remoteEvalExpr(expression: string) {
 	ws.send(JSON.stringify(obj));
 }
 
+// TODO: replace with custom spotify route `spotify:app:reload`
 export const sendReloadDocument = _.debounce(() => {
 	remoteEvalExpr("document.location.reload()");
 }, 1000);

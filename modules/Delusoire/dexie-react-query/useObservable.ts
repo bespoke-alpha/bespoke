@@ -42,10 +42,9 @@ export function useObservable<T, TDefault>(observableFactory: InteropableObserva
 		const observable = typeof observableFactory === "function" ? observableFactory() : observableFactory;
 		if (!observable || typeof observable.subscribe !== "function") {
 			if (observableFactory === observable) {
-				throw new TypeError(`Given argument to useObservable() was neither a valid observable nor a function.`);
-			} else {
-				throw new TypeError(`Observable factory given to useObservable() did not return a valid observable.`);
+				throw new TypeError("Given argument to useObservable() was neither a valid observable nor a function.");
 			}
+			throw new TypeError("Observable factory given to useObservable() did not return a valid observable.");
 		}
 
 		if (

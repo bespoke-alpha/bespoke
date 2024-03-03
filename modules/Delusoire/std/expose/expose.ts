@@ -6,8 +6,14 @@ import type { Tippy } from "tippy.js";
 import type { spring } from "react-flip-toolkit";
 import type { Store } from "redux";
 
-export type GraphQLDefinition = any;
-export type GraphQLDefinitions = Record<string, GraphQLDefinition>;
+export type GraphQLDefinitionOperations = "query" | "mutation";
+export type GraphQLDefinition<N extends string, O extends GraphQLDefinitionOperations> = {
+	name: N;
+	operation: O;
+	sha256Hash: string;
+	value: null;
+};
+type GraphQLDefinitions = { [O in GraphQLDefinitionOperations]: { [N in string]: GraphQLDefinition<N, O> } };
 export type ReduxStore = Store;
 export type ReactFlipToolkitSpring = typeof spring;
 export type SettingsSectionProps = { filterMatchQuery: string };
@@ -128,22 +134,21 @@ export function expose(registerTransform: RegisterTransformFN) {
 
 	registerTransform({
 		transform: emit => str => {
-			str = str.replace(
-				/(=new [\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*\("(\w+)","(query|mutation)","[\w\d]{64}",null\))/,
-				'=__GraphQLDefinitions.$3.$2$1',
+			const matches = str.matchAll(
+				/(=new [\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*\("(?<name>\w+)","(?<operation>query|mutation)","(?<sha256Hash>[\w\d]{64})",null\))/g,
 			);
 			S.GraphQLDefinitions = {
 				query: {},
-				mutation: {}
+				mutation: {},
 			};
-			globalThis.__GraphQLDefinitions = {
-				query: S.GraphQLDefinitions.query,
-				mutation: S.GraphQLDefinitions.mutation
-			};
+			for (const match of matches) {
+				const { name, operation, sha256Hash } = match as any;
+				S.GraphQLDefinitions[operation][name] = { name, operation, sha256Hash, value: null };
+			}
 			emit();
 			return str;
 		},
-		glob: /^\/xpui\.js/,
+		glob: /.+\.js$/,
 	});
 
 	registerTransform<SettingsSection>({
