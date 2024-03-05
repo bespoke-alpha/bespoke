@@ -1,12 +1,14 @@
 import { createRegisterTransform } from "./transforms/transform.js";
 import { readJSON } from "./util.js";
 
+interface VaultModule {
+	enabled: boolean;
+	identifier: string;
+	remoteMeta?: string;
+}
+
 type Vault = {
-	modules: Array<{
-		metadataURL?: string;
-		identifier: string;
-		enabled: boolean;
-	}>;
+	modules: VaultModule[];
 };
 
 type Metadata = {
@@ -35,6 +37,7 @@ export class Module {
 		private path: string,
 		public metadata: Metadata,
 		private enabled = true,
+		public remoteMeta?: string,
 	) {}
 
 	getPriority() {
@@ -97,8 +100,8 @@ export class Module {
 		}
 	}
 
-	static async fromRelPath(relPath: string, enabled = true) {
-		const path = `/modules/${relPath}`;
+	static async fromVault({ enabled = true, identifier, remoteMeta }: VaultModule) {
+		const path = `/modules/${identifier}`;
 
 		const metadata: Metadata = await readJSON(`${path}/metadata.json`);
 
@@ -113,7 +116,7 @@ export class Module {
 			mixin: metadata.entries.mixin ?? statDefaultOrUndefined("mixin.js"),
 		});
 
-		return new Module(path, metadata, enabled);
+		return new Module(path, metadata, enabled, remoteMeta);
 	}
 
 	getAuthor() {
@@ -132,7 +135,7 @@ export class Module {
 export const internalModule = new Module(undefined, undefined);
 
 const lock: Vault = await readJSON("/modules/vault.json");
-export const modules = await Promise.all(lock.modules.map(mod => Module.fromRelPath(mod.identifier, mod.enabled)));
+export const modules = await Promise.all(lock.modules.map(mod => Module.fromVault(mod)));
 export const modulesMap = Object.fromEntries(modules.map(m => [m.getIdentifier(), m] as const));
 
 for (const module of modules) {
