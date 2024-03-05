@@ -234,7 +234,8 @@ func downloadModule(module Module) error {
 	return nil
 }
 
-func InstallModuleMURL(metadataURL MetadataURL) error {
+// TODO: add module entry to vault.json
+func AddModuleMURL(metadataURL MetadataURL) error {
 	metadata, err := fetchMetadata(metadataURL)
 	if err != nil {
 		return err
@@ -264,7 +265,8 @@ func InstallModuleMURL(metadataURL MetadataURL) error {
 	})
 }
 
-func DeleteModule(identifier Identifier) error {
+// TODO: remove module entry from vault.json
+func RemoveModule(identifier Identifier) error {
 	moduleFolder := filepath.Join(modulesFolder, identifier)
 	return os.RemoveAll(moduleFolder)
 }

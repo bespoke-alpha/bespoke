@@ -23,15 +23,26 @@ var protocolCmd = &cobra.Command{
 		action := arguments[1]
 		var err error
 		switch action {
-		case "install":
+		case "add":
 			metadataURL := arguments[2]
-			err = module.InstallModuleMURL(metadataURL)
+			err = module.AddModuleMURL(metadataURL)
 			break
 
-		case "delete":
+		case "remove":
 			identifier := arguments[2]
-			err = module.DeleteModule(identifier)
+			err = module.RemoveModule(identifier)
 			break
+
+		case "enable":
+			identifier := arguments[2]
+			err = module.EnableModule(identifier)
+			break
+
+		case "disable":
+			identifier := arguments[2]
+			err = module.DisableModule(identifier)
+			break
+
 		}
 		if err != nil {
 			log.Fatalln(err.Error())

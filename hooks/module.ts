@@ -33,12 +33,21 @@ export class Module {
 	private registerTransform = createRegisterTransform(this);
 	private priority = 0;
 
+	static registry = new Map<string, Module>();
+
 	constructor(
-		private path: string,
+		private relPath: string,
 		public metadata: Metadata,
 		private enabled = true,
 		public remoteMeta?: string,
-	) {}
+	) {
+		const identifier = this.getIdentifier();
+		if (Module.registry.has(identifier)) {
+			throw new Error(`A module with the same identifier "${identifier}" is already registered!`);
+		}
+
+		Module.registry.set(identifier, this);
+	}
 
 	getPriority() {
 		return this.priority;
@@ -47,7 +56,7 @@ export class Module {
 	incPriority() {
 		this.priority++;
 		this.metadata.dependencies.map(dep => {
-			const module = modulesMap[dep];
+			const module = Module.registry.get(dep);
 			if (module) {
 				module.incPriority();
 			} else {
@@ -60,7 +69,7 @@ export class Module {
 	loadMixin() {
 		if (!this.enabled) return;
 		const entry = this.metadata.entries.mixin;
-		return entry && (import(`${this.path}/${entry}`).then(m => m.default(this.registerTransform)) as Promise<void>);
+		return entry && (import(`${this.relPath}/${entry}`).then(m => m.default(this.registerTransform)) as Promise<void>);
 	}
 
 	async loadJS() {
@@ -68,7 +77,7 @@ export class Module {
 		this.unloadJS?.();
 		const entry = this.metadata.entries.js;
 		if (entry) {
-			const fullPath = `${this.path}/${entry}`;
+			const fullPath = `${this.relPath}/${entry}`;
 			console.info(this.awaitedMixins, fullPath);
 			await Promise.all(this.awaitedMixins);
 			const module = await import(fullPath);
@@ -86,7 +95,7 @@ export class Module {
 		const entry = this.metadata.entries.css;
 		if (entry) {
 			const id = `${this.getIdentifier()}-styles`;
-			const fullPath = `${this.path}/${entry}`;
+			const fullPath = `${this.relPath}/${entry}`;
 			const link = document.createElement("link");
 			link.id = id;
 			link.rel = "stylesheet";
@@ -130,13 +139,50 @@ export class Module {
 	getIdentifier() {
 		return `${this.getAuthor()}/${this.getName()}`;
 	}
+
+	enable() {
+		if (this.enabled) return;
+		this.loadMixin();
+		this.loadCSS();
+		this.loadJS();
+		this.enabled = true;
+		ModuleManager.enable(this.relPath);
+	}
+
+	disable() {
+		if (!this.enabled) return;
+		this.unloadCSS();
+		this.unloadJS();
+		this.enabled = false;
+	}
+
+	dipose() {
+		if (this.enabled) {
+			this.disable();
+		}
+		Module.registry.delete(this.relPath);
+	}
 }
+
+export const ModuleManager = {
+	add: (murl: string) => {
+		open(`bespoke:add:${murl}`);
+	},
+	remove: (identifier: string) => {
+		open(`bespole:remove:${identifier}`);
+	},
+	enable: (identifier: string) => {
+		open(`bespoke:enable:${identifier}`);
+	},
+	disable: (identifier: string) => {
+		open(`bespoke:disable:${identifier}`);
+	},
+};
 
 export const internalModule = new Module(undefined, undefined);
 
 const lock: Vault = await readJSON("/modules/vault.json");
 export const modules = await Promise.all(lock.modules.map(mod => Module.fromVault(mod)));
-export const modulesMap = Object.fromEntries(modules.map(m => [m.getIdentifier(), m] as const));
 
 for (const module of modules) {
 	module.incPriority();
