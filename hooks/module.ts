@@ -32,7 +32,7 @@ export class Module {
 	private priority = 0;
 
 	constructor(
-		public path: string,
+		private path: string,
 		public metadata: Metadata,
 		private enabled = true,
 	) {}
@@ -100,7 +100,7 @@ export class Module {
 	static async fromRelPath(relPath: string, enabled = true) {
 		const path = `/modules/${relPath}`;
 
-		const metadata = (await readJSON(`${path}/metadata.json`)) as Metadata;
+		const metadata: Metadata = await readJSON(`${path}/metadata.json`);
 
 		const statDefaultOrUndefined = (def: string) =>
 			fetch(def)
@@ -131,7 +131,7 @@ export class Module {
 
 export const internalModule = new Module(undefined, undefined);
 
-const lock = (await readJSON("/modules/vault.json")) as Vault;
+const lock: Vault = await readJSON("/modules/vault.json");
 export const modules = await Promise.all(lock.modules.map(mod => Module.fromRelPath(mod.identifier, mod.enabled)));
 export const modulesMap = Object.fromEntries(modules.map(m => [m.getIdentifier(), m] as const));
 

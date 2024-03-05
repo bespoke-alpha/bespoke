@@ -243,27 +243,12 @@ func InstallModuleMURL(metadataURL MetadataURL) error {
 	return downloadModule(module)
 }
 
-func InstallModule(identifier Identifier) error {
-	metadataURL, err := getMonoManifestMURLFromIdentifier(identifier)
-	if err != nil {
-		return err
-	}
-	return InstallModuleMURL(metadataURL)
-}
-
 func DeleteModule(identifier Identifier) error {
 	moduleFolder := filepath.Join(modulesFolder, identifier)
 	return os.RemoveAll(moduleFolder)
 }
 
-func UpdateModule(identifier Identifier) error {
-	metadataURL, err := getVaultMURLFromIdentifier(identifier)
-	if err != nil {
-		return err
-	}
-	return UpdateModuleMURL(metadataURL)
-}
-
+// TODO: move functionality to InstallModuleMURL
 func UpdateModuleMURL(metadataURL MetadataURL) error {
 	metadata, err := fetchMetadata(metadataURL)
 	if err != nil {
