@@ -1,6 +1,6 @@
 import { Predicate, Registry } from "./registry.js";
 import { S } from "../expose/expose.js";
-import { internalRegisterTransform } from "/hooks/transforms/transforms.js";
+import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { createIconComponent } from "../api/createIconComponent.js";
 import type { ReactElement, SetStateAction } from "react";
 import { matchLast } from "/hooks/util.js";

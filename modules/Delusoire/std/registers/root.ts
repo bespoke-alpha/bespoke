@@ -1,5 +1,5 @@
 import { Predicate, Registry } from "./registry.js";
-import { internalRegisterTransform } from "/hooks/transforms/transforms.js";
+import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { matchLast } from "/hooks/util.js";
 import type { ReactElement, SetStateAction } from "react";
 class R extends Registry<React.ReactElement, void> {

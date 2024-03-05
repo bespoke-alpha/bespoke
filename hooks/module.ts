@@ -35,7 +35,24 @@ export class Module {
 
 	static registry = new Map<string, Module>();
 
-	constructor(
+	static INTERNAL = new Module(undefined, undefined);
+
+	static getModules() {
+		return Array.from(Module.registry.values()).sort((a, b) => b.priority - a.priority);
+	}
+
+	static onSpotifyPreInit() {
+		const modules = Module.getModules();
+		return modules.reduce((p, module) => p.then(() => module.loadMixin()), Promise.resolve());
+	}
+
+	static onSpotifyPostInit() {
+		const modules = Module.getModules();
+		for (const module of modules) module.loadCSS();
+		return modules.reduce((p, module) => p.then(() => module.loadJS()), Promise.resolve());
+	}
+
+	private constructor(
 		private relPath: string,
 		public metadata: Metadata,
 		private enabled = true,
@@ -49,11 +66,7 @@ export class Module {
 		Module.registry.set(identifier, this);
 	}
 
-	getPriority() {
-		return this.priority;
-	}
-
-	incPriority() {
+	private incPriority() {
 		this.priority++;
 		this.metadata.dependencies.map(dep => {
 			const module = Module.registry.get(dep);
@@ -66,7 +79,7 @@ export class Module {
 		});
 	}
 
-	loadMixin() {
+	private loadMixin() {
 		if (!this.enabled) return;
 		const entry = this.metadata.entries.mixin;
 		return entry && (import(`${this.relPath}/${entry}`).then(m => m.default(this.registerTransform)) as Promise<void>);
@@ -89,7 +102,7 @@ export class Module {
 		}
 	}
 
-	loadCSS() {
+	private loadCSS() {
 		if (!this.enabled) return;
 		this.unloadCSS?.();
 		const entry = this.metadata.entries.css;
@@ -128,11 +141,11 @@ export class Module {
 		return new Module(path, metadata, enabled, remoteMeta);
 	}
 
-	getAuthor() {
+	private getAuthor() {
 		return this.metadata.authors[0];
 	}
 
-	getName() {
+	private getName() {
 		return this.metadata.name;
 	}
 
@@ -155,13 +168,6 @@ export class Module {
 		this.unloadJS();
 		this.enabled = false;
 	}
-
-	dipose() {
-		if (this.enabled) {
-			this.disable();
-		}
-		Module.registry.delete(this.relPath);
-	}
 }
 
 export const ModuleManager = {
@@ -179,13 +185,9 @@ export const ModuleManager = {
 	},
 };
 
-export const internalModule = new Module(undefined, undefined);
-
 const lock: Vault = await readJSON("/modules/vault.json");
 export const modules = await Promise.all(lock.modules.map(mod => Module.fromVault(mod)));
 
 for (const module of modules) {
 	module.incPriority();
 }
-
-modules.sort((a, b) => b.getPriority() - a.getPriority());

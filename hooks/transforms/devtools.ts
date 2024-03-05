@@ -1,4 +1,4 @@
-import { internalRegisterTransform } from "./transforms.js";
+import { internalRegisterTransform } from "./index.js";
 
 internalRegisterTransform({
 	transform: emit => str => {

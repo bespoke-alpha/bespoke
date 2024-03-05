@@ -1,6 +1,6 @@
 import { Registry } from "./registry.js";
 import { S } from "../expose/expose.js";
-import { internalRegisterTransform } from "/hooks/transforms/transforms.js";
+import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { matchLast } from "/hooks/util.js";
 
 import type { Context } from "react";

@@ -1,9 +1,9 @@
-import { internalModule } from "../module.js";
+import { Module } from "../module.js";
 import { Paths } from "../static.js";
 import { matchLast } from "../util.js";
 import { createRegisterTransform, sources } from "./transform.js";
 
-export const internalRegisterTransform = createRegisterTransform(internalModule);
+export const internalRegisterTransform = createRegisterTransform(Module.INTERNAL);
 
 internalRegisterTransform({
 	transform: emit => str => {
