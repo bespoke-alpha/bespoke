@@ -41,6 +41,12 @@ export class Module {
 		return Array.from(Module.registry.values()).sort((a, b) => b.priority - a.priority);
 	}
 
+	static onModulesLoaded() {
+		for (const module of Module.registry.values()) {
+			module.incPriority();
+		}
+	}
+
 	static onSpotifyPreInit() {
 		const modules = Module.getModules();
 		return modules.reduce((p, module) => p.then(() => module.loadMixin()), Promise.resolve());
@@ -186,8 +192,5 @@ export const ModuleManager = {
 };
 
 const lock: Vault = await readJSON("/modules/vault.json");
-export const modules = await Promise.all(lock.modules.map(mod => Module.fromVault(mod)));
-
-for (const module of modules) {
-	module.incPriority();
-}
+await Promise.all(lock.modules.map(mod => Module.fromVault(mod)));
+Module.onModulesLoaded();
