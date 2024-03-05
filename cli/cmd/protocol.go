@@ -16,16 +16,16 @@ var protocolCmd = &cobra.Command{
 	Short: "Internal protocol handler",
 	Run: func(cmd *cobra.Command, args []string) {
 		arguments := strings.Split(args[0], ":")
+		bespoke := arguments[0]
+		if bespoke != "bespoke" {
+			log.Fatalln("Unsupported URI!")
+		}
 		action := arguments[1]
 		var err error
 		switch action {
 		case "install":
 			metadataURL := arguments[2]
 			err = module.InstallModuleMURL(metadataURL)
-			break
-		case "update":
-			metadataURL := arguments[2]
-			err = module.UpdateModuleMURL(metadataURL)
 			break
 
 		case "delete":

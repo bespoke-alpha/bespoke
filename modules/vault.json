@@ -21,6 +21,10 @@
 			"enabled": true
 		},
 		{
+			"identifier": "Delusoire/search-on-youtube",
+			"enabled": true
+		},
+		{
 			"identifier": "Delusoire/stats-app",
 			"enabled": true
 		}

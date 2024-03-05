@@ -15,15 +15,11 @@
     "[json]": {
         "editor.defaultFormatter": "biomejs.biome"
     },
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
-        "**/.DS_Store": true,
-        "**/Thumbs.db": true,
-        "**/*.js": { "when": "$(basename).ts" },
-        "**/**.js": { "when": "$(basename).tsx" },
-        "**/*.css": { "when": "$(basename).scss" }
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        "*.tsx": "${capture}.js,${capture}.scss",
+        "*.scss": "${capture}.css",
+        "*.ts": "${capture}.js"
     }
 }

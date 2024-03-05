@@ -235,21 +235,6 @@ func downloadModule(module Module) error {
 }
 
 func InstallModuleMURL(metadataURL MetadataURL) error {
-	module, err := fetchModule(metadataURL)
-	if err != nil {
-		return err
-	}
-
-	return downloadModule(module)
-}
-
-func DeleteModule(identifier Identifier) error {
-	moduleFolder := filepath.Join(modulesFolder, identifier)
-	return os.RemoveAll(moduleFolder)
-}
-
-// TODO: move functionality to InstallModuleMURL
-func UpdateModuleMURL(metadataURL MetadataURL) error {
 	metadata, err := fetchMetadata(metadataURL)
 	if err != nil {
 		return err
@@ -258,16 +243,14 @@ func UpdateModuleMURL(metadataURL MetadataURL) error {
 	identifier := metadata.getIdentifier()
 
 	localMetadata, err := fetchLocalMetadata(identifier)
-	if err != nil {
-		return err
-	}
+	if err == nil {
+		if metadata.version == localMetadata.version {
+			return nil
+		}
 
-	if metadata.version == localMetadata.version {
-		return nil
-	}
-
-	if err := DeleteModule(identifier); err != nil {
-		return err
+		if err := DeleteModule(identifier); err != nil {
+			return err
+		}
 	}
 
 	githubPath, err := parseGithubPath(metadataURL)
@@ -281,6 +264,11 @@ func UpdateModuleMURL(metadataURL MetadataURL) error {
 	})
 }
 
+func DeleteModule(identifier Identifier) error {
+	moduleFolder := filepath.Join(modulesFolder, identifier)
+	return os.RemoveAll(moduleFolder)
+}
+
 // TODO:
 func EnableModule(identifier Identifier) error {
 	return errors.ErrUnsupported
@@ -289,11 +277,6 @@ func EnableModule(identifier Identifier) error {
 // TODO:
 func DisableModule(identifier Identifier) error {
 	return errors.ErrUnsupported
-}
-
-// TODO:
-func getMonoManifestMURLFromIdentifier(identifier Identifier) (MetadataURL, error) {
-	return "", errors.ErrUnsupported
 }
 
 func getVaultMURLFromIdentifier(identifier Identifier) (MetadataURL, error) {
