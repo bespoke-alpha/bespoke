@@ -9,6 +9,10 @@
 			"enabled": true
 		},
 		{
+			"identifier": "Delusoire/spicetify-marketplace",
+			"enabled": true
+		},
+		{
 			"identifier": "Delusoire/library-db",
 			"enabled": true
 		},
