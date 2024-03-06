@@ -135,10 +135,10 @@ func fetchLocalMetadata(identifier Identifier) (Metadata, error) {
 }
 
 func parseGithubPath(metadataURL MetadataURL) (GithubPath, error) {
-	re := regexp.MustCompile(`^(?<owner>.+?)/(?<repo>.+?)/(?<version>.+?)/(?<path>.*?)/?metadata\.json$`)
+	re := regexp.MustCompile(`(?<owner>.+?)/(?<repo>.+?)/(?<version>.+?)/(?<path>.*?)/?metadata\.json$`)
 	submatches := re.FindStringSubmatch(metadataURL)
 	if len(submatches) < 4 {
-		return GithubPath{}, errors.New("URL cannot be parsed!")
+		return GithubPath{}, errors.New("URL cannot be parsed")
 	}
 
 	owner := submatches[0]
@@ -249,7 +249,7 @@ func AddModuleMURL(metadataURL MetadataURL) error {
 			return nil
 		}
 
-		if err := DeleteModule(identifier); err != nil {
+		if err := RemoveModule(identifier); err != nil {
 			return err
 		}
 	}

@@ -1,5 +1,5 @@
 import { createRegisterTransform } from "./transforms/transform.js";
-import { readJSON } from "./util.js";
+import { fetchJSON } from "./util.js";
 
 interface VaultModule {
 	enabled: boolean;
@@ -7,16 +7,17 @@ interface VaultModule {
 	remoteMeta?: string;
 }
 
-type Vault = {
+interface Vault {
 	modules: VaultModule[];
-};
+}
 
-type Metadata = {
+export interface Metadata {
 	name: string;
+	tags: string[];
+	preview: string;
 	version: string;
 	authors: string[];
 	description: string;
-	tags: string[];
 	entries: {
 		js?: string | false;
 		css?: string | false;
@@ -24,7 +25,7 @@ type Metadata = {
 	};
 	dependencies: string[];
 	spotifyVersions: string;
-};
+}
 
 export class Module {
 	public unloadJS: (() => Promise<void>) | undefined = undefined;
@@ -91,7 +92,7 @@ export class Module {
 		return entry && (import(`${this.relPath}/${entry}`).then(m => m.default(this.registerTransform)) as Promise<void>);
 	}
 
-	async loadJS() {
+	private async loadJS() {
 		if (!this.enabled) return;
 		this.unloadJS?.();
 		const entry = this.metadata.entries.js;
@@ -131,7 +132,7 @@ export class Module {
 	static async fromVault({ enabled = true, identifier, remoteMeta }: VaultModule) {
 		const path = `/modules/${identifier}`;
 
-		const metadata: Metadata = await readJSON(`${path}/metadata.json`);
+		const metadata: Metadata = await fetchJSON(`${path}/metadata.json`);
 
 		const statDefaultOrUndefined = (def: string) =>
 			fetch(def)
@@ -153,6 +154,10 @@ export class Module {
 
 	private getName() {
 		return this.metadata.name;
+	}
+
+	getLocalMeta() {
+		return `/modules/${this.getIdentifier()}/metadata.json`;
 	}
 
 	getIdentifier() {
@@ -191,6 +196,6 @@ export const ModuleManager = {
 	},
 };
 
-const lock: Vault = await readJSON("/modules/vault.json");
+const lock: Vault = await fetchJSON("/modules/vault.json");
 await Promise.all(lock.modules.map(mod => Module.fromVault(mod)));
 Module.onModulesLoaded();
