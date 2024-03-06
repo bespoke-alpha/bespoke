@@ -1,5 +1,5 @@
 import { Registry } from "./registry.js";
-import { internalRegisterTransform } from "/hooks/transforms/transforms.js";
+import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 const registry = new Registry();
 export default registry;
 globalThis.__renderSettingSections = registry.getItems.bind(registry);

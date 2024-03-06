@@ -1,4 +1,4 @@
-import { internalRegisterTransform } from "./transforms.js";
+import { internalRegisterTransform } from "./index.js";
 internalRegisterTransform({
     transform: emit => str => {
         str = str.replace(/(\w+ [\w$_]+)=[\w$_]+\([\w$_]+>>>0\)/, "$1=__getStyledClassName(arguments,this)");

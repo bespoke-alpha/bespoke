@@ -1,5 +1,5 @@
 import { Registry } from "./registry.js";
-import { S } from "../expose/expose.js";
+import { S } from "../expose/index.js";
 import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { findMatchingPos } from "/hooks/util.js";
 import { createIconComponent } from "../api/createIconComponent.js";

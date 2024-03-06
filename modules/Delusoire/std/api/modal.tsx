@@ -1,4 +1,4 @@
-import { S } from "../expose/expose.js";
+import { S } from "../expose/index.js";
 
 const { Locale } = S;
 const { GenericModal, Text } = S.ReactComponents;

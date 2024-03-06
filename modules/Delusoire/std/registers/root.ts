@@ -1,7 +1,7 @@
 import { Predicate, Registry } from "./registry.js";
-import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { matchLast } from "/hooks/util.js";
 import type { ReactElement, SetStateAction } from "react";
+import { registerTransform } from "../mixin.js";
 class R extends Registry<React.ReactElement, void> {
 	register(item: ReactElement, predicate: Predicate<void>): ReactElement {
 		super.register(item, predicate);
@@ -25,7 +25,7 @@ const refreshRoot = new Promise<() => void>(r => {
 });
 
 globalThis.__renderRootChildren = registry.getItems.bind(registry);
-internalRegisterTransform<React.Dispatch<SetStateAction<number>>>({
+registerTransform<React.Dispatch<SetStateAction<number>>>({
 	transform: emit => str => {
 		const croppedInput = str.match(/.*"data-right-sidebar-hidden"/)![0];
 		const children = matchLast(croppedInput, /children:([\w_\$][\w_\$\d]*)/g)[1];

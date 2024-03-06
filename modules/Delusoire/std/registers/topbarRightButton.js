@@ -1,6 +1,6 @@
 import { Registry } from "./registry.js";
-import { S } from "../expose/expose.js";
-import { internalRegisterTransform } from "/hooks/transforms/transforms.js";
+import { S } from "../expose/index.js";
+import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { createIconComponent } from "../api/createIconComponent.js";
 const registry = new Registry();
 export default registry;

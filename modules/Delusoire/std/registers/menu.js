@@ -1,7 +1,7 @@
 import { Registry } from "./registry.js";
-import { S } from "../expose/expose.js";
-import { internalRegisterTransform } from "/hooks/transforms/transforms.js";
+import { S } from "../expose/index.js";
 import { matchLast } from "/hooks/util.js";
+import { registerTransform } from "../mixin.js";
 const registry = new Registry();
 export default registry;
 export const useMenuItem = () => S.React.useContext(globalThis.__MenuContext);
@@ -9,7 +9,7 @@ globalThis.__renderMenuItems = () => {
     const context = useMenuItem();
     return registry.getItems(context);
 };
-internalRegisterTransform({
+registerTransform({
     transform: emit => str => {
         str = str.replace(/("Menu".+?children:)([\w_\$][\w_\$\d]*)/, "$1[__renderMenuItems(),$2].flat()");
         const croppedInput = str.match(/.*value:"contextmenu"/)[0];

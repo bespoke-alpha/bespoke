@@ -1,6 +1,6 @@
 export * from "./static.js";
 
-import { S as _S } from "./expose/expose.js";
+import { S as _S } from "./expose/index.js";
 export const S = _S;
 
 import type { Module } from "/hooks/module.js";

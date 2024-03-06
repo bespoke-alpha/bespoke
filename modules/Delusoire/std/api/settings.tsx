@@ -1,4 +1,4 @@
-import { S } from "../expose/expose.js";
+import { S } from "../expose/index.js";
 
 type Task<A> = (() => Awaited<A>) | (() => Promise<Awaited<A>>);
 

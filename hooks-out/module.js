@@ -1,23 +1,59 @@
 import { createRegisterTransform } from "./transforms/transform.js";
-import { readJSON } from "./util.js";
+import { fetchJSON } from "./util.js";
 export class Module {
-    constructor(path, metadata, enabled = true) {
-        this.path = path;
+    static { this.registry = new Map(); }
+    static { this.INTERNAL = new Module(undefined, {
+        name: "internal",
+        tags: ["internal"],
+        preview: "",
+        version: "dev",
+        authors: ["internal"],
+        entries: {
+            js: false,
+            css: false,
+            mixin: false,
+        },
+        description: "internal",
+        dependencies: [],
+    }); }
+    static getModules() {
+        return Array.from(Module.registry.values()).sort((a, b) => b.priority - a.priority);
+    }
+    static onModulesLoaded() {
+        for (const module of Module.registry.values()) {
+            module.incPriority();
+        }
+    }
+    static onSpotifyPreInit() {
+        const modules = Module.getModules();
+        return modules.reduce((p, module) => p.then(() => module.loadMixin()), Promise.resolve());
+    }
+    static onSpotifyPostInit() {
+        const modules = Module.getModules();
+        for (const module of modules)
+            module.loadCSS();
+        return modules.reduce((p, module) => p.then(() => module.loadJS()), Promise.resolve());
+    }
+    constructor(relPath, metadata, enabled = true, remoteMeta) {
+        this.relPath = relPath;
         this.metadata = metadata;
         this.enabled = enabled;
+        this.remoteMeta = remoteMeta;
         this.unloadJS = undefined;
         this.unloadCSS = undefined;
         this.awaitedMixins = new Array();
         this.registerTransform = createRegisterTransform(this);
         this.priority = 0;
-    }
-    getPriority() {
-        return this.priority;
+        const identifier = this.getIdentifier();
+        if (Module.registry.has(identifier)) {
+            throw new Error(`A module with the same identifier "${identifier}" is already registered!`);
+        }
+        Module.registry.set(identifier, this);
     }
     incPriority() {
         this.priority++;
         this.metadata.dependencies.map(dep => {
-            const module = modulesMap[dep];
+            const module = Module.registry.get(dep);
             if (module) {
                 module.incPriority();
             }
@@ -31,7 +67,7 @@ export class Module {
         if (!this.enabled)
             return;
         const entry = this.metadata.entries.mixin;
-        return entry && import(`${this.path}/${entry}`).then(m => m.default(this.registerTransform));
+        return entry && import(`${this.relPath}/${entry}`).then(m => m.default(this.registerTransform));
     }
     async loadJS() {
         if (!this.enabled)
@@ -39,7 +75,7 @@ export class Module {
         this.unloadJS?.();
         const entry = this.metadata.entries.js;
         if (entry) {
-            const fullPath = `${this.path}/${entry}`;
+            const fullPath = `${this.relPath}/${entry}`;
             console.info(this.awaitedMixins, fullPath);
             await Promise.all(this.awaitedMixins);
             const module = await import(fullPath);
@@ -57,7 +93,7 @@ export class Module {
         const entry = this.metadata.entries.css;
         if (entry) {
             const id = `${this.getIdentifier()}-styles`;
-            const fullPath = `${this.path}/${entry}`;
+            const fullPath = `${this.relPath}/${entry}`;
             const link = document.createElement("link");
             link.id = id;
             link.rel = "stylesheet";
@@ -70,9 +106,9 @@ export class Module {
             };
         }
     }
-    static async fromRelPath(relPath, enabled = true) {
-        const path = `/modules/${relPath}`;
-        const metadata = (await readJSON(`${path}/metadata.json`));
+    static async fromVault({ enabled = true, identifier, remoteMeta }) {
+        const path = `/modules/${identifier}`;
+        const metadata = await fetchJSON(`${path}/metadata.json`);
         const statDefaultOrUndefined = (def) => fetch(def)
             .then(() => def)
             .catch(() => undefined);
@@ -81,7 +117,7 @@ export class Module {
             css: metadata.entries.css ?? statDefaultOrUndefined("index.css"),
             mixin: metadata.entries.mixin ?? statDefaultOrUndefined("mixin.js"),
         });
-        return new Module(path, metadata, enabled);
+        return new Module(path, metadata, enabled, remoteMeta);
     }
     getAuthor() {
         return this.metadata.authors[0];
@@ -89,15 +125,43 @@ export class Module {
     getName() {
         return this.metadata.name;
     }
+    getLocalMeta() {
+        return `/modules/${this.getIdentifier()}/metadata.json`;
+    }
     getIdentifier() {
         return `${this.getAuthor()}/${this.getName()}`;
     }
+    enable() {
+        if (this.enabled)
+            return;
+        this.loadMixin();
+        this.loadCSS();
+        this.loadJS();
+        this.enabled = true;
+        ModuleManager.enable(this.relPath);
+    }
+    disable() {
+        if (!this.enabled)
+            return;
+        this.unloadCSS();
+        this.unloadJS();
+        this.enabled = false;
+    }
 }
-export const internalModule = new Module(undefined, undefined);
-const lock = (await readJSON("/modules/vault.json"));
-export const modules = await Promise.all(lock.modules.map(mod => Module.fromRelPath(mod.identifier, mod.enabled)));
-export const modulesMap = Object.fromEntries(modules.map(m => [m.getIdentifier(), m]));
-for (const module of modules) {
-    module.incPriority();
-}
-modules.sort((a, b) => b.getPriority() - a.getPriority());
+export const ModuleManager = {
+    add: (murl) => {
+        open(`bespoke:add:${murl}`);
+    },
+    remove: (identifier) => {
+        open(`bespole:remove:${identifier}`);
+    },
+    enable: (identifier) => {
+        open(`bespoke:enable:${identifier}`);
+    },
+    disable: (identifier) => {
+        open(`bespoke:disable:${identifier}`);
+    },
+};
+const lock = await fetchJSON("/modules/vault.json");
+await Promise.all(lock.modules.map(mod => Module.fromVault(mod)));
+Module.onModulesLoaded();

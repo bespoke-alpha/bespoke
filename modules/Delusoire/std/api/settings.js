@@ -1,4 +1,4 @@
-import { S } from "../expose/expose.js";
+import { S } from "../expose/index.js";
 const { React } = S;
 const { ButtonSecondary } = S.ReactComponents;
 export var FieldType;

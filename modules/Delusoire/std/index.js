@@ -1,5 +1,5 @@
 export * from "./static.js";
-import { S as _S } from "./expose/expose.js";
+import { S as _S } from "./expose/index.js";
 export const S = _S;
 import { Registrar } from "./registers/registers.js";
 export const createRegistrar = (mod) => {

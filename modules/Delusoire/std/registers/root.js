@@ -1,6 +1,6 @@
 import { Registry } from "./registry.js";
-import { internalRegisterTransform } from "/hooks/transforms/transforms.js";
 import { matchLast } from "/hooks/util.js";
+import { registerTransform } from "../mixin.js";
 class R extends Registry {
     register(item, predicate) {
         super.register(item, predicate);
@@ -20,7 +20,7 @@ const refreshRoot = new Promise(r => {
     resolveRefreshRoot = r;
 });
 globalThis.__renderRootChildren = registry.getItems.bind(registry);
-internalRegisterTransform({
+registerTransform({
     transform: emit => str => {
         const croppedInput = str.match(/.*"data-right-sidebar-hidden"/)[0];
         const children = matchLast(croppedInput, /children:([\w_\$][\w_\$\d]*)/g)[1];

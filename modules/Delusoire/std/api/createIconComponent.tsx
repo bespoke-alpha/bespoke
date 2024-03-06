@@ -1,4 +1,4 @@
-import { S } from "../expose/expose.js";
+import { S } from "../expose/index.js";
 
 export const createIconComponent = ({ icon, iconSize = 16, ...props }: { [k: string]: any; icon: string; iconSize?: number }) => {
 	return (

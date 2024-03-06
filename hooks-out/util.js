@@ -12,8 +12,8 @@ export function findBy(...tests) {
     const testFn = (x) => testFns.map(t => t(x)).every(Boolean);
     return (xs) => xs.find(testFn);
 }
-export const readFile = (path) => fetch(path).then(res => res.text());
-export const readJSON = (path) => fetch(path).then(res => res.json());
+export const fetchText = (path) => fetch(path).then(res => res.text());
+export const fetchJSON = (path) => fetch(path).then(res => res.json());
 export const findMatchingPos = (str, start, direction, pair, scopes) => {
     let l = scopes;
     let i = start + direction;

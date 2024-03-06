@@ -24,7 +24,7 @@ export interface Metadata {
 		mixin?: string | false;
 	};
 	dependencies: string[];
-	spotifyVersions: string;
+	spotifyVersions?: string;
 }
 
 export class Module {
@@ -36,7 +36,20 @@ export class Module {
 
 	static registry = new Map<string, Module>();
 
-	static INTERNAL = new Module(undefined, undefined);
+	static INTERNAL = new Module(undefined, {
+		name: "internal",
+		tags: ["internal"],
+		preview: "",
+		version: "dev",
+		authors: ["internal"],
+		entries: {
+			js: false,
+			css: false,
+			mixin: false,
+		},
+		description: "internal",
+		dependencies: [],
+	});
 
 	static getModules() {
 		return Array.from(Module.registry.values()).sort((a, b) => b.priority - a.priority);

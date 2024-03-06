@@ -1,5 +1,5 @@
 import { Paths } from "../static.js";
-import { readFile } from "../util.js";
+import { fetchText } from "../util.js";
 export class SourceFile {
     constructor(path) {
         this.path = path;
@@ -11,7 +11,7 @@ export class SourceFile {
     async getObjectURL() {
         if (this.objectURL)
             return this.objectURL;
-        const content = await readFile(this.path);
+        const content = await fetchText(this.path);
         const modifiedContent = this.transforms.reduce((p, transform) => transform(p), content);
         const [ext] = this.path.match(/\..+$/) ?? [];
         const types = {

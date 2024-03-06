@@ -1,9 +1,10 @@
 import { Registry } from "./registry.js";
-import { S } from "../expose/expose.js";
-import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
+import { S } from "../expose/index.js";
+
 import { matchLast } from "/hooks/util.js";
 
 import type { Context } from "react";
+import { registerTransform } from "../mixin.js";
 
 type __MenuContext = Context<MenuContext>;
 
@@ -27,7 +28,7 @@ globalThis.__renderMenuItems = () => {
 	const context = useMenuItem();
 	return registry.getItems(context);
 };
-internalRegisterTransform({
+registerTransform({
 	transform: emit => str => {
 		str = str.replace(/("Menu".+?children:)([\w_\$][\w_\$\d]*)/, "$1[__renderMenuItems(),$2].flat()");
 

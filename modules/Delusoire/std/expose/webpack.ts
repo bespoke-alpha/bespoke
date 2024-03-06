@@ -57,7 +57,7 @@ export type useInfiniteQuery = typeof useInfiniteQueryT;
 export type Mousetrap = typeof MousetrapT;
 
 import type { Platform } from "./platform.js";
-import { S } from "./expose.js";
+import { S } from "./index.js";
 
 type ParsableAsURI = any;
 

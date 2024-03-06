@@ -1,4 +1,4 @@
-import { internalRegisterTransform } from "./transforms.js";
+import { internalRegisterTransform } from "./index.js";
 internalRegisterTransform({
     transform: emit => str => {
         str = str.replace(/("incognito-enabled":[\w_\$][\w_\$\d]*)/, '$1,employee:"1"');
