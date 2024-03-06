@@ -21,6 +21,7 @@ import type {
 	useMutation as useMutationT,
 	useQuery as useQueryT,
 	useQueryClient as useQueryClientT,
+	useSuspenseQuery as useSuspenseQueryT,
 	useInfiniteQuery as useInfiniteQueryT,
 } from "@tanstack/react-query";
 import type MousetrapT from "mousetrap";
@@ -50,6 +51,7 @@ export type notifyManager = typeof notifyManagerT;
 export type useMutation = typeof useMutationT;
 export type useQuery = typeof useQueryT;
 export type useQueryClient = typeof useQueryClientT;
+export type useSuspenseQuery = typeof useSuspenseQueryT;
 export type useInfiniteQuery = typeof useInfiniteQueryT;
 
 export type Mousetrap = typeof MousetrapT;
@@ -425,7 +427,7 @@ export function expose({ Snackbar, Platform }: { Snackbar: Snackbar; Platform: P
 			/^function [\w_\$][\w_\$\d]*\(([\w_\$][\w_\$\d]*),([\w_\$][\w_\$\d]*)\)\{return\(0,[\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*\)\(\1,[\w_\$][\w_\$\d]*\.[\w_\$][\w_\$\d]*,\2\)\}$/,
 		)(exportedFunctions) as useQuery,
 		useQueryClient: findBy("client", "Provider", "mount")(exportedFunctions) as useQueryClient,
-		useSuspenseQuery: findBy("throwOnError", "suspense", "enabled")(exportedFunctions),
+		useSuspenseQuery: findBy("throwOnError", "suspense", "enabled")(exportedFunctions) as useSuspenseQuery,
 		useInfiniteQuery: Object.values(require(infiniteQueryChunkID)).find(m => typeof m === "function") as useInfiniteQuery,
 	};
 
