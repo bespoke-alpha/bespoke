@@ -1,6 +1,10 @@
 {
 	"name": "playlist-labels",
+	"tags": [],
+	"preview": "",
+	"version": "",
 	"authors": ["Delusoire", "duffey"],
+	"description": "",
 	"entries": {
 		"js": "index.js",
 		"css": "index.css",

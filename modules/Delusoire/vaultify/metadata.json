@@ -1,6 +1,10 @@
 {
 	"name": "vaultify",
+	"tags": [],
+	"preview": "",
+	"version": "",
 	"authors": ["Delusoire"],
+	"description": "",
 	"entries": {
 		"js": "index.js",
 		"css": false,

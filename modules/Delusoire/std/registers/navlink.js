@@ -1,12 +1,12 @@
 import { Registry } from "./registry.js";
 import { S } from "../expose/index.js";
-import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { findMatchingPos } from "/hooks/util.js";
 import { createIconComponent } from "../api/createIconComponent.js";
+import { registerTransform } from "../mixin.js";
 const registry = new Registry();
 export default registry;
 globalThis.__renderNavLinks = () => registry.getItems().map(Item => S.React.createElement(Item, null));
-internalRegisterTransform({
+registerTransform({
     transform: emit => str => {
         const j = str.search(/\("li",\{[^\{]*\{[^\{]*\{to:"\/search/);
         const i = findMatchingPos(str, j, 1, ["(", ")"], 1);

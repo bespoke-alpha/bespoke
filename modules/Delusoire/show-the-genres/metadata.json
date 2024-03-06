@@ -1,6 +1,10 @@
 {
 	"name": "show-the-genres",
+	"tags": [],
+	"preview": "",
+	"version": "",
 	"authors": ["Delusoire"],
+	"description": "",
 	"entries": {
 		"js": "index.js",
 		"css": "index.css",

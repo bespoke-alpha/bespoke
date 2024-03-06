@@ -1,0 +1,14 @@
+{
+	"name": "filter-duplicates",
+	"tags": [],
+	"preview": "",
+	"version": "",
+	"authors": ["Delusoire"],
+	"description": "",
+	"entries": {
+		"js": false,
+		"css": false,
+		"mixin": false
+	},
+	"dependencies": []
+}

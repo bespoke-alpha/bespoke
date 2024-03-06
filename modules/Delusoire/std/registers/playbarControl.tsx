@@ -1,13 +1,13 @@
 import { Registry } from "./registry.js";
 import { S } from "../expose/index.js";
-import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { createIconComponent } from "../api/createIconComponent.js";
+import { registerTransform } from "../mixin.js";
 
 const registry = new Registry<React.ReactElement, void>();
 export default registry;
 
 globalThis.__renderPlaybarBarControls = registry.getItems.bind(registry, undefined, true);
-internalRegisterTransform({
+registerTransform({
 	transform: emit => str => {
 		str = str.replace(/(children:\[)([^\[]*djJumpButtonFactory)/, "$1...__renderPlaybarBarControls(),$2");
 		emit();

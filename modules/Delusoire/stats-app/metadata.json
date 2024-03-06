@@ -1,6 +1,10 @@
 {
 	"name": "stats-app",
+	"tags": [],
+	"preview": "",
+	"version": "",
 	"authors": ["Delusoire", "harbassan"],
+	"description": "",
 	"entries": {
 		"js": "index.js",
 		"css": "index.css",

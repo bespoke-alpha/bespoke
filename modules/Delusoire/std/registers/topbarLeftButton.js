@@ -1,8 +1,8 @@
 import { Registry } from "./registry.js";
 import { S } from "../expose/index.js";
-import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { createIconComponent } from "../api/createIconComponent.js";
 import { matchLast } from "/hooks/util.js";
+import { registerTransform } from "../mixin.js";
 class R extends Registry {
     register(item, predicate) {
         super.register(item, predicate);
@@ -22,7 +22,7 @@ const refreshNavButtons = new Promise(r => {
     resolveRefreshNavButtons = r;
 });
 globalThis.__renderTopbarLeftButtons = registry.getItems.bind(registry);
-internalRegisterTransform({
+registerTransform({
     transform: emit => str => {
         str = str.replace(/("top-bar-forward-button"[^\]]*)/g, "$1,...__renderTopbarLeftButtons()");
         const croppedInput = str.match(/.*"top-bar-back-button"/)[0];

@@ -1,7 +1,10 @@
 {
 	"name": "delulib",
-	"authors": ["Delusoire"],
 	"tags": ["lib"],
+	"preview": "",
+	"version": "",
+	"authors": ["Delusoire"],
+	"description": "",
 	"entries": {
 		"js": false,
 		"css": false,

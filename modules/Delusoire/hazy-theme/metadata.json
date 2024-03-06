@@ -1,6 +1,10 @@
 {
 	"name": "hazy-theme",
+	"tags": [],
+	"preview": "",
+	"version": "",
 	"authors": ["Delusoire", "Astromations"],
+	"description": "",
 	"entries": {
 		"js": "index.js",
 		"css": "index.css",

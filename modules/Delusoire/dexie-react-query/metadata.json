@@ -1,6 +1,10 @@
 {
 	"name": "dexie-react-query",
+	"tags": [],
+	"preview": "",
+	"version": "",
 	"authors": ["Delusoire", "Dexie"],
+	"description": "",
 	"entries": {
 		"js": "index.js",
 		"css": false,

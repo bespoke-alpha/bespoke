@@ -1,9 +1,12 @@
 {
 	"name": "std",
-	"authors": ["Delusoire"],
 	"tags": ["lib"],
+	"preview": "",
+	"version": "",
+	"authors": ["Delusoire"],
+	"description": "",
 	"entries": {
-		"js": false,
+		"js": "index.js",
 		"css": false,
 		"mixin": "mixin.js"
 	},

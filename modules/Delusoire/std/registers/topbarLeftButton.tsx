@@ -1,9 +1,9 @@
 import { Predicate, Registry } from "./registry.js";
 import { S } from "../expose/index.js";
-import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { createIconComponent } from "../api/createIconComponent.js";
 import type { ReactElement, SetStateAction } from "react";
 import { matchLast } from "/hooks/util.js";
+import { registerTransform } from "../mixin.js";
 
 class R extends Registry<React.ReactElement, void> {
 	register(item: ReactElement, predicate: Predicate<void>): ReactElement {
@@ -28,7 +28,7 @@ const refreshNavButtons = new Promise<() => void>(r => {
 });
 
 globalThis.__renderTopbarLeftButtons = registry.getItems.bind(registry);
-internalRegisterTransform<React.Dispatch<SetStateAction<number>>>({
+registerTransform<React.Dispatch<SetStateAction<number>>>({
 	transform: emit => str => {
 		str = str.replace(/("top-bar-forward-button"[^\]]*)/g, "$1,...__renderTopbarLeftButtons()");
 

@@ -1,11 +1,11 @@
 import { Registry } from "./registry.js";
 import { S } from "../expose/index.js";
-import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { createIconComponent } from "../api/createIconComponent.js";
+import { registerTransform } from "../mixin.js";
 const registry = new Registry();
 export default registry;
 globalThis.__renderNowPlayingWidgets = registry.getItems.bind(registry);
-internalRegisterTransform({
+registerTransform({
     transform: emit => str => {
         str = str.replace(/(hideButtonFactory[^\]]*)/, "$1,...__renderNowPlayingWidgets()");
         emit();

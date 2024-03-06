@@ -1,6 +1,10 @@
 {
 	"name": "search-on-youtube",
+	"tags": [],
+	"preview": "",
+	"version": "",
 	"authors": ["Delusoire"],
+	"description": "",
 	"entries": {
 		"js": "index.js",
 		"css": false,

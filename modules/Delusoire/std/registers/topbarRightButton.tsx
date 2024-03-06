@@ -1,13 +1,13 @@
 import { Registry } from "./registry.js";
 import { S } from "../expose/index.js";
-import { internalRegisterTransform } from "../../../../hooks/transforms/index.js";
 import { createIconComponent } from "../api/createIconComponent.js";
+import { registerTransform } from "../mixin.js";
 
 const registry = new Registry<React.ReactElement, void>();
 export default registry;
 
 globalThis.__renderTopbarRightButtons = registry.getItems.bind(registry, undefined, true);
-internalRegisterTransform({
+registerTransform({
 	transform: emit => str => {
 		str = str.replace(/("login-button"[^\}]*\}[^\}]*\}[^\}]*\}\))/, "$1,...__renderTopbarRightButtons()");
 		emit();
