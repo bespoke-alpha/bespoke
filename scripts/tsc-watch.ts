@@ -15,7 +15,7 @@ while (true) {
 			const cleanLine = line.replace(/[^ -~]+/g, "");
 			const match = cleanLine.match(/^TSFILE: (.*)/);
 			if (!match) continue;
-			const relfilepath = path.relative(import.meta.dir, match[1]);
+			const relfilepath = path.relative(process.cwd(), match[1]);
 			await applyCssMapPerFile(relfilepath);
 			sendReloadDocument();
 		}
