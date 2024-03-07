@@ -14,8 +14,8 @@ export function findBy(...tests: Array<string | RegExp | Predicate<any>>) {
 	return <A>(xs: A[]) => xs.find(testFn);
 }
 
-export const fetchText = (path: string) => fetch(path).then(res => res.text());
-export const fetchJSON = (path: string) => fetch(path).then(res => res.json());
+export const fetchText = <R>(path: string) => fetch(path).then(res => res.text()) as Promise<R>;
+export const fetchJSON = <R>(path: string) => fetch(path).then(res => res.json()) as Promise<R>;
 
 export const findMatchingPos = (str: string, start: number, direction: 1 | -1, pair: [string, string], scopes: number) => {
 	let l = scopes;

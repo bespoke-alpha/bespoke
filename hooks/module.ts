@@ -3,7 +3,8 @@ import { fetchJSON } from "./util.js";
 
 interface VaultModule {
 	enabled: boolean;
-	remoteMeta?: string;
+	metadata: string;
+	remoteMetadata?: string;
 }
 
 interface Vault {
@@ -17,6 +18,7 @@ export interface Metadata {
 	version: string;
 	authors: string[];
 	description: string;
+	readme: string;
 	entries: {
 		js?: string | false;
 		css?: string | false;
@@ -35,26 +37,32 @@ export class Module {
 
 	static registry = new Map<string, Module>();
 
-	static INTERNAL = new Module(undefined, {
-		name: "internal",
-		tags: ["internal"],
-		preview: "",
-		version: "dev",
-		authors: ["internal"],
-		entries: {
-			js: false,
-			css: false,
-			mixin: false,
+	static INTERNAL = new Module(
+		{
+			name: "internal",
+			tags: ["internal"],
+			preview: "",
+			version: "dev",
+			authors: ["internal"],
+			readme: "",
+			entries: {
+				js: false,
+				css: false,
+				mixin: false,
+			},
+			description: "internal",
+			dependencies: [],
 		},
-		description: "internal",
-		dependencies: [],
-	});
+		undefined,
+		undefined,
+		false,
+	);
 
 	static getModules() {
 		return Array.from(Module.registry.values()).sort((a, b) => b.priority - a.priority);
 	}
 
-	static onModulesLoaded() {
+	static onModulesRegistered() {
 		for (const module of Module.registry.values()) {
 			module.incPriority();
 		}
@@ -72,17 +80,19 @@ export class Module {
 	}
 
 	private constructor(
-		private relPath: string,
 		public metadata: Metadata,
+		private metadataURL: string,
+		private remoteMetadataURL?: string,
 		private enabled = true,
-		public remoteMeta?: string,
 	) {
 		const identifier = this.getIdentifier();
 		if (Module.registry.has(identifier)) {
-			throw new Error(`A module with the same identifier "${identifier}" is already registered!`);
+			throw new Error(`A module with the same identifier "${identifier}" is already registered`);
 		}
 
-		Module.registry.set(identifier, this);
+		const registry = new Map(Module.registry);
+		registry.set(identifier, this);
+		Module.registry = registry;
 	}
 
 	private incPriority() {
@@ -98,10 +108,14 @@ export class Module {
 		});
 	}
 
+	private getRelPath(rel: string) {
+		return `${this.metadataURL}/../${rel}`;
+	}
+
 	private loadMixin() {
 		if (!this.enabled) return;
 		const entry = this.metadata.entries.mixin;
-		return entry && (import(`${this.relPath}/${entry}`).then(m => m.default(this.registerTransform)) as Promise<void>);
+		return entry && (import(this.getRelPath(entry)).then(m => m.default(this.registerTransform)) as Promise<void>);
 	}
 
 	private async loadJS() {
@@ -109,7 +123,7 @@ export class Module {
 		this.unloadJS?.();
 		const entry = this.metadata.entries.js;
 		if (entry) {
-			const fullPath = `${this.relPath}/${entry}`;
+			const fullPath = this.getRelPath(entry);
 			console.info(this.awaitedMixins, fullPath);
 			await Promise.all(this.awaitedMixins);
 			const module = await import(fullPath);
@@ -127,7 +141,7 @@ export class Module {
 		const entry = this.metadata.entries.css;
 		if (entry) {
 			const id = `${this.getIdentifier()}-styles`;
-			const fullPath = `${this.relPath}/${entry}`;
+			const fullPath = this.getRelPath(entry);
 			const link = document.createElement("link");
 			link.id = id;
 			link.rel = "stylesheet";
@@ -141,13 +155,11 @@ export class Module {
 		}
 	}
 
-	static async fromVault(identifier: string, { enabled = true, remoteMeta }: VaultModule) {
-		const path = `/modules/${identifier}`;
-
-		const metadata: Metadata = await fetchJSON(`${path}/metadata.json`);
+	static async fromVault(identifier: string, { enabled = true, metadata: metadataURL, remoteMetadata: remoteMetadataURL }: VaultModule) {
+		const metadata: Metadata = await fetchJSON(metadataURL);
 
 		const statDefaultOrUndefined = (def: string) =>
-			fetch(def)
+			fetch(`${metadata}/../${def}`)
 				.then(() => def)
 				.catch(() => undefined);
 
@@ -157,7 +169,7 @@ export class Module {
 			mixin: metadata.entries.mixin ?? statDefaultOrUndefined("mixin.js"),
 		});
 
-		return new Module(path, metadata, enabled, remoteMeta);
+		return new Module(metadata, metadataURL, remoteMetadataURL, enabled);
 	}
 
 	private getAuthor() {
@@ -176,21 +188,29 @@ export class Module {
 		return `${this.getAuthor()}/${this.getName()}`;
 	}
 
-	enable() {
+	enable(send = true) {
 		if (this.enabled) return;
 		this.loadMixin();
 		this.loadCSS();
 		this.loadJS();
 		this.enabled = true;
-		ModuleManager.enable(this.getIdentifier());
+		send && ModuleManager.enable(this.getIdentifier());
 	}
 
-	disable() {
+	disable(send = true) {
 		if (!this.enabled) return;
 		this.unloadCSS();
 		this.unloadJS();
 		this.enabled = false;
-		ModuleManager.disable(this.getIdentifier());
+		send && ModuleManager.disable(this.getIdentifier());
+	}
+
+	dispose(send = true) {
+		this.disable(false);
+		const registry = new Map(Module.registry);
+		registry.delete(this.getIdentifier());
+		Module.registry = registry;
+		send && ModuleManager.remove(this.getIdentifier());
 	}
 
 	isEnabled() {
@@ -215,4 +235,4 @@ export const ModuleManager = {
 
 const lock: Vault = await fetchJSON("/modules/vault.json");
 await Promise.all(Object.entries(lock.modules).map(([identifier, mod]) => Module.fromVault(identifier, mod)));
-Module.onModulesLoaded();
+Module.onModulesRegistered();
