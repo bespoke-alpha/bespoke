@@ -182,7 +182,7 @@ export class Module {
 		this.loadCSS();
 		this.loadJS();
 		this.enabled = true;
-		ModuleManager.enable(this.relPath);
+		ModuleManager.enable(this.getIdentifier());
 	}
 
 	disable() {
@@ -190,6 +190,7 @@ export class Module {
 		this.unloadCSS();
 		this.unloadJS();
 		this.enabled = false;
+		ModuleManager.disable(this.getIdentifier());
 	}
 
 	isEnabled() {
