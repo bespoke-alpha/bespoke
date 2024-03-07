@@ -70,7 +70,7 @@ type Vault struct {
 	Modules []MinimalModule `json:"modules"`
 }
 
-// <owner>/<repo>/<branch|tag|commit>/path/to/module/metadata.json
+// https://raw.githubusercontent.com/<owner>/<repo>/<branch|tag|commit>/path/to/module/metadata.json
 type MetadataURL = string
 
 // <owner>/<module>
