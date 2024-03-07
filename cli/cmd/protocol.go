@@ -6,7 +6,7 @@ package cmd
 import (
 	"bespoke/module"
 	"log"
-	"strings"
+	"regexp"
 
 	"github.com/spf13/cobra"
 )
@@ -15,33 +15,30 @@ var protocolCmd = &cobra.Command{
 	Use:   "protocol [uri]",
 	Short: "Internal protocol handler",
 	Run: func(cmd *cobra.Command, args []string) {
-		arguments := strings.Split(args[0], ":")
-		bespoke := arguments[0]
-		if bespoke != "bespoke" {
-			log.Fatalln("Unsupported URI!")
+		re := regexp.MustCompile(`bespole:(?<action>.+?)(:(?<args>.*))?`)
+		submatches := re.FindStringSubmatch(args[0])
+		if len(submatches) == 0 {
+			log.Fatalln("Unsupported URI")
 		}
-		action := arguments[1]
+		action := submatches[0]
+		arguments := submatches[2]
 		var err error
 		switch action {
 		case "add":
-			metadataURL := arguments[2]
+			metadataURL := arguments
 			err = module.AddModuleMURL(metadataURL)
-			break
 
 		case "remove":
-			identifier := arguments[2]
+			identifier := arguments
 			err = module.RemoveModule(identifier)
-			break
 
 		case "enable":
-			identifier := arguments[2]
+			identifier := arguments
 			err = module.EnableModule(identifier)
-			break
 
 		case "disable":
-			identifier := arguments[2]
+			identifier := arguments
 			err = module.DisableModule(identifier)
-			break
 
 		}
 		if err != nil {

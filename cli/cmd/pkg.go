@@ -23,31 +23,19 @@ var addCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		metadataURL := args[0]
-		if err := module.InstallModuleMURL(metadataURL); err != nil {
-			log.Fatalln(err.Error())
-		}
-	},
-}
-
-var updateCmd = &cobra.Command{
-	Use:   "sync [murl]",
-	Short: "Update module",
-	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		metadataURL := args[0]
-		if err := module.UpdateModuleMURL(metadataURL); err != nil {
+		if err := module.AddModuleMURL(metadataURL); err != nil {
 			log.Fatalln(err.Error())
 		}
 	},
 }
 
 var remCmd = &cobra.Command{
-	Use:   "rm [id]",
+	Use:   "rem [id]",
 	Short: "Uninstall module",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		identifier := args[0]
-		if err := module.DeleteModule(identifier); err != nil {
+		if err := module.RemoveModule(identifier); err != nil {
 			log.Fatalln(err.Error())
 		}
 	},
@@ -56,5 +44,5 @@ var remCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(pkgCmd)
 
-	pkgCmd.AddCommand(addCmd, updateCmd, remCmd)
+	pkgCmd.AddCommand(addCmd, remCmd)
 }

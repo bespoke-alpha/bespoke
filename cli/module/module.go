@@ -23,22 +23,22 @@ import (
 var client = github.NewClient(nil)
 
 type Metadata struct {
-	name        string
-	version     string
-	authors     []string
-	description string
-	tags        []string
-	entries     struct {
-		js    string
-		css   string
-		mixin string
-	}
-	dependencies    []string
-	spotifyVersions string
+	Name        string   `json:"name"`
+	Version     string   `json:"version"`
+	Authors     []string `json:"authors"`
+	Description string   `json:"description"`
+	Tags        []string `json:"tags"`
+	Entries     struct {
+		Js    string `json:"js"`
+		Css   string `json:"css"`
+		Mixin string `json:"mixin"`
+	} `json:"entries"`
+	Dependencies    []string `json:"dependencies"`
+	SpotifyVersions string   `json:"spotifyVersions"`
 }
 
 func (m Metadata) getIdentifier() string {
-	return filepath.Join(m.authors[0], m.name)
+	return filepath.Join(m.Authors[0], m.Name)
 }
 
 type GithubPathVersion struct {
@@ -61,13 +61,13 @@ type Module struct {
 }
 
 type MinimalModule struct {
-	metadataURL MetadataURL
-	identifier  Identifier
-	enabled     bool
+	MetadataURL MetadataURL `json:"metadataURL"`
+	Identifier  Identifier  `json:"identifier"`
+	Enabled     bool        `json:"enabled"`
 }
 
 type Vault struct {
-	modules []MinimalModule
+	Modules []MinimalModule `json:"modules"`
 }
 
 // <owner>/<repo>/<branch|tag|commit>/path/to/module/metadata.json
@@ -111,8 +111,7 @@ func parseMetadata(r io.Reader) (Metadata, error) {
 }
 
 func fetchMetadata(metadataURL MetadataURL) (Metadata, error) {
-	rawUrl := "http://raw.githubusercontent.com/" + metadataURL
-	res, err := http.Get(rawUrl)
+	res, err := http.Get(metadataURL)
 	if err != nil {
 		return Metadata{}, err
 	}
@@ -210,13 +209,13 @@ func downloadModule(module Module) error {
 	switch module.githubPath.version.__type {
 	case "commit":
 		url += module.githubPath.version.commit
-		break
+
 	case "tag":
 		url += "refs/tags/" + module.githubPath.version.tag
-		break
+
 	case "branch":
 		url += "regs/heads/" + module.githubPath.version.branch
-		break
+
 	}
 
 	url += ".tar.gz"
@@ -245,7 +244,7 @@ func AddModuleMURL(metadataURL MetadataURL) error {
 
 	localMetadata, err := fetchLocalMetadata(identifier)
 	if err == nil {
-		if metadata.version == localMetadata.version {
+		if metadata.Version == localMetadata.Version {
 			return nil
 		}
 
@@ -288,9 +287,9 @@ func getVaultMURLFromIdentifier(identifier Identifier) (MetadataURL, error) {
 	}
 
 	var metadataURL MetadataURL
-	for module := range vault.modules {
-		if vault.modules[module].identifier == identifier {
-			metadataURL = vault.modules[module].metadataURL
+	for module := range vault.Modules {
+		if vault.Modules[module].Identifier == identifier {
+			metadataURL = vault.Modules[module].MetadataURL
 			break
 		}
 	}
