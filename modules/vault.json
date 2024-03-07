@@ -1,36 +1,28 @@
 {
-	"modules": [
-		{
-			"identifier": "Delusoire/std",
+	"modules": {
+		"Delusoire/std": {
 			"enabled": true
 		},
-		{
-			"identifier": "Delusoire/delulib",
+		"Delusoire/delulib": {
 			"enabled": true
 		},
-		{
-			"identifier": "Delusoire/spicetify-marketplace",
+		"Delusoire/spicetify-marketplace": {
 			"enabled": true
 		},
-		{
-			"identifier": "Delusoire/library-db",
+		"Delusoire/library-db": {
 			"enabled": true
 		},
-		{
-			"identifier": "Delusoire/dexie-react-query",
+		"Delusoire/dexie-react-query": {
 			"enabled": true
 		},
-		{
-			"identifier": "Delusoire/hazy-theme",
+		"Delusoire/hazy-theme": {
 			"enabled": true
 		},
-		{
-			"identifier": "Delusoire/search-on-youtube",
+		"Delusoire/search-on-youtube": {
 			"enabled": true
 		},
-		{
-			"identifier": "Delusoire/stats-app",
+		"Delusoire/stats-app": {
 			"enabled": true
 		}
-	]
+	}
 }
