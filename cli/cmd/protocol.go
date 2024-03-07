@@ -34,11 +34,11 @@ var protocolCmd = &cobra.Command{
 
 		case "enable":
 			identifier := arguments
-			err = module.EnableModule(identifier)
+			err = module.ToggleModule(identifier, true)
 
 		case "disable":
 			identifier := arguments
-			err = module.DisableModule(identifier)
+			err = module.ToggleModule(identifier, false)
 
 		}
 		if err != nil {
