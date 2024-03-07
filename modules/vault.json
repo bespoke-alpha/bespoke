@@ -1,28 +1,36 @@
 {
 	"modules": {
 		"Delusoire/std": {
-			"enabled": true
+			"enabled": true,
+			"metadata": "/modules/Delusoire/std/manifest.json"
 		},
 		"Delusoire/delulib": {
-			"enabled": true
+			"enabled": true,
+			"metadata": "/modules/Delusoire/delulib/manifest.json"
 		},
 		"Delusoire/spicetify-marketplace": {
-			"enabled": true
+			"enabled": true,
+			"metadata": "/modules/Delusoire/spicetify-marketplace/manifest.json"
 		},
 		"Delusoire/library-db": {
-			"enabled": true
+			"enabled": true,
+			"metadata": "/modules/Delusoire/library-db/manifest.json"
 		},
 		"Delusoire/dexie-react-query": {
-			"enabled": true
+			"enabled": true,
+			"metadata": "/modules/Delusoire/dexie-react-query/manifest.json"
 		},
 		"Delusoire/hazy-theme": {
-			"enabled": true
+			"enabled": true,
+			"metadata": "/modules/Delusoire/hazy-theme/manifest.json"
 		},
 		"Delusoire/search-on-youtube": {
-			"enabled": true
+			"enabled": true,
+			"metadata": "/modules/Delusoire/search-on-youtube/manifest.json"
 		},
 		"Delusoire/stats-app": {
-			"enabled": true
+			"enabled": true,
+			"metadata": "/modules/Delusoire/stats-app/manifest.json"
 		}
 	}
 }

@@ -79,10 +79,10 @@ export class Module {
 		return modules.reduce((p, module) => p.then(() => module.loadJS()), Promise.resolve());
 	}
 
-	private constructor(
+	constructor(
 		public metadata: Metadata,
-		private metadataURL: string,
-		private remoteMetadataURL?: string,
+		public metadataURL: string,
+		public remoteMetadataURL?: string,
 		private enabled = true,
 	) {
 		const identifier = this.getIdentifier();
@@ -155,7 +155,7 @@ export class Module {
 		}
 	}
 
-	static async fromVault(identifier: string, { enabled = true, metadata: metadataURL, remoteMetadata: remoteMetadataURL }: VaultModule) {
+	static async fromVault({ enabled, metadata: metadataURL, remoteMetadata: remoteMetadataURL }: VaultModule) {
 		const metadata: Metadata = await fetchJSON(metadataURL);
 
 		const statDefaultOrUndefined = (def: string) =>
@@ -234,5 +234,5 @@ export const ModuleManager = {
 };
 
 const lock: Vault = await fetchJSON("/modules/vault.json");
-await Promise.all(Object.entries(lock.modules).map(([identifier, mod]) => Module.fromVault(identifier, mod)));
+await Promise.all(Object.values(lock.modules).map(Module.fromVault));
 Module.onModulesRegistered();
