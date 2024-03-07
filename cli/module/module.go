@@ -62,12 +62,11 @@ type Module struct {
 
 type MinimalModule struct {
 	MetadataURL MetadataURL `json:"metadataURL"`
-	Identifier  Identifier  `json:"identifier"`
 	Enabled     bool        `json:"enabled"`
 }
 
 type Vault struct {
-	Modules []MinimalModule `json:"modules"`
+	Modules map[string]MinimalModule `json:"modules"`
 }
 
 // https://raw.githubusercontent.com/<owner>/<repo>/<branch|tag|commit>/path/to/module/metadata.json
@@ -78,9 +77,10 @@ type Identifier = string
 
 var modulesFolder = filepath.Join(paths.ConfigPath, "modules")
 
+var vaultPath = filepath.Join(modulesFolder, "vault.json")
+
 func parseVault() (Vault, error) {
-	vaultFile := filepath.Join(modulesFolder, "vault.json")
-	file, err := os.Open(vaultFile)
+	file, err := os.Open(vaultPath)
 	if err != nil {
 		return Vault{}, err
 	}
@@ -233,7 +233,6 @@ func downloadModule(module Module) error {
 	return nil
 }
 
-// TODO: add module entry to vault.json
 func AddModuleMURL(metadataURL MetadataURL) error {
 	metadata, err := fetchMetadata(metadataURL)
 	if err != nil {
@@ -258,26 +257,55 @@ func AddModuleMURL(metadataURL MetadataURL) error {
 		return err
 	}
 
-	return downloadModule(Module{
+	err = downloadModule(Module{
 		metadata,
 		githubPath,
 	})
+	if err != nil {
+		return err
+	}
+
+	return SetModule(identifier, MinimalModule{MetadataURL: metadataURL, Enabled: true})
 }
 
-// TODO: remove module entry from vault.json
 func RemoveModule(identifier Identifier) error {
 	moduleFolder := filepath.Join(modulesFolder, identifier)
+	err := ToggleModule(identifier, false)
+	if err != nil {
+		return err
+	}
 	return os.RemoveAll(moduleFolder)
 }
 
-// TODO:
-func EnableModule(identifier Identifier) error {
-	return errors.ErrUnsupported
+func SetModule(identifier Identifier, module MinimalModule) error {
+	vault, err := GetVault()
+	if err != nil {
+		return err
+	}
+
+	vault.Modules[identifier] = module
+
+	file, err := os.Open(vaultPath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	return json.NewEncoder(file).Encode(vault)
 }
 
-// TODO:
-func DisableModule(identifier Identifier) error {
-	return errors.ErrUnsupported
+func ToggleModule(identifier Identifier, enabled bool) error {
+	vault, err := GetVault()
+	if err != nil {
+		return err
+	}
+
+	module := vault.Modules[identifier]
+	module.Enabled = enabled
+
+	SetModule(identifier, module)
+
+	return nil
 }
 
 func getVaultMURLFromIdentifier(identifier Identifier) (MetadataURL, error) {
@@ -286,14 +314,7 @@ func getVaultMURLFromIdentifier(identifier Identifier) (MetadataURL, error) {
 		return "", err
 	}
 
-	var metadataURL MetadataURL
-	for module := range vault.Modules {
-		if vault.Modules[module].Identifier == identifier {
-			metadataURL = vault.Modules[module].MetadataURL
-			break
-		}
-	}
-
+	metadataURL := vault.Modules[identifier].MetadataURL
 	if metadataURL == "" {
 		err = errors.New("Can't find a module for the identifier " + identifier)
 	}

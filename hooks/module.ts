@@ -3,12 +3,11 @@ import { fetchJSON } from "./util.js";
 
 interface VaultModule {
 	enabled: boolean;
-	identifier: string;
 	remoteMeta?: string;
 }
 
 interface Vault {
-	modules: VaultModule[];
+	modules: Record<string, VaultModule>;
 }
 
 export interface Metadata {
@@ -142,7 +141,7 @@ export class Module {
 		}
 	}
 
-	static async fromVault({ enabled = true, identifier, remoteMeta }: VaultModule) {
+	static async fromVault(identifier: string, { enabled = true, remoteMeta }: VaultModule) {
 		const path = `/modules/${identifier}`;
 
 		const metadata: Metadata = await fetchJSON(`${path}/metadata.json`);
@@ -210,5 +209,5 @@ export const ModuleManager = {
 };
 
 const lock: Vault = await fetchJSON("/modules/vault.json");
-await Promise.all(lock.modules.map(mod => Module.fromVault(mod)));
+await Promise.all(Object.entries(lock.modules).map(([identifier, mod]) => Module.fromVault(identifier, mod)));
 Module.onModulesLoaded();
