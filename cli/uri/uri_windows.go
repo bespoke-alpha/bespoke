@@ -16,7 +16,7 @@ func RegisterURIScheme() error {
 	access := uint32(registry.QUERY_VALUE | registry.SET_VALUE)
 	key := registry.CURRENT_USER
 
-	key, existing, err := registry.CreateKey(key, `SOFTWARE\Classes\bespoke`, access)
+	key, existing, err := registry.CreateKey(key, `Software\Classes\bespoke`, access)
 	if existing {
 		return nil
 	}
