@@ -1,0 +1,24 @@
+{
+    "extends": "../../../tsconfig.json",
+    "compilerOptions": {
+        "baseUrl": "../../../",
+        "paths": {
+            "/*": ["./*"],
+            "https://esm.sh/v135/@adaskothebeast/splines/es2022/splines.mjs": [
+                "../node_modules/@adaskothebeast/splines/"
+            ],
+            "https://esm.sh/v135/*": [
+                "modules/Delusoire/better-lyrics/node_modules/@types/*",
+                "modules/Delusoire/better-lyrics/node_modules/*",
+                "node_modules/@types/*",
+                "node_modules/*"
+            ],
+            "https://esm.sh/*": [
+                "modules/Delusoire/better-lyrics/node_modules/@types/*",
+                "modules/Delusoire/better-lyrics/node_modules/*",
+                "node_modules/@types/*",
+                "node_modules/*"
+            ]
+        }
+    }
+}
