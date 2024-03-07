@@ -191,6 +191,10 @@ export class Module {
 		this.unloadJS();
 		this.enabled = false;
 	}
+
+	isEnabled() {
+		return this.enabled;
+	}
 }
 
 export const ModuleManager = {
