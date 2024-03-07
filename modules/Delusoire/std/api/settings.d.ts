@@ -62,5 +62,5 @@ export declare class Settings<A = Record<string, never>> {
 }
 export declare const createSettings: (mod: Module & {
     settings?: Settings;
-}) => any;
+}) => Settings<Record<string, never>>;
 export {};

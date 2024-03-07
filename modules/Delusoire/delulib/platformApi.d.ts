@@ -1,0 +1,20 @@
+export declare const areInLibrary: (uris: string[]) => Promise<any>;
+export declare const setInLibrary: (uris: string[], liked: boolean) => Promise<any>;
+export declare const toggleInLibrary: (uris: string[]) => Promise<any[]>;
+export declare const fetchLikedTracks: () => Promise<any>;
+export declare const fetchArtistLikedTracks: (uri: string, offset?: number, limit?: number) => Promise<any>;
+export declare const fetchPlaylistContents: (uri: string) => Promise<any>;
+export declare const createFolder: (name: string, location?: Platform.RootlistAPI.Location) => Promise<any>;
+export declare const addPlaylist: (playlist: string, folder?: string) => Promise<any>;
+export declare const createPlaylist: (name: string, location?: Platform.RootlistAPI.Location) => Promise<any>;
+export declare const createPlaylistFromTracks: (name: string, tracks: string[], folder?: string) => any;
+export declare const setPlaylistVisibility: (playlist: string, visibleForAll: boolean) => Promise<any>;
+export declare const setPlaylistPublished: (playlist: string, published: boolean) => Promise<any>;
+export declare const fetchFolder: (folder?: string) => Promise<any>;
+export declare const fetchRootFolder: () => Promise<any>;
+export declare const addPlaylistTracks: (playlist: string, tracks: string[], location?: Platform.RootlistAPI.Location) => Promise<any>;
+export declare const movePlaylistTracks: (playlist: string, uids: string[], location?: Platform.RootlistAPI.Location) => Promise<any>;
+export declare const removePlaylistTracks: (playlist: string, tracks: Array<{
+    uid: string;
+}>) => any;
+export declare const fetchLocalTracks: () => Promise<any>;

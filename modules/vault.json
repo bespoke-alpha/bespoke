@@ -2,35 +2,35 @@
 	"modules": {
 		"Delusoire/std": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/std/manifest.json"
+			"metadata": "/modules/Delusoire/std/metadata.json"
 		},
 		"Delusoire/delulib": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/delulib/manifest.json"
+			"metadata": "/modules/Delusoire/delulib/metadata.json"
 		},
 		"Delusoire/spicetify-marketplace": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/spicetify-marketplace/manifest.json"
+			"metadata": "/modules/Delusoire/spicetify-marketplace/metadata.json"
 		},
 		"Delusoire/library-db": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/library-db/manifest.json"
+			"metadata": "/modules/Delusoire/library-db/metadata.json"
 		},
 		"Delusoire/dexie-react-query": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/dexie-react-query/manifest.json"
+			"metadata": "/modules/Delusoire/dexie-react-query/metadata.json"
 		},
 		"Delusoire/hazy-theme": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/hazy-theme/manifest.json"
+			"metadata": "/modules/Delusoire/hazy-theme/metadata.json"
 		},
 		"Delusoire/search-on-youtube": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/search-on-youtube/manifest.json"
+			"metadata": "/modules/Delusoire/search-on-youtube/metadata.json"
 		},
 		"Delusoire/stats-app": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/stats-app/manifest.json"
+			"metadata": "/modules/Delusoire/stats-app/metadata.json"
 		}
 	}
 }

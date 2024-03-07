@@ -29,11 +29,9 @@ export function useObservable(observableFactory, arg2, arg3) {
         const observable = typeof observableFactory === "function" ? observableFactory() : observableFactory;
         if (!observable || typeof observable.subscribe !== "function") {
             if (observableFactory === observable) {
-                throw new TypeError(`Given argument to useObservable() was neither a valid observable nor a function.`);
+                throw new TypeError("Given argument to useObservable() was neither a valid observable nor a function.");
             }
-            else {
-                throw new TypeError(`Observable factory given to useObservable() did not return a valid observable.`);
-            }
+            throw new TypeError("Observable factory given to useObservable() did not return a valid observable.");
         }
         if (!monitor.current.hasResult &&
             typeof window !== "undefined" // Don't do this in SSR

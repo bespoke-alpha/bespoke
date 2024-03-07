@@ -1,42 +1,44 @@
 {
-	"name": "bespoke",
-	"scripts": {
-		"build:cli": "cd cli && go build .",
-		"build:hooks": "cd hooks && tsc --noResolve",
-		"build": "conc -n build-cli,build-hooks \"bun run build:cli\" \"bun run build:hooks\"",
-		"watch:js": "cd modules && bun ../scripts/tsc-watch.ts",
-		"watch:css": "cd modules && bun ../scripts/sass-watch.ts",
-		"watch": "conc -n watch-js,watch-css \"bun run watch:js\" \"bun run watch:css\"",
-		"run": "bespoke run --",
-		"dev": "bespoke dev && bun run run --remote-debugging-port=9222 --remote-allow-origins=*"
-	},
-	"dependencies": {},
-	"devDependencies": {
-		"@adaskothebeast/splines": "^4.0.0",
-		"@fostertheweb/spotify-web-api-ts-sdk": "^1.2.1",
-		"@lit/context": "^1.1.0",
-		"@lit/task": "^1.0.0",
-		"@tanstack/react-query": "^5.24.1",
-		"@types/bun": "latest",
-		"@types/classnames": "^2.3.1",
-		"@types/lodash": "^4.14.202",
-		"@types/mousetrap": "^1.6.15",
-		"@types/react": "^18.2.55",
-		"@types/react-dom": "^18.2.19",
-		"@types/redux": "^3.6.0",
-		"concurrently": "^8.2.2",
-		"dexie": "^3.2.5",
-		"dexie-react-hooks": "^1.1.7",
-		"lit": "^3.1.2",
-		"lodash": "^4.17.21",
-		"notistack": "^3.0.1",
-		"react-flip-toolkit": "^7.1.0",
-		"rxjs": "^7.8.1",
-		"strip-ansi": "^7.1.0",
-		"tippy.js": "^6.3.7",
-		"youtubei.js": "^9.1.0"
-	},
-	"peerDependencies": {
-		"typescript": "^5.0.0"
-	}
+  "name": "bespoke",
+  "scripts": {
+    "build:cli": "cd cli && go build .",
+    "build:hooks": "cd hooks && tsc --noResolve",
+    "build": "conc -n build-cli,build-hooks \"bun run build:cli\" \"bun run build:hooks\"",
+    "watch:js": "cd modules && bun ../scripts/tsc-watch.ts",
+    "watch:css": "cd modules && bun ../scripts/sass-watch.ts",
+    "watch": "conc -n watch-js,watch-css \"bun run watch:js\" \"bun run watch:css\"",
+    "run": "bespoke run --",
+    "dev": "bespoke dev && bun run run --remote-debugging-port=9222 --remote-allow-origins=*"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@adaskothebeast/splines": "^4.0.0",
+    "@elysiajs/cors": "^0.8.0",
+    "@fostertheweb/spotify-web-api-ts-sdk": "^1.2.1",
+    "@lit/context": "^1.1.0",
+    "@lit/task": "^1.0.0",
+    "@tanstack/react-query": "^5.24.1",
+    "@types/bun": "latest",
+    "@types/classnames": "^2.3.1",
+    "@types/lodash": "^4.14.202",
+    "@types/mousetrap": "^1.6.15",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@types/redux": "^3.6.0",
+    "concurrently": "^8.2.2",
+    "dexie": "^3.2.5",
+    "dexie-react-hooks": "^1.1.7",
+    "elysia": "^0.8.17",
+    "lit": "^3.1.2",
+    "lodash": "^4.17.21",
+    "notistack": "^3.0.1",
+    "react-flip-toolkit": "^7.1.0",
+    "rxjs": "^7.8.1",
+    "strip-ansi": "^7.1.0",
+    "tippy.js": "^6.3.7",
+    "youtubei.js": "^9.1.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
 }

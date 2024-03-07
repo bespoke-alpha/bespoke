@@ -34,32 +34,34 @@ export declare const S: {
         exportedForwardRefs: import("./expose/webpack.js").ForwardRefExoticComponent<any>[];
         exportedMemos: import("./expose/webpack.js").NamedExoticComponent[];
     };
-    useMatch: any;
-    getPlayContext: any;
+    useMatch: unknown;
+    getPlayContext: Function;
     FilterContext: import("./expose/webpack.js").Context<any>;
-    useContextMenuState: any;
+    useContextMenuState: Function;
     enqueueCustomSnackbar: (element: import("react").ReactElement<any, string | import("react").JSXElementConstructor<any>>, opts: any) => any;
     React: typeof import("react");
     ReactJSX: any;
     ReactDOM: typeof import("react-dom");
     ReactDOMServer: any;
     classnames: any;
-    Color: any;
+    Color: Function & {
+        CSSFormat: any;
+    };
     ReactComponents: {
         SnackbarProvider: SnackbarProviderT;
-        SettingColumn: any;
-        SettingText: any;
-        SettingToggle: any;
-        IconComponent: any;
+        SettingColumn: import("react").FC<any>;
+        SettingText: import("react").FC<any>;
+        SettingToggle: import("react").FC<any>;
+        IconComponent: import("react").FC<any>;
         Text: import("./expose/webpack.js").ForwardRefExoticComponent<any>;
         TextComponent: any;
         ContextMenu: unknown;
-        RightClickMenu: any;
-        ConfirmDialog: any;
-        Tooltip: any;
-        Menu: any;
-        MenuItem: any;
-        MenuItemSubMenu: any;
+        RightClickMenu: import("react").FC<any>;
+        ConfirmDialog: import("react").FC<any>;
+        Tooltip: import("react").FC<any>;
+        Menu: import("react").FC<any>;
+        MenuItem: import("react").FC<any>;
+        MenuItemSubMenu: import("react").FC<any>;
         Slider: import("react").FC<any>;
         Nav: import("./expose/webpack.js").NamedExoticComponent;
         NavTo: import("./expose/webpack.js").NamedExoticComponent;
@@ -75,37 +77,37 @@ export declare const S: {
         }) => import("react").FunctionComponentElement<any>;
         Scrollable: import("react").FC<any>;
         PanelHeader: import("react").FC<any>;
-        PanelContent: any;
-        PanelSkeleton: any;
-        ButtonPrimary: any;
-        ButtonSecondary: any;
-        ButtonTertiary: any;
+        PanelContent: import("./expose/webpack.js").ForwardRefExoticComponent<any> | import("react").FC<any>;
+        PanelSkeleton: import("./expose/webpack.js").ForwardRefExoticComponent<any> | import("react").FC<any>;
+        ButtonPrimary: import("./expose/webpack.js").ForwardRefExoticComponent<any>;
+        ButtonSecondary: import("./expose/webpack.js").ForwardRefExoticComponent<any>;
+        ButtonTertiary: import("./expose/webpack.js").ForwardRefExoticComponent<any>;
         Snackbar: {
-            wrapper: any;
-            simpleLayout: any;
-            ctaText: any;
-            styledImage: any;
+            wrapper: import("react").FC<any>;
+            simpleLayout: import("react").FC<any>;
+            ctaText: import("react").FC<any>;
+            styledImage: import("react").FC<any>;
         };
-        Chip: any;
-        Toggle: any;
-        Router: any;
-        Routes: any;
-        Route: any;
-        StoreProvider: any;
+        Chip: import("./expose/webpack.js").ForwardRefExoticComponent<any>;
+        Toggle: import("react").FC<any>;
+        Router: import("react").FC<any>;
+        Routes: import("react").FC<any>;
+        Route: import("react").FC<any>;
+        StoreProvider: import("react").FC<any>;
         Cards: any;
         Menus: any;
         PlaylistMenu: unknown;
-        GenericModal: any;
+        GenericModal: import("react").FC<any>;
         Tracklist: import("./expose/webpack.js").NamedExoticComponent;
         TracklistRow: import("./expose/webpack.js").NamedExoticComponent;
-        TracklistColumnsContextProvider: any;
+        TracklistColumnsContextProvider: Function;
     };
     ReactHooks: {
-        DragHandler: any;
+        DragHandler: Function;
         useExtractedColor: Function;
     };
     ReactQuery: {
-        PersistQueryClientProvider: any;
+        PersistQueryClientProvider: Function;
         QueryClient: QueryClientT;
         QueryClientProvider: any;
         notifyManager: any;
@@ -123,7 +125,7 @@ export declare const S: {
     _reservedPanelIds: Record<string, number>;
     Mousetrap: import("mousetrap").MousetrapStatic;
     Locale: any;
-    createUrlLocale: any;
+    createUrlLocale: Function;
     Snackbar: any;
     URI: {
         Types: import("./expose/webpack.js").URITypes;
@@ -186,13 +188,13 @@ import type { Module } from "/hooks/module.js";
 import { Registrar } from "./registers/registers.js";
 export declare const createRegistrar: (mod: Module & {
     registrar?: Registrar;
-}) => any;
+}) => Registrar;
 export declare const createStorage: <M extends Module>(mod: M & {
     storage?: Storage;
-}) => any;
+}) => Storage;
 export declare const createLogger: (mod: Module & {
     logger?: Console;
-}) => any;
+}) => Console;
 declare class Event<A> {
     private getArg;
     callbacks: ((a: A) => void)[];
