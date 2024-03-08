@@ -1,5 +1,5 @@
 import { fetchLastFMTrack, spotifyApi } from "/modules/Delusoire/delulib/api.js";
-import { waitForElement } from "/modules/Delusoire/delulib/util.js";
+import { waitForElement } from "/modules/Delusoire/std/api/util.js";
 
 import { CONFIG } from "./settings.js";
 

@@ -5,6 +5,7 @@
 	"version": "",
 	"authors": ["Delusoire", "Dexie"],
 	"description": "",
+	"readme": "",
 	"entries": {
 		"js": "index.js",
 		"css": false,

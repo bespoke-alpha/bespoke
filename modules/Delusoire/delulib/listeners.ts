@@ -1,7 +1,8 @@
 import { _ } from "/modules/Delusoire/std/deps.js";
 import { S } from "/modules/Delusoire/std/index.js";
 
-import { PermanentMutationObserver, REACT_FIBER } from "./util.js";
+import { PermanentMutationObserver } from "./util.js";
+import { REACT_FIBER } from "/modules/Delusoire/std/api/util.js";
 
 const { URI } = S;
 const History = S.Platform.getHistory();

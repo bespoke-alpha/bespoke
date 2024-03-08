@@ -5,6 +5,7 @@
 	"version": "",
 	"authors": ["Delusoire", "harbassan"],
 	"description": "",
+	"readme": "",
 	"entries": {
 		"js": "index.js",
 		"css": "index.css",

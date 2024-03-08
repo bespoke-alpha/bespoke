@@ -5,6 +5,7 @@
 	"version": "",
 	"authors": ["Delusoire", "Astromations"],
 	"description": "",
+	"readme": "",
 	"entries": {
 		"js": "index.js",
 		"css": "index.css",
