@@ -9,5 +9,6 @@ cli/bespoke*
 
 apps/
 #modules/vault.json
+modules/types/
 
 *.tsbuildinfo

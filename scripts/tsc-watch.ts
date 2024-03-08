@@ -13,12 +13,11 @@ while (true) {
 	{
 		const lines = decoder.decode(value).split("\n");
 		for await (const line of lines) {
-			console.log(line);
 			const cleanLine = line.replace(/[^ -~]+/g, "");
 			const match = cleanLine.match(/^TSFILE: (.*)/);
 			if (!match) continue;
 			const relfilepath = path.relative(process.cwd(), match[1]);
-			// await applyCssMapPerFile(relfilepath);
+			await applyCssMapPerFile(relfilepath);
 			sendReloadDocument();
 		}
 	}

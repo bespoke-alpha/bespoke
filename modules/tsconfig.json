@@ -4,5 +4,6 @@
         "baseUrl": "../",
         "declarationDir": "./types/",
         "resolveJsonModule": false
-    }
+    },
+    "exclude": ["node_modules/"]
 }
