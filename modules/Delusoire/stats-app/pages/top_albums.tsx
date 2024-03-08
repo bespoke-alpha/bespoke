@@ -5,7 +5,6 @@ import useDropdown from "../components/dropdown/useDropdown.js";
 import SpotifyCard from "../components/shared/spotify_card.js";
 import PageContainer from "../components/shared/page_container.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
-import SettingsButton from "../components/buttons/settings_button.js";
 import { fetchLFMTopAlbums } from "../api/lastfm.js";
 import { spotifyApi } from "../../delulib/api.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
@@ -13,7 +12,7 @@ import { CONFIG } from "../settings.js";
 
 import { SpotifyTimeRange } from "../api/spotify.js";
 import { useStatus } from "../components/status/useStatus.js";
-import { logger } from "../index.js";
+import { logger, settingsButton } from "../index.js";
 
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"] as const;
 const OptionToTimeRange = {
@@ -51,7 +50,7 @@ const AlbumsPage = () => {
 
 	const props = {
 		title: "Top Albums",
-		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="stats-app" />],
+		headerEls: [dropdown, <RefreshButton refresh={refetch} />, settingsButton],
 	};
 
 	const albumCards = topAlbums.map((album, index) => {

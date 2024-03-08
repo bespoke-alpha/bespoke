@@ -9,7 +9,6 @@ import PageContainer from "../components/shared/page_container.js";
 import Shelf from "../components/shelf.js";
 
 import RefreshButton from "../components/buttons/refresh_button.js";
-import SettingsButton from "../components/buttons/settings_button.js";
 import { fetchTopTracks } from "./top_tracks.js";
 import { fetchTopArtists } from "./top_artists.js";
 import { calculateGenresFromArtists, fetchAudioFeaturesMeta } from "./playlist.js";
@@ -18,7 +17,7 @@ import { getURI, toID } from "../util/parse.js";
 import { SpotifyTimeRange } from "../api/spotify.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
 import { useStatus } from "../components/status/useStatus.js";
-import { logger } from "../index.js";
+import { logger, settingsButton } from "../index.js";
 
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"] as const;
 const OptionToTimeRange = {
@@ -94,7 +93,7 @@ const GenresPage = () => {
 
 	const PageContainerProps = {
 		title: "Top Genres",
-		headerEls: [dropdown, <RefreshButton refresh={refetch} />, <SettingsButton section="stats-app" />],
+		headerEls: [dropdown, <RefreshButton refresh={refetch} />, settingsButton],
 	};
 
 	const statsCards = Object.entries(audioFeatures).map(([key, value]) => <StatCard label={key} value={value} />);

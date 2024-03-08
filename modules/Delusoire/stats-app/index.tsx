@@ -18,11 +18,12 @@ const History = S.Platform.getHistory();
 export let storage: Storage = undefined;
 export let logger: Console = undefined;
 export let settings: Settings = undefined;
+export let settingsButton: React.JSX.Element = undefined;
 
 export default function (mod: Module) {
 	storage = createStorage(mod);
 	logger = createLogger(mod);
-	[settings] = createSettings(mod);
+	[settings, settingsButton] = createSettings(mod);
 	const registrar = createRegistrar(mod);
 
 	let setPlaylistEditHidden: React.Dispatch<React.SetStateAction<boolean>> | undefined = undefined;
