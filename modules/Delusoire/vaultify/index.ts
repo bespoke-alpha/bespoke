@@ -5,7 +5,7 @@ import { createSettings } from "/modules/Delusoire/std/api/settings.js";
 
 export let settings: Settings;
 export default async function (mod: Module) {
-	settings = createSettings(mod);
+	[settings] = createSettings(mod);
 
 	await import("./settings.js");
 }

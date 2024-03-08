@@ -22,7 +22,7 @@ export let settings: Settings = undefined;
 export default function (mod: Module) {
 	storage = createStorage(mod);
 	logger = createLogger(mod);
-	settings = createSettings(mod);
+	[settings] = createSettings(mod);
 	const registrar = createRegistrar(mod);
 
 	let setPlaylistEditHidden: React.Dispatch<React.SetStateAction<boolean>> | undefined = undefined;

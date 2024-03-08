@@ -198,14 +198,6 @@ export class Settings<A = Record<string, never>> {
 	};
 }
 
-export const createSettings = (mod: Module & { settings?: Settings }) => {
-	if (!mod.settings) {
-		mod.settings = Settings.fromModule(mod);
-	}
-
-	return [mod.settings, <SettingsButton section={mod.settings.getName()} />] as const;
-};
-
 import { REACT_FIBER, waitForElement } from "./util.js";
 import { createIconComponent } from "./createIconComponent.js";
 
@@ -247,4 +239,12 @@ export const SettingsButton = ({ section }: SettingsButtonProps): React.ReactEle
 			/>
 		</Tooltip>
 	);
+};
+
+export const createSettings = (mod: Module & { settings?: Settings }) => {
+	if (!mod.settings) {
+		mod.settings = Settings.fromModule(mod);
+	}
+
+	return [mod.settings, <SettingsButton section={mod.settings.getName()} />] as const;
 };

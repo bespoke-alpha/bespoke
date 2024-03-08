@@ -11,7 +11,7 @@ export let settings: Settings;
 
 export default async function (mod: Module) {
 	const registrar = createRegistrar(mod);
-	settings = createSettings(mod);
+	[settings] = createSettings(mod);
 
 	const { showOnYouTube } = await import("./showOnYoutube.js");
 
