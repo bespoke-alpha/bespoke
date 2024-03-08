@@ -7,7 +7,7 @@ export const TippyProps = {
         const box = document.createElement("div");
         popper.id = "context-menu";
         popper.appendChild(box);
-        box.className = "X8yW2lJbFCQfV5GjoRwL";
+        box.className = "main-contextMenu-tippy";
         box[instance.props.allowHTML ? "innerHTML" : "textContent"] = instance.props.content;
         return {
             popper,
@@ -22,17 +22,17 @@ export const TippyProps = {
         };
     },
     onShow(instance) {
-        instance.popper.firstElementChild?.classList.add("mph1R_QkS44EPi4lrhxd");
+        instance.popper.firstElementChild?.classList.add("main-contextMenu-tippyEnter");
     },
     onMount(instance) {
         requestAnimationFrame(() => {
-            instance.popper.firstElementChild?.classList.remove("mph1R_QkS44EPi4lrhxd");
-            instance.popper.firstElementChild?.classList.add("v5IUMJNPJgol0273zQXD");
+            instance.popper.firstElementChild?.classList.remove("main-contextMenu-tippyEnter");
+            instance.popper.firstElementChild?.classList.add("main-contextMenu-tippyEnterActive");
         });
     },
     onHide(instance) {
         requestAnimationFrame(() => {
-            instance.popper.firstElementChild?.classList.remove("v5IUMJNPJgol0273zQXD");
+            instance.popper.firstElementChild?.classList.remove("main-contextMenu-tippyEnterActive");
             instance.unmount();
         });
     },

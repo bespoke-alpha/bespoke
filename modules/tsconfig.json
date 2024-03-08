@@ -2,8 +2,7 @@
     "extends": "../tsconfig.json",
     "compilerOptions": {
         "baseUrl": "../",
-        "outDir": "hooks-out/",
-        "declarationDir": "hooks-out/types/",
+        "declarationDir": "./types/",
         "resolveJsonModule": false
     }
 }

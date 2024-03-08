@@ -1,5 +1,5 @@
 import { fetchLastFMTrack, spotifyApi } from "/modules/Delusoire/delulib/api.js";
-import { waitForElement } from "/modules/Delusoire/delulib/util.js";
+import { waitForElement } from "/modules/Delusoire/std/api/util.js";
 import { CONFIG } from "./settings.js";
 import { fetchArtistRelated } from "/modules/Delusoire/delulib/GraphQL/fetchArtistRelated.js";
 import { onHistoryChanged } from "/modules/Delusoire/delulib/listeners.js";
@@ -23,7 +23,7 @@ nowPlayingGenreContainerEl.fetchGenres = fetchLastFMTagsForNowPlayingTrack;
 nowPlayingGenreContainerEl.className += " ellipsis-one-line main-type-finale";
 nowPlayingGenreContainerEl.style.gridArea = "genres";
 (async () => {
-    const trackInfoContainer = await waitForElement("div.ZcNcu7WZgOAz_Mkcoff3");
+    const trackInfoContainer = await waitForElement("div.main-trackInfo-container");
     trackInfoContainer.appendChild(nowPlayingGenreContainerEl);
 })();
 Events.Player.songchanged.on(state => {
@@ -51,9 +51,9 @@ const updateArtistPage = async (uri) => {
     artistGenreContainerEl.name = "Artist Genres";
     artistGenreContainerEl.uri = uri.toString();
     artistGenreContainerEl.fetchGenres = uri => getArtistsGenresOrRelated([uri]);
-    const lastHeaderTextEl = document.querySelector("div.RP2rRchy4i8TIp1CTmb7");
-    const headerTextEl = await waitForElement("div.RP2rRchy4i8TIp1CTmb7", undefined, undefined, lastHeaderTextEl);
-    const headerTextDetailsEl = await waitForElement("span.Ydwa1P5GkCggtLlSvphs");
+    const lastHeaderTextEl = document.querySelector("div.main-entityHeader-headerText");
+    const headerTextEl = await waitForElement("div.main-entityHeader-headerText", undefined, undefined, lastHeaderTextEl);
+    const headerTextDetailsEl = await waitForElement("span.main-entityHeader-detailsText");
     headerTextEl.insertBefore(artistGenreContainerEl, headerTextDetailsEl);
 };
 onHistoryChanged(uri => URI.is.Artist(uri), updateArtistPage);

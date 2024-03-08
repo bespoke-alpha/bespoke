@@ -1,4 +1,5 @@
-const { stdout } = Bun.spawn(["sass.cmd", "--no-source-map", "--no-color", "--no-unicode", "--watch", "."]);
+const dir = Bun.argv[2] ?? ".";
+const { stdout } = Bun.spawn(["sass.cmd", "--no-source-map", "--no-color", "--no-unicode", "--watch", dir]);
 const reader = stdout.getReader();
 const decoder = new TextDecoder();
 

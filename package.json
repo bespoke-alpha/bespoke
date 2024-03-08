@@ -4,8 +4,10 @@
     "build:cli": "cd cli && go build .",
     "build:hooks": "cd hooks && tsc --noResolve",
     "build": "conc -n build-cli,build-hooks \"bun run build:cli\" \"bun run build:hooks\"",
-    "watch:js": "cd modules && bun ../scripts/tsc-watch.ts",
-    "watch:css": "cd modules && bun ../scripts/sass-watch.ts",
+    "watch:js": "bun run scripts/tsc-watch.ts",
+    "watch:css": "bun run scripts/sass-watch.ts",
+	"watch:js:modules": "bun run scripts/tsc-watch.ts modules/",
+	"watch:css:modules": "bun run scripts/sass-watch.ts modules/",
     "watch": "conc -n watch-js,watch-css \"bun run watch:js\" \"bun run watch:css\"",
     "run": "bespoke run --",
     "dev": "bespoke dev && bun run run --remote-debugging-port=9222 --remote-allow-origins=*"
@@ -40,5 +42,6 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
-  }
+  },
+  "private": true
 }

@@ -11,10 +11,11 @@ const History = S.Platform.getHistory();
 export let storage = undefined;
 export let logger = undefined;
 export let settings = undefined;
+export let settingsButton = undefined;
 export default function (mod) {
     storage = createStorage(mod);
     logger = createLogger(mod);
-    settings = createSettings(mod);
+    [settings, settingsButton] = createSettings(mod);
     const registrar = createRegistrar(mod);
     let setPlaylistEditHidden = undefined;
     const PlaylistEdit = () => {

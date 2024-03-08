@@ -6,7 +6,7 @@ const { URI } = S;
 export let settings;
 export default async function (mod) {
     const registrar = createRegistrar(mod);
-    settings = createSettings(mod);
+    [settings] = createSettings(mod);
     const { showOnYouTube } = await import("./showOnYoutube.js");
     registrar.register("menu", S.React.createElement(() => {
         const { props } = useMenuItem();

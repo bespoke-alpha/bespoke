@@ -7,7 +7,6 @@ import InlineGrid from "../components/inline_grid.js";
 import PageContainer from "../components/shared/page_container.js";
 import Shelf from "../components/shelf.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
-import SettingsButton from "../components/buttons/settings_button.js";
 import { fetchTopTracks } from "./top_tracks.js";
 import { fetchTopArtists } from "./top_artists.js";
 import { calculateGenresFromArtists, fetchAudioFeaturesMeta } from "./playlist.js";
@@ -15,7 +14,7 @@ import { getURI, toID } from "../util/parse.js";
 import { SpotifyTimeRange } from "../api/spotify.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
 import { useStatus } from "../components/status/useStatus.js";
-import { logger } from "../index.js";
+import { logger, settingsButton } from "../index.js";
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"];
 const OptionToTimeRange = {
     "Past Month": SpotifyTimeRange.Short,
@@ -74,11 +73,11 @@ const GenresPage = () => {
     const { genres, releaseDates, obscureTracks, audioFeatures } = data;
     const PageContainerProps = {
         title: "Top Genres",
-        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "stats-app" })],
+        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), settingsButton],
     };
     const statsCards = Object.entries(audioFeatures).map(([key, value]) => S.React.createElement(StatCard, { label: key, value: value }));
     return (S.React.createElement(PageContainer, { ...PageContainerProps },
-        S.React.createElement("section", { className: "QyANtc_r7ff_tqrf5Bvc Shelf" },
+        S.React.createElement("section", { className: "main-shelf-shelf Shelf" },
             S.React.createElement(ContributionChart, { contributions: genres }),
             S.React.createElement(InlineGrid, { special: true }, statsCards)),
         S.React.createElement(Shelf, { title: "Release Year Distribution" },

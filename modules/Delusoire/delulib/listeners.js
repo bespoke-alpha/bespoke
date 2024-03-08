@@ -1,9 +1,10 @@
 import { S } from "/modules/Delusoire/std/index.js";
-import { PermanentMutationObserver, REACT_FIBER } from "./util.js";
+import { PermanentMutationObserver } from "./util.js";
+import { REACT_FIBER } from "/modules/Delusoire/std/api/util.js";
 const { URI } = S;
 const History = S.Platform.getHistory();
-export const getTrackLists = () => Array.from(document.querySelectorAll(".ShMHCGsT93epRGdxJp2w.Ss6hr6HYpN4wjHJ9GHmi"));
-export const getTrackListTracks = (trackList) => Array.from(trackList.querySelectorAll(".h4HgbO_Uu1JYg5UGANeQ"));
+export const getTrackLists = () => Array.from(document.querySelectorAll(".main-trackList-trackList.main-trackList-indexable"));
+export const getTrackListTracks = (trackList) => Array.from(trackList.querySelectorAll(".main-trackList-trackListRow"));
 export const onHistoryChanged = (toMatchTo, callback, dropDuplicates = true) => {
     const createMatchFn = (toMatchTo) => {
         switch (typeof toMatchTo) {

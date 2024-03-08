@@ -35,6 +35,6 @@ function InlineGrid(props) {
     return (S.React.createElement("section", { className: "stats-gridInlineSection" },
         S.React.createElement("button", { className: "stats-scrollButton", onClick: scrollGridLeft }, "<"),
         S.React.createElement("button", { className: "stats-scrollButton", onClick: scrollGrid }, ">"),
-        S.React.createElement("div", { className: `iKwGKEfAfW7Rkx2_Ba4E stats-gridInline${special ? " stats-specialGrid" : ""}`, "data-scroll": "start" }, children)));
+        S.React.createElement("div", { className: `main-gridContainer-gridContainer stats-gridInline${special ? " stats-specialGrid" : ""}`, "data-scroll": "start" }, children)));
 }
 export default React.memo(InlineGrid);

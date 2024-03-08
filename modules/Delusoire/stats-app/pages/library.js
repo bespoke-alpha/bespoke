@@ -8,7 +8,6 @@ import InlineGrid from "../components/inline_grid.js";
 import PageContainer from "../components/shared/page_container.js";
 import Shelf from "../components/shelf.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
-import SettingsButton from "../components/buttons/settings_button.js";
 import { SpotifyTimeRange } from "../api/spotify.js";
 import { getTracksFromURIs } from "/modules/Delusoire/library-db/db.js";
 import { PlaylistItems, SavedPlaylists } from "/modules/Delusoire/library-db/listeners.js";
@@ -17,7 +16,7 @@ import { fetchAlbumsMeta, fetchArtistsMeta, fetchAudioFeaturesMeta } from "./pla
 import { calculateTracksMeta } from "./top_genres.js";
 import { getURI, toID } from "../util/parse.js";
 import { useStatus } from "../components/status/useStatus.js";
-import { logger } from "../index.js";
+import { logger, settingsButton } from "../index.js";
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"];
 const OptionToTimeRange = {
     "Past Month": SpotifyTimeRange.Short,
@@ -66,7 +65,7 @@ const LibraryPage = () => {
     const { genres, artists, albums, playlists, duration, releaseDates, tracks, audioFeatures } = data;
     const PageContainerProps = {
         title: "Library Analysis",
-        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "stats-app" })],
+        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), settingsButton],
     };
     const statCards = Object.entries(audioFeatures).map(([key, value]) => {
         return S.React.createElement(StatCard, { label: key, value: value });

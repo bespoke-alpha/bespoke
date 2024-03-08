@@ -23,4 +23,4 @@ registerTransform({
     },
     glob: /^\/xpui\.js/,
 });
-export const createProfileMenuShouldAdd = () => ({ trigger, target }) => trigger === "click" && target.parentElement?.classList.contains("rwdnt1SmeRC_lhLVfIzg");
+export const createProfileMenuShouldAdd = () => ({ trigger, target }) => trigger === "click" && target.parentElement?.classList.contains("main-topBar-topbarContentRight");

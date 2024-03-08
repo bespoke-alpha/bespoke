@@ -4,12 +4,11 @@ import useDropdown from "../components/dropdown/useDropdown.js";
 import SpotifyCard from "../components/shared/spotify_card.js";
 import PageContainer from "../components/shared/page_container.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
-import SettingsButton from "../components/buttons/settings_button.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
 import { spotifyApi } from "../../delulib/api.js";
 import { SpotifyTimeRange } from "../api/spotify.js";
 import { useStatus } from "../components/status/useStatus.js";
-import { logger } from "../index.js";
+import { logger, settingsButton } from "../index.js";
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"];
 const OptionToTimeRange = {
     "Past Month": SpotifyTimeRange.Short,
@@ -31,9 +30,9 @@ const ArtistsPage = () => {
     const topArtists = data.items;
     const PageContainerProps = {
         title: "Top Artists",
-        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "stats-app" })],
+        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), settingsButton],
     };
     return (S.React.createElement(PageContainer, { ...PageContainerProps },
-        S.React.createElement("div", { className: "iKwGKEfAfW7Rkx2_Ba4E grid" }, topArtists.map((artist, index) => (S.React.createElement(SpotifyCard, { type: "artist", uri: artist.uri, header: artist.name, subheader: `#${index + 1} Artist`, imageUrl: artist.images.at(-1)?.url ?? DEFAULT_TRACK_IMG }))))));
+        S.React.createElement("div", { className: "main-gridContainer-gridContainer grid" }, topArtists.map((artist, index) => (S.React.createElement(SpotifyCard, { type: "artist", uri: artist.uri, header: artist.name, subheader: `#${index + 1} Artist`, imageUrl: artist.images.at(-1)?.url ?? DEFAULT_TRACK_IMG }))))));
 };
 export default React.memo(ArtistsPage);

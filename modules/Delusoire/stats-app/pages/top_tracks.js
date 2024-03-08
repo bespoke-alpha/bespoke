@@ -4,11 +4,10 @@ import PageContainer from "../components/shared/page_container.js";
 import useDropdown from "../components/dropdown/useDropdown.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
 import RefreshButton from "../components/buttons/refresh_button.js";
-import SettingsButton from "../components/buttons/settings_button.js";
 import { spotifyApi } from "../../delulib/api.js";
 import { SpotifyTimeRange } from "../api/spotify.js";
 import { useStatus } from "../components/status/useStatus.js";
-import { logger } from "../index.js";
+import { logger, settingsButton } from "../index.js";
 const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"];
 const OptionToTimeRange = {
     "Past Month": SpotifyTimeRange.Short,
@@ -34,7 +33,7 @@ const TracksPage = () => {
     const topTracks = data.items;
     const pageContainerProps = {
         title: "Top Tracks",
-        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), S.React.createElement(SettingsButton, { section: "stats-app" })],
+        headerEls: [dropdown, S.React.createElement(RefreshButton, { refresh: refetch }), settingsButton],
         infoToCreatePlaylist: {
             playlistName: `Top Songs - ${activeOption}`,
             itemsUris: topTracks.map(track => track.uri),

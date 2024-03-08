@@ -1,4 +1,5 @@
-const { stdout } = Bun.spawn(["tsc.cmd", "--noResolve", "--watch", "--listEmittedFiles"]);
+const dir = Bun.argv[2] ?? ".";
+const { stdout } = Bun.spawn(["tsc.cmd", "--noResolve", "--watch", "--listEmittedFiles", "--explainFiles", "--project", dir]);
 const reader = stdout.getReader();
 const decoder = new TextDecoder();
 

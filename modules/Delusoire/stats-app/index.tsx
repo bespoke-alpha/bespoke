@@ -3,7 +3,7 @@ import { createSettings } from "/modules/Delusoire/std/api/settings.js";
 
 import { NavLink } from "/modules/Delusoire/std/registers/navlink.js";
 import { ACTIVE_ICON, ICON } from "./static.js";
-import { Module } from "/hooks/module.js";
+import type { Module } from "/hooks/module.js";
 
 import PlaylistPage from "./pages/playlist.js";
 import { onHistoryChanged } from "/modules/Delusoire/delulib/listeners.js";
