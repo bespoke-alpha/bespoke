@@ -10,7 +10,7 @@ import (
 )
 
 func GetPlatformDefaultSpotifyPath() string {
-	return "/opt/spotify/"
+	return "/opt/spotify/" // aur
 }
 
 func GetSpotifyExecPath(spotifyPath string) string {

@@ -4,7 +4,6 @@ Copyright © 2024 Delusoire <deluso7re@outlook.com>
 package paths
 
 import (
-	"os/exec"
 	"path/filepath"
 
 	"github.com/adrg/xdg"
@@ -15,14 +14,6 @@ var (
 )
 
 func GetSpotifyPath() string {
-	spotifyExecPath, err := exec.LookPath("spotify")
-	if err == nil {
-		spotifyExecPath, err = filepath.EvalSymlinks(spotifyExecPath)
-		if err == nil {
-			return filepath.Dir(spotifyExecPath)
-		}
-	}
-
 	return GetPlatformDefaultSpotifyPath()
 }
 
