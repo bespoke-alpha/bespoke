@@ -1,5 +1,5 @@
 const dir = Bun.argv[2] ?? ".";
-const { stdout } = Bun.spawn(["tsc.cmd", "--noResolve", "--watch", "--listEmittedFiles", "--explainFiles", "--project", dir]);
+const { stdout } = Bun.spawn(["tsc.cmd", "--noResolve", "--watch", "--listEmittedFiles", "--project", dir]);
 const reader = stdout.getReader();
 const decoder = new TextDecoder();
 
@@ -17,7 +17,7 @@ while (true) {
 			const match = cleanLine.match(/^TSFILE: (.*)/);
 			if (!match) continue;
 			const relfilepath = path.relative(process.cwd(), match[1]);
-			await applyCssMapPerFile(relfilepath);
+			// await applyCssMapPerFile(relfilepath);
 			sendReloadDocument();
 		}
 	}
