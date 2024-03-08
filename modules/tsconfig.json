@@ -5,5 +5,5 @@
         "declarationDir": "./types/",
         "resolveJsonModule": false
     },
-    "exclude": ["node_modules/"]
+    "exclude": ["./types/"]
 }

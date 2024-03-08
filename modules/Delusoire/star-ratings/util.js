@@ -1,10 +1,10 @@
 import { fetchFolder, fetchPlaylistContents } from "/modules/Delusoire/delulib/platformApi.js";
 import { REACT_PROPS } from "/modules/Delusoire/delulib/util.js";
 import { CONFIG } from "./settings.js";
-export const getTrackLists = () => Array.from(document.querySelectorAll(".main-trackList-trackList.main-trackList-indexable"));
-export const getTrackListTracks = (trackList) => Array.from(trackList.querySelectorAll(".main-trackList-trackListRow"));
+export const getTrackLists = () => Array.from(document.querySelectorAll(".ShMHCGsT93epRGdxJp2w.Ss6hr6HYpN4wjHJ9GHmi"));
+export const getTrackListTracks = (trackList) => Array.from(trackList.querySelectorAll(".h4HgbO_Uu1JYg5UGANeQ"));
 export const getTrackListTrackUri = (track) => {
-    const rowSectionEnd = track.querySelector(".main-trackList-rowSectionEnd");
+    const rowSectionEnd = track.querySelector(".HcMOFLaukKJdK5LfdHh0");
     const reactProps = rowSectionEnd[REACT_PROPS];
     const { props } = 
     // artist & local tracks & albums
@@ -13,8 +13,8 @@ export const getTrackListTrackUri = (track) => {
         reactProps.children.props.children.at(-1).props.menu;
     return props.uri;
 };
-export const getNowPlayingBar = () => document.querySelector("div.main-nowPlayingBar-nowPlayingBar");
-export const getCollectionActionBarRow = () => document.querySelector("div.main-actionBar-ActionBarRow");
+export const getNowPlayingBar = () => document.querySelector("div.OCY4jHBlCVZEyGvtSv0J");
+export const getCollectionActionBarRow = () => document.querySelector("div.eSg4ntPU2KQLfpLGXAww");
 export const playlistButtonSelector = `button[aria-label="Add to Liked Songs"], button[aria-label="Add to playlist"], button[aria-label="Remove recommendation"]`;
 export const getPlaylistButton = (parent) => parent.querySelector(playlistButtonSelector);
 export const getCollectionPlaylistButton = () => {

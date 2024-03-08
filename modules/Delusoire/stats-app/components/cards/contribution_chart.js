@@ -13,7 +13,7 @@ const ContributionChart = ({ contributions }) => {
     const sortedTopGenres = Object.entries(contributions)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10);
-    return (S.React.createElement("div", { className: "main-card-card stats-genreCard" }, sortedTopGenres.map(([genre, value]) => {
+    return (S.React.createElement("div", { className: "LunqxlFIupJw_Dkx6mNx stats-genreCard" }, sortedTopGenres.map(([genre, value]) => {
         return ContributionLine(genre, value, sortedTopGenres[0][1], genresTotal);
     })));
 };

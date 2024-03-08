@@ -23,7 +23,7 @@ nowPlayingGenreContainerEl.fetchGenres = fetchLastFMTagsForNowPlayingTrack;
 nowPlayingGenreContainerEl.className += " ellipsis-one-line main-type-finale";
 nowPlayingGenreContainerEl.style.gridArea = "genres";
 (async () => {
-    const trackInfoContainer = await waitForElement("div.main-trackInfo-container");
+    const trackInfoContainer = await waitForElement("div.ZcNcu7WZgOAz_Mkcoff3");
     trackInfoContainer.appendChild(nowPlayingGenreContainerEl);
 })();
 Events.Player.songchanged.on(state => {
@@ -51,9 +51,9 @@ const updateArtistPage = async (uri) => {
     artistGenreContainerEl.name = "Artist Genres";
     artistGenreContainerEl.uri = uri.toString();
     artistGenreContainerEl.fetchGenres = uri => getArtistsGenresOrRelated([uri]);
-    const lastHeaderTextEl = document.querySelector("div.main-entityHeader-headerText");
-    const headerTextEl = await waitForElement("div.main-entityHeader-headerText", undefined, undefined, lastHeaderTextEl);
-    const headerTextDetailsEl = await waitForElement("span.main-entityHeader-detailsText");
+    const lastHeaderTextEl = document.querySelector("div.RP2rRchy4i8TIp1CTmb7");
+    const headerTextEl = await waitForElement("div.RP2rRchy4i8TIp1CTmb7", undefined, undefined, lastHeaderTextEl);
+    const headerTextDetailsEl = await waitForElement("span.Ydwa1P5GkCggtLlSvphs");
     headerTextEl.insertBefore(artistGenreContainerEl, headerTextDetailsEl);
 };
 onHistoryChanged(uri => URI.is.Artist(uri), updateArtistPage);

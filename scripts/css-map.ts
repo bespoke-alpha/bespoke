@@ -6,7 +6,7 @@ import cssMap from "./css-map.json";
 
 const boundary = "([^\\w\\-])";
 export async function applyCssMapPerFile(file: string) {
-	console.log("OVERWRITING:", file);
+	console.log("REMAPPING:", file);
 	let content = (await fs.readFile(file)).toString();
 	for (const [v, k] of Object.entries(cssMap)) {
 		content = content.replaceAll(new RegExp(boundary + escRegex(k) + boundary, "g"), `$1${v}$2`);
@@ -28,4 +28,4 @@ async function applyCssMapPerDir(dir: string) {
 	applyCssMapPerFiles(allCSS);
 }
 
-await applyCssMapPerDir(".");
+// await applyCssMapPerDir(".");

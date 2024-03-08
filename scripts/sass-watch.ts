@@ -6,17 +6,25 @@ const decoder = new TextDecoder();
 import { applyCssMapPerFile } from "./css-map";
 import { sendReloadDocument } from "./devtools-ws";
 
+let lineBuffer = "";
 while (true) {
 	const { done, value } = await reader.read();
 	{
-		const lines = decoder.decode(value).split("\n");
-		for await (const line of lines) {
-			const cleanLine = line.replace(/[^ -~]+/g, "");
-			const match = cleanLine.match(/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}\] .* to (.*)\./);
-			if (!match) continue;
-			const relfilepath = match[1];
-			await applyCssMapPerFile(relfilepath);
-			sendReloadDocument();
+		const buffer = decoder.decode(value).replace(/[^ -~\n]+/g, "");
+
+		for (const char of buffer) {
+			if (char === "\n") {
+				const line = lineBuffer;
+				lineBuffer = "";
+				const match = line.match(/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}\] .* to (?<file>.*)\./);
+				if (!match) continue;
+				const relfilepath = match.groups.file;
+				await applyCssMapPerFile(relfilepath);
+				sendReloadDocument();
+				continue;
+			}
+
+			lineBuffer += char;
 		}
 	}
 	if (done) break;
