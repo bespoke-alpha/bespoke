@@ -18,7 +18,7 @@ import { logger } from "../index.js";
 const PlaylistAPI = S.Platform.getPlaylistAPI();
 
 export const fetchAudioFeaturesMeta = async (ids: string[]) => {
-	const featureList = {
+	const audioFeaturesLists = {
 		danceability: new Array<number>(),
 		energy: new Array<number>(),
 		key: new Array<number>(),
@@ -32,17 +32,17 @@ export const fetchAudioFeaturesMeta = async (ids: string[]) => {
 		tempo: new Array<number>(),
 		time_signature: new Array<number>(),
 	};
-	const audioFeaturess = await chunkify50(chunk => spotifyApi.tracks.audioFeatures(chunk))(ids);
+	const audioFeaturesList = await chunkify50(chunk => spotifyApi.tracks.audioFeatures(chunk))(ids);
 
-	for (const audioFeatures of audioFeaturess) {
+	for (const audioFeatures of audioFeaturesList) {
 		// ? some songs don't have audioFeatures
 		if (!audioFeatures) continue;
-		for (const f of Object.keys(featureList)) {
-			featureList[f].push(audioFeatures[f]);
+		for (const f of Object.keys(audioFeaturesLists)) {
+			audioFeaturesLists[f].push(audioFeatures[f]);
 		}
 	}
 
-	return _.mapValues(featureList, fp.mean);
+	return _.mapValues(audioFeaturesLists, fp.mean);
 };
 
 export const calculateGenresFromArtists = (artists: Artist[], getArtistMultiplicity: (index: number) => number) => {
