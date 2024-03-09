@@ -7,7 +7,6 @@ import (
 	"bespoke/paths"
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
@@ -36,16 +35,6 @@ func execSync() {
 		if err != nil {
 			log.Fatalln(err.Error())
 		}
-	}
-
-	if modules {
-		modulesPath := filepath.Join(paths.ConfigPath, "modules")
-		filepath.Walk(modulesPath, func(path string, info os.FileInfo, err error) error {
-			if info.IsDir() {
-				pull(path)
-			}
-			return nil
-		})
 	}
 }
 

@@ -79,7 +79,7 @@ var modulesFolder = filepath.Join(paths.ConfigPath, "modules")
 
 var vaultPath = filepath.Join(modulesFolder, "vault.json")
 
-func parseVault() (Vault, error) {
+func GetVault() (Vault, error) {
 	file, err := os.Open(vaultPath)
 	if err != nil {
 		return Vault{}, err
@@ -89,17 +89,6 @@ func parseVault() (Vault, error) {
 	var vault Vault
 	err = json.NewDecoder(file).Decode(&vault)
 	return vault, err
-}
-
-var vault *Vault
-
-func GetVault() (Vault, error) {
-	if vault != nil {
-		return *vault, nil
-	}
-	_vault, err := parseVault()
-	vault = &_vault
-	return _vault, err
 }
 
 func parseMetadata(r io.Reader) (Metadata, error) {
