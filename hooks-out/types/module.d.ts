@@ -42,8 +42,8 @@ export declare class Module {
     private loadJS;
     private loadCSS;
     static fromVault({ enabled, metadata: metadataURL, remoteMetadata: remoteMetadataURL }: VaultModule): Promise<Module>;
-    private getAuthor;
-    private getName;
+    getAuthor(): string;
+    getName(): string;
     getLocalMeta(): string;
     getIdentifier(): string;
     enable(send?: boolean): void;

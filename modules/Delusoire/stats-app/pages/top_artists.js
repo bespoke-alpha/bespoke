@@ -1,6 +1,5 @@
 import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
-import useDropdown from "../components/dropdown/useDropdown.js";
 import SpotifyCard from "../components/shared/spotify_card.js";
 import PageContainer from "../components/shared/page_container.js";
 import { DEFAULT_TRACK_IMG } from "../static.js";
@@ -8,8 +7,9 @@ import RefreshButton from "../components/buttons/refresh_button.js";
 import { spotifyApi } from "../../delulib/api.js";
 import { SpotifyTimeRange } from "../api/spotify.js";
 import { useStatus } from "../components/status/useStatus.js";
-import { logger, settingsButton } from "../index.js";
-const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"];
+import { logger, settingsButton, storage } from "../index.js";
+import { useDropdown } from "../../std/api/components/index.js";
+const DropdownOptions = { "Past Month": "Past Month", "Past 6 Months": "Past 6 Months", "All Time": "All Time" };
 const OptionToTimeRange = {
     "Past Month": SpotifyTimeRange.Short,
     "Past 6 Months": SpotifyTimeRange.Medium,
@@ -17,7 +17,7 @@ const OptionToTimeRange = {
 };
 export const fetchTopArtists = (timeRange) => spotifyApi.currentUser.topItems("artists", timeRange, 50, 0);
 const ArtistsPage = () => {
-    const [dropdown, activeOption] = useDropdown(DropdownOptions, "top-artists");
+    const [dropdown, activeOption] = useDropdown({ options: DropdownOptions, storage, storageVariable: "top-artists" });
     const timeRange = OptionToTimeRange[activeOption];
     const { status, error, data, refetch } = S.ReactQuery.useQuery({
         queryKey: ["topArtists", timeRange],
