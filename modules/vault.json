@@ -26,7 +26,8 @@
 		},
 		"Delusoire/search-on-youtube": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/search-on-youtube/metadata.json"
+			"metadata": "/modules/Delusoire/search-on-youtube/metadata.json",
+			"remoteMetadata": "https://raw.githubusercontent.com/Delusoire/bespoke/main/modules/Delusoire/search-on-youtube/metadata.json"
 		},
 		"Delusoire/stats-app": {
 			"enabled": true,
