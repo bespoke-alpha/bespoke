@@ -30,7 +30,7 @@ var rootCmd = &cobra.Command{
 	Short: "Make Spotify your own",
 	Long:  `Bespoke is a CLI utility that empowers the desktop Spotify client with custom themes and extensions`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if autoUpdate {
+		if _, err := os.Stat(paths.ConfigPath); err != nil || autoUpdate {
 			execSync()
 		}
 		execInit()
@@ -46,7 +46,7 @@ func isRanAsSpotify() bool {
 		log.Fatalln(err.Error())
 	}
 	execName := strings.ToLower(filepath.Base(execPath))
-	return strings.HasPrefix(execName, "spotify")
+	return strings.HasPrefix(strings.ToLower(execName), "spotify")
 }
 
 func Execute() {
