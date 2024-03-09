@@ -1,5 +1,6 @@
-import { createIconComponent } from "/modules/Delusoire/std/api/createIconComponent.js";
-import { S, SVGIcons } from "/modules/Delusoire/std/index.js";
+import { createIconComponent } from "../createIconComponent.js";
+import { S } from "../../index.js";
+import { SVGIcons } from "../../static.js";
 
 const CheckIcon = () =>
 	createIconComponent({
@@ -9,11 +10,10 @@ const CheckIcon = () =>
 interface MenuItemProps {
 	option: string;
 	isActive: boolean;
-	switchCallback: (option: string) => void;
+	onSwitch: (option: string) => void;
+	children: React.ReactNode;
 }
-const DropdownMenuItem = (props: MenuItemProps) => {
-	const { option, isActive, switchCallback } = props;
-
+const DropdownMenuItem = ({ option, isActive, onSwitch, children }: MenuItemProps) => {
 	const activeStyle = {
 		backgroundColor: "rgba(var(--spice-rgb-selected-row),.1)",
 	};
@@ -21,30 +21,33 @@ const DropdownMenuItem = (props: MenuItemProps) => {
 	return (
 		<S.ReactComponents.MenuItem
 			trigger="click"
-			onClick={() => switchCallback(option)}
+			onClick={() => onSwitch(option)}
 			data-checked={isActive}
 			trailingIcon={isActive ? <CheckIcon /> : undefined}
 			style={isActive ? activeStyle : undefined}
 		>
-			{option}
+			{children}
 		</S.ReactComponents.MenuItem>
 	);
 };
 
-interface DropdownMenuProps<O extends string[]> {
+export type DropdownOptions = Record<string, React.ReactNode>;
+
+interface DropdownMenuProps<O extends DropdownOptions> {
 	options: O;
-	activeOption: O[number];
-	switchCallback: (option: O[number]) => void;
+	activeOption: keyof O;
+	onSwitch: (option: keyof O) => void;
 }
-const Dropdown = <O extends readonly string[]>(props: DropdownMenuProps<O>) => {
+export default function <O extends DropdownOptions>({ options, activeOption, onSwitch }: DropdownMenuProps<O>) {
 	const { ContextMenu, Menu, TextComponent } = S.ReactComponents;
-	const { options, activeOption, switchCallback } = props;
 
 	const DropdownMenu = props => {
 		return (
 			<Menu {...props}>
-				{options.map(option => (
-					<DropdownMenuItem option={option} isActive={option === activeOption} switchCallback={switchCallback} />
+				{Object.entries(options).map(([option, children]) => (
+					<DropdownMenuItem option={option} isActive={option === activeOption} onSwitch={onSwitch}>
+						{children}
+					</DropdownMenuItem>
 				))}
 			</Menu>
 		);
@@ -70,6 +73,4 @@ const Dropdown = <O extends readonly string[]>(props: DropdownMenuProps<O>) => {
 			</button>
 		</ContextMenu>
 	);
-};
-
-export default Dropdown;
+}

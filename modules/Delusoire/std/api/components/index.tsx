@@ -1,7 +1,6 @@
 import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
-import Dropdown from "./Dropdown.js";
-import { storage } from "../../index.js";
+import Dropdown, { type DropdownOptions } from "./Dropdown.js";
 
 // * Who doesn't love some Fixed Point (Functional) Programming?
 const Bluebird =
@@ -44,12 +43,25 @@ const usePersistedState =
 
 const createPersistedState = Bluebird(usePersistedState)(createStorage);
 
-const useDropdown = <O extends readonly string[]>(options: O, storageVariable: string) => {
-	const [activeOption, setActiveOption] = createPersistedState(storage)(`drop-down:${storageVariable}`)<O[number]>(() => options[0]);
+interface UseDropdownOpts<O extends DropdownOptions> {
+	options: O;
+	storage?: Storage;
+	storageVariable?: string;
+}
 
-	const dropdown = <Dropdown options={options} activeOption={activeOption} switchCallback={o => setActiveOption(() => o)} />;
+export const useDropdown = <O extends DropdownOptions>({ options, storage, storageVariable }: UseDropdownOpts<O>) => {
+	// We do this because we don't want the variable to change
+	const [initialStorageVariable] = React.useState(storageVariable);
+	const getDefaultOption = () => Object.keys(options)[0];
+	let activeOption: keyof typeof options;
+	let setActiveOption: (reducer: (state: keyof typeof options) => keyof typeof options) => void;
+	if (storage && initialStorageVariable) {
+		[activeOption, setActiveOption] = createPersistedState(storage)(`drop-down:${initialStorageVariable}`)<keyof typeof options>(getDefaultOption);
+	} else {
+		[activeOption, setActiveOption] = React.useState(getDefaultOption);
+	}
+
+	const dropdown = <Dropdown options={options} activeOption={activeOption} onSwitch={o => setActiveOption(() => o)} />;
 
 	return [dropdown, activeOption, setActiveOption] as const;
 };
-
-export default useDropdown;

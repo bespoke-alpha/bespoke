@@ -172,11 +172,11 @@ export class Module {
 		return new Module(metadata, metadataURL, remoteMetadataURL, enabled);
 	}
 
-	private getAuthor() {
+	getAuthor() {
 		return this.metadata.authors[0];
 	}
 
-	private getName() {
+	getName() {
 		return this.metadata.name;
 	}
 

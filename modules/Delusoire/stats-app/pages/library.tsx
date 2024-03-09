@@ -1,7 +1,6 @@
 import { S } from "/modules/Delusoire/std/index.js";
 const { React } = S;
 
-import useDropdown from "../components/dropdown/useDropdown.js";
 import StatCard from "../components/cards/stat_card.js";
 import ContributionChart from "../components/cards/contribution_chart.js";
 import SpotifyCard from "../components/shared/spotify_card.js";
@@ -17,9 +16,10 @@ import { fetchAlbumsMeta, fetchArtistsMeta, fetchAudioFeaturesMeta } from "./pla
 import { calculateTracksMeta } from "./top_genres.js";
 import { getURI, toID } from "../util/parse.js";
 import { useStatus } from "../components/status/useStatus.js";
-import { logger, settingsButton } from "../index.js";
+import { logger, settingsButton, storage } from "../index.js";
+import { useDropdown } from "../../std/api/components/index.js";
 
-const DropdownOptions = ["Past Month", "Past 6 Months", "All Time"] as const;
+const DropdownOptions = { "Past Month": "Past Month", "Past 6 Months": "Past 6 Months", "All Time": "All Time" } as const;
 const OptionToTimeRange = {
 	"Past Month": SpotifyTimeRange.Short,
 	"Past 6 Months": SpotifyTimeRange.Medium,
@@ -27,7 +27,7 @@ const OptionToTimeRange = {
 } as const;
 
 const LibraryPage = () => {
-	const [dropdown, activeOption] = useDropdown(DropdownOptions, "top-genres");
+	const [dropdown, activeOption] = useDropdown({ options: DropdownOptions, storage, storageVariable: "top-genres" });
 	const timeRange = OptionToTimeRange[activeOption];
 
 	const { error, data, refetch, status } = S.ReactQuery.useQuery({
