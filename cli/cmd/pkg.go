@@ -41,8 +41,32 @@ var remCmd = &cobra.Command{
 	},
 }
 
+var enableCmd = &cobra.Command{
+	Use:   "enable [id]",
+	Short: "Enable installed module",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		identifier := args[0]
+		if err := module.ToggleModule(identifier, true); err != nil {
+			log.Fatalln(err.Error())
+		}
+	},
+}
+
+var disableCmd = &cobra.Command{
+	Use:   "disable [id]",
+	Short: "Disable installed module",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		identifier := args[0]
+		if err := module.ToggleModule(identifier, false); err != nil {
+			log.Fatalln(err.Error())
+		}
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(pkgCmd)
 
-	pkgCmd.AddCommand(addCmd, remCmd)
+	pkgCmd.AddCommand(addCmd, remCmd, enableCmd, disableCmd)
 }
