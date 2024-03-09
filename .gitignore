@@ -11,6 +11,4 @@ apps/
 #modules/vault.json
 modules/types/
 
-modules/bespoke-modules/
-
 *.tsbuildinfo
