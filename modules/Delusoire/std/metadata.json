@@ -1,7 +1,7 @@
 {
 	"name": "std",
 	"tags": ["lib"],
-	"preview": "./assets/PREVIEW.md",
+	"preview": "./assets/PREVIEW.png",
 	"version": "beta",
 	"authors": ["Delusoire"],
 	"description": "The standard library",
