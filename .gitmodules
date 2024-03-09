@@ -1,0 +1,3 @@
+[submodule "modules/Delusoire"]
+	path = modules/Delusoire
+	url = https://github.com/Delusoire/bespoke-modules

@@ -8,8 +8,6 @@ config.yaml
 cli/bespoke*
 
 apps/
-modules/
-!modules/vault.json
-!modules/tsconfig.json
+modules/types/
 
 *.tsbuildinfo
