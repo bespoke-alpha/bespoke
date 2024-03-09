@@ -26,7 +26,8 @@ func prepend[Type any](slice []Type, elems ...Type) []Type {
 }
 
 func execRun(args []string) {
-	args = prepend(args, "" /*"--disable-web-security"*/)
+	defaultArgs := []string{ /*"--disable-web-security",*/ }
+	args = prepend(args, defaultArgs...)
 	var execPath string
 	if mirror {
 		execPath = filepath.Join(xdg.ConfigHome, "Microsoft", "WindowsApps", "Spotify.exe")
