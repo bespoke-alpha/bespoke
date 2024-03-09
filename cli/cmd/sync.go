@@ -28,9 +28,14 @@ func execSync() {
 	if err := pull(paths.ConfigPath); err != nil {
 		log.Println("Cloning remote bespoke repo to", paths.ConfigPath)
 		_, err = git.PlainClone(paths.ConfigPath, false, &git.CloneOptions{
-			URL:      "https://github.com/Delusoire/bespoke",
-			Progress: os.Stdout,
-			Depth:    1,
+			URL:               "https://github.com/Delusoire/bespoke",
+			RemoteName:        "origin",
+			ReferenceName:     "HEAD",
+			SingleBranch:      true,
+			NoCheckout:        false,
+			Depth:             1,
+			RecurseSubmodules: 10,
+			Progress:          os.Stdout,
 		})
 		if err != nil {
 			log.Fatalln(err.Error())
