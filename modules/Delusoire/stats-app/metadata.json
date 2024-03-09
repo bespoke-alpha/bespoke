@@ -1,11 +1,11 @@
 {
 	"name": "stats-app",
-	"tags": [],
-	"preview": "",
+	"tags": ["stats"],
+	"preview": "./assets/PREVIEW.png",
 	"version": "",
 	"authors": ["Delusoire", "harbassan"],
-	"description": "",
-	"readme": "",
+	"description": "See your top artists, tracks, genres and an analysis of your music library.",
+	"readme": "./assets/README.md",
 	"entries": {
 		"js": "index.js",
 		"css": "index.css",

@@ -1,5 +1,4 @@
-import { settings } from ".";
-import { Settings } from "/modules/Delusoire/std/api/settings.js";
+import { settings } from "./index.js";
 
 export const CONFIG = settings
 	.addInput(

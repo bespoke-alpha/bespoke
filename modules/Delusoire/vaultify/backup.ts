@@ -81,7 +81,7 @@ export const getSettings = async () => {
 	} as SettingBackup;
 };
 
-export const getLocalStorage = () => Object.entries(localStorage).filter(([key]) => key.startsWith("module:"));
+export const getLocalStorage = () => Object.entries(localStorage).filter(([key]) => key.startsWith("settings:"));
 
 export const getLocalStoreAPI = () => {
 	return Object.entries(LocalStorageAPI.items)

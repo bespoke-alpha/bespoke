@@ -1,4 +1,4 @@
-import { settings } from ".";
+import { settings } from "./index.js";
 export const CONFIG = settings
     .addInput({
     id: "LFMApiKey",

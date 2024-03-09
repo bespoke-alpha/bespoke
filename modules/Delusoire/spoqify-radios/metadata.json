@@ -1,11 +1,11 @@
 {
 	"name": "spoqify-radios",
-	"tags": [],
-	"preview": "",
-	"version": "",
+	"tags": ["radio", "spoqify"],
+	"preview": "./assets/PREVIEW.png",
+	"version": "beta",
 	"authors": ["Delusoire"],
-	"description": "",
-	"readme": "",
+	"description": "Create anonymized radio-playlists for your favorite songs, playlists, artists and albums.",
+	"readme": "./assets/README.md",
 	"entries": {
 		"js": "index.js",
 		"css": false,

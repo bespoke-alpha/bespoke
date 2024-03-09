@@ -7,6 +7,7 @@ import { parseAlbumTrack, parseArtistLikedTrack, parseLibraryAPILikedTracks, par
 import { fetchArtistLikedTracks, fetchLikedTracks, fetchPlaylistContents } from "/modules/Delusoire/delulib/platformApi.js";
 import { CONFIG } from "./settings.js";
 import { S } from "/modules/Delusoire/std/index.js";
+import { URI_is_LikedTracks } from "./util.js";
 const { URI } = S;
 export const getTracksFromAlbum = async (uri) => {
     const albumRes = await fetchAlbum(uri);
@@ -51,3 +52,9 @@ export const getTracksFromArtist = async (uri) => {
     allTracks.push(...albumsTracks.flat(), ...appearsOnTracks.flat().filter(track => track.artistUris.includes(uri)));
     return await Promise.all(allTracks);
 };
+export const getTracksFromUri = _.cond([
+    [URI.is.Album, getTracksFromAlbum],
+    [URI.is.Artist, getTracksFromArtist],
+    [URI_is_LikedTracks, getLikedTracks],
+    [URI.is.PlaylistV1OrV2, getTracksFromPlaylist],
+]);

@@ -1,5 +1,5 @@
 import { _, fp } from "/modules/Delusoire/std/deps.js";
-import { getTracksFromUri } from "../sort-plus/util.js";
+import { getTracksFromUri } from "../sort-plus/fetch.js";
 import { Dropdown } from "./dropdown.js";
 import { getCollectionPlaylistButton, getNowPlayingBar, getPlaylistButton, getTrackListTrackUri, getTrackListTracks, getTrackLists } from "./util.js";
 import { S } from "/modules/Delusoire/std/index.js";

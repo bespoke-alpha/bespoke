@@ -1,11 +1,11 @@
 {
 	"name": "library-db",
-	"tags": [],
-	"preview": "",
-	"version": "",
+	"tags": ["lib"],
+	"preview": "./assets/PREVIEW.png",
+	"version": "beta",
 	"authors": ["Delusoire"],
-	"description": "",
-	"readme": "",
+	"description": "Provides metadata about your Spotify library to other modules.",
+	"readme": "./assets/README.md",
 	"entries": {
 		"js": false,
 		"css": false,

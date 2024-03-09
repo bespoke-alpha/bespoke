@@ -3,7 +3,7 @@ import { _ } from "/modules/Delusoire/std/deps.js";
 import { onTrackListMutationListeners } from "/modules/Delusoire/delulib/listeners.js";
 import { useLivePlaylistItems } from "../library-db/listeners.js";
 import { createIconComponent } from "/modules/Delusoire/std/api/createIconComponent.js";
-import { useLiveQuery } from "/modules/Delusoire/dexie-react-query/index.js";
+import { useLiveQuery } from "/modules/Delusoire/dexie-react-hooks/index.js";
 import { db } from "../library-db/db.js";
 
 const { ReactDOM, URI } = S;

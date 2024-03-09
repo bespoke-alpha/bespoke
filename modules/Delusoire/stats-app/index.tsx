@@ -59,5 +59,5 @@ export default function (mod: Module) {
 	const LazyStatsApp = S.React.lazy(() => import("./app.js"));
 	registrar.register("route", <S.ReactComponents.Route path={"/stats/*"} element={<LazyStatsApp />} />);
 
-	registrar.register("navlink", () => <NavLink localizedApp="stats-app" appRoutePath="/stats" icon={ICON} activeIcon={ACTIVE_ICON} />);
+	registrar.register("navlink", () => <NavLink localizedApp="Statistics" appRoutePath="/stats" icon={ICON} activeIcon={ACTIVE_ICON} />);
 }

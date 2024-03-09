@@ -1,11 +1,12 @@
-import { TrackData } from "/modules/Delusoire/delulib/parse.js";
+import type { TrackData } from "/modules/Delusoire/delulib/parse.js";
 import { setQueue as _setQueue, createQueueItem } from "/modules/Delusoire/delulib/util.js";
 import { _, fp } from "/modules/Delusoire/std/deps.js";
 import { S } from "/modules/Delusoire/std/index.js";
 
 import { fillTracksFromLastFM, fillTracksFromSpotify } from "./populate.js";
 import { CONFIG } from "./settings.js";
-import { AsyncTracksOperation, SEPARATOR_URI, SortAction, SortActionIcon, SortActionProp, URI_is_LikedTracks, getTracksFromUri } from "./util.js";
+import { type AsyncTracksOperation, SEPARATOR_URI, SortAction, SortActionIcon, SortActionProp, URI_is_LikedTracks } from "./util.js";
+import { getTracksFromUri } from "./fetch.js";
 import { SVGIcons } from "/modules/Delusoire/std/index.js";
 
 export * from "./playlistsInterop.js";

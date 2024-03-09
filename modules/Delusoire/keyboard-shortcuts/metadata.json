@@ -1,11 +1,11 @@
 {
 	"name": "keyboard-shortcuts",
-	"tags": [],
-	"preview": "",
-	"version": "",
+	"tags": ["keybinds", "vim"],
+	"preview": "./assets/PREVIEW.png",
+	"version": "beta",
 	"authors": ["Delusoire"],
-	"description": "",
-	"readme": "",
+	"description": "Vim-like keyboard shortcuts for spotify. Now with sneak mode.",
+	"readme": "./assets/README.md",
 	"entries": {
 		"js": "index.js",
 		"css": false,

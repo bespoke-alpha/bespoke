@@ -1,11 +1,11 @@
 {
 	"name": "std",
 	"tags": ["lib"],
-	"preview": "",
-	"version": "",
+	"preview": "./assets/PREVIEW.md",
+	"version": "beta",
 	"authors": ["Delusoire"],
-	"description": "",
-	"readme": "",
+	"description": "The standard library",
+	"readme": "./assets/README.md",
 	"entries": {
 		"js": "index.js",
 		"css": false,

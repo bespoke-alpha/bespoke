@@ -1,11 +1,11 @@
 {
 	"name": "filter-duplicates",
 	"tags": [],
-	"preview": "",
-	"version": "",
+	"preview": "./assets/PREVIEW.png",
+	"version": "prototype",
 	"authors": ["Delusoire"],
 	"description": "",
-	"readme": "",
+	"readme": "./assets/README.md",
 	"entries": {
 		"js": false,
 		"css": false,

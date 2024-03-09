@@ -1,11 +1,11 @@
 {
 	"name": "delulib",
 	"tags": ["lib"],
-	"preview": "",
-	"version": "",
+	"preview": "./assets/PREVIEW.png",
+	"version": "beta",
 	"authors": ["Delusoire"],
-	"description": "",
-	"readme": "",
+	"description": "Required by other modules",
+	"readme": "./assets/README.md",
 	"entries": {
 		"js": false,
 		"css": false,

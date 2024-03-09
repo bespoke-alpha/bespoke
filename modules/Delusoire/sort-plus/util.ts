@@ -1,10 +1,9 @@
 import { _, fp } from "/modules/Delusoire/std/deps.js";
 import { S } from "/modules/Delusoire/std/index.js";
 import { spotifyApi } from "/modules/Delusoire/delulib/api.js";
-import { TrackData } from "/modules/Delusoire/delulib/parse.js";
+import type { TrackData } from "/modules/Delusoire/delulib/parse.js";
 
-import { getLikedTracks, getTracksFromAlbum, getTracksFromArtist, getTracksFromPlaylist } from "./fetch.js";
-import { URIClass } from "/modules/Delusoire/std/expose/webpack.js";
+import type { URIClass } from "/modules/Delusoire/std/expose/webpack.js";
 
 const { URI } = S;
 
@@ -81,10 +80,3 @@ export const getNameFromUri = async (uri: URIClass<any>) => {
 		}
 	}
 };
-
-export const getTracksFromUri = _.cond([
-	[URI.is.Album, getTracksFromAlbum],
-	[URI.is.Artist, getTracksFromArtist],
-	[URI_is_LikedTracks, getLikedTracks],
-	[URI.is.PlaylistV1OrV2, getTracksFromPlaylist],
-]);

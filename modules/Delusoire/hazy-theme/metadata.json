@@ -1,11 +1,11 @@
 {
 	"name": "hazy-theme",
-	"tags": [],
-	"preview": "",
-	"version": "",
+	"tags": ["theme"],
+	"preview": "./assets/PREVIEW.png",
+	"version": "https://github.com/Astromations/Hazy/commit/fa443999da80ba2ee1faf7038de1a16596dacbe9",
 	"authors": ["Delusoire", "Astromations"],
-	"description": "",
-	"readme": "",
+	"description": "The Hazy theme from spicetify",
+	"readme": "./assets/README.md",
 	"entries": {
 		"js": "index.js",
 		"css": "index.css",

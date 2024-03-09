@@ -1,11 +1,11 @@
 import { fetchAlbum } from "/modules/Delusoire/delulib/GraphQL/fetchAlbum.js";
 import { fetchArtistDiscography } from "/modules/Delusoire/delulib/GraphQL/fetchArtistDiscography.js";
 import { fetchArtistOverview } from "/modules/Delusoire/delulib/GraphQL/fetchArtistOveriew.js";
-import { ItemMin, ItemsReleases, ItemsReleasesWithCount, ItemsWithCount } from "/modules/Delusoire/delulib/GraphQL/sharedTypes.js";
+import type { ItemMin, ItemsReleases, ItemsReleasesWithCount, ItemsWithCount } from "/modules/Delusoire/delulib/GraphQL/sharedTypes.js";
 import { _, fp } from "/modules/Delusoire/std/deps.js";
 import { pMchain } from "/modules/Delusoire/delulib/fp.js";
 import {
-	TrackData,
+	type TrackData,
 	parseAlbumTrack,
 	parseArtistLikedTrack,
 	parseLibraryAPILikedTracks,
@@ -17,6 +17,7 @@ import { fetchArtistLikedTracks, fetchLikedTracks, fetchPlaylistContents } from 
 import { CONFIG } from "./settings.js";
 
 import { S } from "/modules/Delusoire/std/index.js";
+import { URI_is_LikedTracks } from "./util.js";
 
 const { URI } = S;
 
@@ -79,3 +80,10 @@ export const getTracksFromArtist = async (uri: string) => {
 	allTracks.push(...albumsTracks.flat(), ...appearsOnTracks.flat().filter(track => track.artistUris.includes(uri)));
 	return await Promise.all(allTracks);
 };
+
+export const getTracksFromUri = _.cond([
+	[URI.is.Album, getTracksFromAlbum],
+	[URI.is.Artist, getTracksFromArtist],
+	[URI_is_LikedTracks, getLikedTracks],
+	[URI.is.PlaylistV1OrV2, getTracksFromPlaylist],
+]);

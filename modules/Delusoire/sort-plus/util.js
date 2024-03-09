@@ -1,7 +1,6 @@
 import { _, fp } from "/modules/Delusoire/std/deps.js";
 import { S } from "/modules/Delusoire/std/index.js";
 import { spotifyApi } from "/modules/Delusoire/delulib/api.js";
-import { getLikedTracks, getTracksFromAlbum, getTracksFromArtist, getTracksFromPlaylist } from "./fetch.js";
 const { URI } = S;
 export const SEPARATOR_URI = "spotify:separator";
 export var ERROR;
@@ -68,9 +67,3 @@ export const getNameFromUri = async (uri) => {
         }
     }
 };
-export const getTracksFromUri = _.cond([
-    [URI.is.Album, getTracksFromAlbum],
-    [URI.is.Artist, getTracksFromArtist],
-    [URI_is_LikedTracks, getLikedTracks],
-    [URI.is.PlaylistV1OrV2, getTracksFromPlaylist],
-]);
