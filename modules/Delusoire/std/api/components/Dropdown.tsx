@@ -56,9 +56,9 @@ export default function <O extends DropdownOptions>({ options, activeOption, onS
 	return (
 		<ContextMenu menu={<DropdownMenu />} trigger="click">
 			<button className="x-sortBox-sortDropdown" type="button" role="combobox" aria-expanded="false">
-				<TextComponent variant="mesto" semanticColor="textSubdued">
-					{activeOption}
-				</TextComponent>
+				{/* <TextComponent variant="mesto" semanticColor="textSubdued">
+					{options[activeOption]}
+				</TextComponent> */}
 				<svg
 					role="img"
 					height="16"
