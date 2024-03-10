@@ -1,37 +1,61 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+
+import swc from "@swc/core";
 import postcss from "postcss";
 
+import atImport from "postcss-import";
+import tailwindcssNesting from "tailwindcss/nesting";
 import tailwindcss from "tailwindcss";
-
 import autoprefixer from "autoprefixer";
 
-import tailwindcssNesting from "tailwindcss/nesting";
-
-const transpiler = new Bun.Transpiler({});
-const PostCSSProcessor = await postcss.default([
-	tailwindcssNesting(),
-	tailwindcss({
-		config: {
-			content: {
-				relative: true,
-				files: ["./modules/**/*.{tsx}"],
+async function transpileToJs(file: string) {
+	const dest = file.replace(/\.[^\.]+$/, ".js");
+	const buffer = await Bun.file(file).text();
+	const { code: js } = await swc.transform(buffer, {
+		filename: path.basename(file),
+		sourceMaps: false,
+		jsc: {
+			baseUrl: ".",
+			parser: {
+				syntax: "typescript",
+				tsx: true,
+				decorators: true,
+				dynamicImport: true,
 			},
+			transform: {
+				legacyDecorator: true,
+				react: {
+					pragma: "S.React.createElement",
+					pragmaFrag: "S.React.Fragment",
+				},
+			},
+			target: "esnext",
+			loose: false,
 		},
-	}),
-	autoprefixer({}),
-]);
-
-async function buildJS(file: string) {
-	const buffer = await Bun.file(file).toString();
-	const js = transpiler.transform(buffer);
-	return PostCSSProcessor.process(js, { from: file });
+		isModule: true,
+	});
+	await Bun.write(dest, applyClassMap(js));
 }
 
-async function buildCSS(file: string) {
-	const buffer = await Bun.file(file).toString();
-	const { css } = PostCSSProcessor.process(buffer, { from: file });
-	return css;
+async function transpileToCss(file: string, files: string[]) {
+	const dest = file.replace(/\.[^\.]+$/, ".css");
+	const buffer = await Bun.file(file).text();
+	const PostCSSProcessor = await postcss.default([
+		atImport(),
+		tailwindcssNesting(),
+		tailwindcss({
+			config: {
+				content: {
+					relative: true,
+					files,
+				},
+			},
+		}),
+		autoprefixer({}),
+	]);
+	const p = await PostCSSProcessor.process(buffer, { from: file });
+	await Bun.write(dest, applyClassMap(p.css));
 }
 
 import escRegex from "lodash/escapeRegExp";
@@ -46,39 +70,62 @@ function applyClassMap(content: string) {
 	return content;
 }
 
-async function buildFile(file: string) {
-	const ext = path.extname(file);
-
-	let dest: string;
-	let content = "";
-	switch (ext) {
-		case "scss": {
-			dest = file.replace(/\.scss$/, "");
-			content = await buildCSS(file);
-			break;
-		}
-		case "ts":
-		case "tsx": {
-			dest = file.replace(/\.tsx?$/, "");
-			content = await buildJS(file);
-			break;
-		}
-		default:
-			return;
-	}
-	return await Bun.write(dest, applyClassMap(content));
-}
-
 import { Glob } from "bun";
 
-const files = new Glob("**/*.{ts,tsx,scss}").scan("modules/");
+import type { Metadata } from "/hooks/module";
+import { sendReloadDocument } from "./devtools-ws";
 
-for await (const file of files) {
-	await buildFile(file);
-}
+const vault = await import("/modules/vault.json");
+
+const timeStart = Date.now();
+
+await Promise.all(
+	Object.entries(vault.modules).map(async ([identifier, { metadata: metadataPath }]) => {
+		const modulePath = path.dirname(metadataPath);
+		const relativeModulePath = modulePath.slice(1);
+		const metadata = (await import(metadataPath)) as Metadata;
+		const toJsGlob = `${relativeModulePath}/**/*.{ts,tsx}`;
+		const toJsFiles = new Glob(toJsGlob).scan(".");
+		for await (const toJsFile of toJsFiles) {
+			await transpileToJs(toJsFile);
+		}
+		const cssEntry = metadata.entries.css;
+		if (cssEntry) {
+			const toCssFile = path.join(relativeModulePath, cssEntry.replace(/\.css$/, ".scss"));
+			await transpileToCss(toCssFile, [toJsGlob]);
+		}
+	}),
+);
+
+console.log(`Build finished in ${(Date.now() - timeStart) / 1000}s!`);
+console.log("Watching for further changes");
 
 const watcher = fs.watch("modules", { recursive: true });
 for await (const event of watcher) {
-	console.log(`${event.filename} was ${event.eventType}d`);
-	await buildFile(event.filename);
+	const { filename, eventType } = event;
+	console.log(`${filename} was ${eventType}d`);
+	const fullFilename = path.join("modules", filename);
+	switch (path.extname(filename)) {
+		case ".scss": {
+			const identifier = filename.split(path.sep).slice(0, 2).join("/");
+			const metadataPath = vault.modules[identifier].metadata;
+			const modulePath = path.dirname(metadataPath);
+			const relativeModulePath = modulePath.slice(1);
+			const metadata = (await import(metadataPath)) as Metadata;
+			const toJsGlob = `${relativeModulePath}/**/*.{ts,tsx}`;
+			const cssEntry = metadata.entries.css;
+			if (cssEntry) {
+				const toCssFile = path.join(relativeModulePath, cssEntry.replace(/\.css$/, ".scss"));
+				await transpileToCss(toCssFile, [toJsGlob]);
+				sendReloadDocument();
+			}
+			break;
+		}
+		case ".ts":
+		case ".tsx": {
+			await transpileToJs(fullFilename);
+			sendReloadDocument();
+			break;
+		}
+	}
 }
