@@ -2,13 +2,30 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import postcss from "postcss";
 
+import tailwindcss from "tailwindcss";
+
+import autoprefixer from "autoprefixer";
+
+import tailwindcssNesting from "tailwindcss/nesting";
+
 const transpiler = new Bun.Transpiler({});
-const PostCSSProcessor = await postcss.default([]);
+const PostCSSProcessor = await postcss.default([
+	tailwindcssNesting(),
+	tailwindcss({
+		config: {
+			content: {
+				relative: true,
+				files: ["./modules/**/*.{tsx}"],
+			},
+		},
+	}),
+	autoprefixer({}),
+]);
 
 async function buildJS(file: string) {
 	const buffer = await Bun.file(file).toString();
 	const js = transpiler.transform(buffer);
-	return js;
+	return PostCSSProcessor.process(js, { from: file });
 }
 
 async function buildCSS(file: string) {
