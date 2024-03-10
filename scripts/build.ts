@@ -77,10 +77,13 @@ import { sendReloadDocument } from "./devtools-ws";
 
 const vault = await import("/modules/vault.json");
 
+const selectedModules = Bun.argv.slice(2);
+
 const timeStart = Date.now();
 
 await Promise.all(
 	Object.entries(vault.modules).map(async ([identifier, { metadata: metadataPath }]) => {
+		if (selectedModules.length && !selectedModules.includes(identifier)) return;
 		const modulePath = path.dirname(metadataPath);
 		const relativeModulePath = modulePath.slice(1);
 		const metadata = (await import(metadataPath)) as Metadata;
@@ -105,9 +108,10 @@ for await (const event of watcher) {
 	const { filename, eventType } = event;
 	console.log(`${filename} was ${eventType}d`);
 	const fullFilename = path.join("modules", filename);
+	const identifier = filename.split(path.sep).slice(0, 2).join("/");
+	if (selectedModules.length && !selectedModules.includes(identifier)) continue;
 	switch (path.extname(filename)) {
 		case ".scss": {
-			const identifier = filename.split(path.sep).slice(0, 2).join("/");
 			const metadataPath = vault.modules[identifier].metadata;
 			const modulePath = path.dirname(metadataPath);
 			const relativeModulePath = modulePath.slice(1);
