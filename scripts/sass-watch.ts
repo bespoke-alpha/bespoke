@@ -3,7 +3,7 @@ const { stdout } = Bun.spawn(["sass.cmd", "--no-source-map", "--no-color", "--no
 const reader = stdout.getReader();
 const decoder = new TextDecoder();
 
-import { applyCssMapPerFile } from "./css-map";
+import { applyCssMapPerFile } from "./class-map";
 import { sendReloadDocument } from "./devtools-ws";
 
 let lineBuffer = "";

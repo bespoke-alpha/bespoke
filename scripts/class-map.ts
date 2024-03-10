@@ -2,7 +2,7 @@ import { Glob } from "bun";
 import fs from "node:fs/promises";
 import escRegex from "lodash/escapeRegExp";
 
-import cssMap from "./css-map.json";
+import cssMap from "./class-map.json";
 
 const boundary = "([^\\w\\-])";
 export async function applyCssMapPerFile(file: string) {

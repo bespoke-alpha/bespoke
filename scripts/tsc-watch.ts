@@ -5,7 +5,7 @@ const decoder = new TextDecoder();
 
 import path from "node:path";
 
-import { applyCssMapPerFile } from "./css-map";
+import { applyCssMapPerFile } from "./class-map";
 import { sendReloadDocument } from "./devtools-ws";
 
 let lineBuffer = "";

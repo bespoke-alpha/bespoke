@@ -17,6 +17,18 @@ async function buildCSS(file: string) {
 	return css;
 }
 
+import escRegex from "lodash/escapeRegExp";
+import classMap from "./class-map.json";
+
+const boundary = "([^\\w\\-])";
+
+function applyClassMap(content: string) {
+	for (const [v, k] of Object.entries(classMap)) {
+		content = content.replaceAll(new RegExp(boundary + escRegex(k) + boundary, "g"), `$1${v}$2`);
+	}
+	return content;
+}
+
 async function buildFile(file: string) {
 	const ext = path.extname(file);
 
@@ -37,7 +49,7 @@ async function buildFile(file: string) {
 		default:
 			return;
 	}
-	return await Bun.write(dest, content);
+	return await Bun.write(dest, applyClassMap(content));
 }
 
 import { Glob } from "bun";
