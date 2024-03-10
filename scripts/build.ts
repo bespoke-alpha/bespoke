@@ -90,6 +90,7 @@ await Promise.all(
 		const toJsGlob = `${relativeModulePath}/**/*.{ts,tsx}`;
 		const toJsFiles = new Glob(toJsGlob).scan(".");
 		for await (const toJsFile of toJsFiles) {
+			if (toJsFile.includes("node_modules")) continue;
 			await transpileToJs(toJsFile);
 		}
 		const cssEntry = metadata.entries.css;
