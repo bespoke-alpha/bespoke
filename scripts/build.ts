@@ -35,7 +35,7 @@ async function buildCSS(file: string) {
 }
 
 import escRegex from "lodash/escapeRegExp";
-import classMap from "./class-map.json";
+import classMap from "./util/class-map.json";
 
 const boundary = "([^\\w\\-])";
 
