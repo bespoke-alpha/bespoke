@@ -3,6 +3,7 @@
   "scripts": {
     "build:cli": "cd cli && go build .",
     "build:hooks": "cd hooks && tsc --noResolve",
+    "build:modules": "bun run scripts/build.ts",
     "build": "conc -n build-cli,build-hooks \"bun run build:cli\" \"bun run build:hooks\"",
     "watch:js": "bun run scripts/tsc-watch.ts",
     "watch:css": "bun run scripts/sass-watch.ts",
