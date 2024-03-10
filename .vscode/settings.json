@@ -18,8 +18,8 @@
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.expand": false,
     "explorer.fileNesting.patterns": {
-        "*.tsx": "${capture}.js,${capture}.scss",
-        "*.scss": "${capture}.css",
-        "*.ts": "${capture}.js"
+        "*.ts": "${capture}.js",
+        "*.tsx": "${capture}.js",
+        "*.scss": "${capture}.css"
     }
 }
