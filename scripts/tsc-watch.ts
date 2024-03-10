@@ -3,9 +3,9 @@ const { stdout } = Bun.spawn(["tsc.cmd", "--pretty", "false", "--noResolve", "--
 
 import path from "node:path";
 
-import { applyCssMapPerFile } from "./class-map";
+import { applyCssMapPerFile } from "./util/class-map";
 import { sendReloadDocument } from "./devtools-ws";
-import { readByLine } from "./readByLine";
+import { readByLine } from "./util/readByLine";
 
 readByLine(stdout, async line => {
 	const match = line.match(/^TSFILE: (?<file>.*)$/);

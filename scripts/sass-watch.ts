@@ -1,9 +1,9 @@
 const dir = Bun.argv[2] ?? ".";
 const { stdout } = Bun.spawn(["sass.cmd", "--no-source-map", "--no-color", "--no-unicode", "--watch", dir]);
 
-import { applyCssMapPerFile } from "./class-map";
+import { applyCssMapPerFile } from "./util/class-map";
 import { sendReloadDocument } from "./devtools-ws";
-import { readByLine } from "./readByLine";
+import { readByLine } from "./util/readByLine";
 
 readByLine(stdout, async line => {
 	const match = line.match(/^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}\] .* to (?<file>.*)\./);
