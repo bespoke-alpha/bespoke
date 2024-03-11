@@ -14,14 +14,15 @@ import (
 var protocolCmd = &cobra.Command{
 	Use:   "protocol [uri]",
 	Short: "Internal protocol handler",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		re := regexp.MustCompile(`bespole:(?<action>.+?)(:(?<args>.*))?`)
+		re := regexp.MustCompile(`bespoke:(?<action>[^:]+)(:(?<args>.*))?`)
 		submatches := re.FindStringSubmatch(args[0])
 		if len(submatches) == 0 {
 			log.Fatalln("Unsupported URI")
 		}
-		action := submatches[0]
-		arguments := submatches[2]
+		action := submatches[1]
+		arguments := submatches[3]
 		var err error
 		switch action {
 		case "add":

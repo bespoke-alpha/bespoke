@@ -61,8 +61,9 @@ type Module struct {
 }
 
 type MinimalModule struct {
-	MetadataURL MetadataURL `json:"metadataURL"`
-	Enabled     bool        `json:"enabled"`
+	Enabled           bool        `json:"enabled"`
+	MetadataURL       MetadataURL `json:"metadata"`
+	RemoteMetadataURL MetadataURL `json:"remoteMetadata"`
 }
 
 type Vault struct {
@@ -274,13 +275,12 @@ func SetModule(identifier Identifier, module MinimalModule) error {
 
 	vault.Modules[identifier] = module
 
-	file, err := os.Open(vaultPath)
+	vaultJson, err := json.Marshal(vault)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
 
-	return json.NewEncoder(file).Encode(vault)
+	return os.WriteFile(vaultPath, vaultJson, 0700)
 }
 
 func ToggleModule(identifier Identifier, enabled bool) error {
@@ -292,9 +292,7 @@ func ToggleModule(identifier Identifier, enabled bool) error {
 	module := vault.Modules[identifier]
 	module.Enabled = enabled
 
-	SetModule(identifier, module)
-
-	return nil
+	return SetModule(identifier, module)
 }
 
 func getVaultMURLFromIdentifier(identifier Identifier) (MetadataURL, error) {
