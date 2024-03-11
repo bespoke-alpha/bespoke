@@ -164,18 +164,20 @@ export class Module {
         return this.enabled;
     }
 }
+const bespokeProtocol = "http://localhost:3000/protocol/";
+const bespokeScheme = "bespoke:";
 export const ModuleManager = {
     add: (murl) => {
-        open(`bespoke:add:${murl}`);
+        open(`${bespokeProtocol}${bespokeScheme}add:${murl}`);
     },
     remove: (identifier) => {
-        open(`bespole:remove:${identifier}`);
+        open(`${bespokeProtocol}${bespokeScheme}remove:${identifier}`);
     },
     enable: (identifier) => {
-        open(`bespoke:enable:${identifier}`);
+        open(`${bespokeProtocol}${bespokeScheme}enable:${identifier}`);
     },
     disable: (identifier) => {
-        open(`bespoke:disable:${identifier}`);
+        open(`${bespokeProtocol}${bespokeScheme}disable:${identifier}`);
     },
 };
 const lock = await fetchJSON("/modules/vault.json");

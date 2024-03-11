@@ -218,18 +218,21 @@ export class Module {
 	}
 }
 
+const bespokeProtocol = "http://localhost:3000/protocol/";
+const bespokeScheme = "bespoke:";
+
 export const ModuleManager = {
 	add: (murl: string) => {
-		open(`bespoke:add:${murl}`);
+		open(`${bespokeProtocol}${bespokeScheme}add:${murl}`);
 	},
 	remove: (identifier: string) => {
-		open(`bespole:remove:${identifier}`);
+		open(`${bespokeProtocol}${bespokeScheme}remove:${identifier}`);
 	},
 	enable: (identifier: string) => {
-		open(`bespoke:enable:${identifier}`);
+		open(`${bespokeProtocol}${bespokeScheme}enable:${identifier}`);
 	},
 	disable: (identifier: string) => {
-		open(`bespoke:disable:${identifier}`);
+		open(`${bespokeProtocol}${bespokeScheme}disable:${identifier}`);
 	},
 };
 

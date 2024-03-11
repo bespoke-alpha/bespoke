@@ -1,12 +1,12 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 
-const xSetUrl = "X-Set-Url";
-const xSetHeaders = "X-Set-Headers";
-
 new Elysia()
 	.use(cors())
 	.get("/", async context => {
+		const xSetUrl = "X-Set-Url";
+		const xSetHeaders = "X-Set-Headers";
+
 		// return new Response(undefined, { status: 418 })
 		try {
 			const req = context.request;
@@ -35,5 +35,22 @@ new Elysia()
 			console.error(e);
 			throw e;
 		}
+	})
+	.get("/protocol/*", async context => {
+		const strippedPath = context.path.slice("/protocol/".length);
+		const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>bespoke protocol</title>
+</head>
+<body>
+	<script>open("${strippedPath}")</script>
+</body>
+</html>
+`;
+		return new Blob([html], { type: "text/html" });
 	})
 	.listen(3000);

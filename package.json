@@ -4,9 +4,10 @@
     "build:cli": "cd cli && go build .",
     "build:hooks": "cd hooks && tsc --noResolve",
     "build:modules": "bun run scripts/build.ts",
-    "build": "conc -n build-cli,build-hooks,build-modules \"bun run build:cli\" \"bun run build:hooks\" \"bun run build:modules\"",
+    "build": "conc -n build-cli,build-hooks,build-modules \"bun.exe run build:cli\" \"bun.exe run build:hooks\" \"bun.exe run build:modules\"",
     "run": "bespoke run --",
-    "dev": "bespoke dev && bun run run --remote-debugging-port=9222 --remote-allow-origins=*"
+    "dev": "bespoke dev && bun run run --remote-debugging-port=9222 --remote-allow-origins=*",
+	"proxy": "bun run scripts/proxy.ts"
   },
   "dependencies": {},
   "devDependencies": {
