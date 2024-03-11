@@ -199,8 +199,8 @@ export class Module {
 
 	disable(send = true) {
 		if (!this.enabled) return;
-		this.unloadCSS();
-		this.unloadJS();
+		this.unloadCSS?.();
+		this.unloadJS?.();
 		this.enabled = false;
 		send && ModuleManager.disable(this.getIdentifier());
 	}
