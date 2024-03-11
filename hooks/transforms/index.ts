@@ -25,7 +25,7 @@ internalRegisterTransform({
 
 internalRegisterTransform({
 	transform: emit => str => {
-		str = str.replace(/\{([^\}]*__SENTRY_RELEASE__)/, "{return;$1");
+		str = str.replace(/(\("[^"]+sentry.io)/, ",$1");
 		emit();
 		return str;
 	},
