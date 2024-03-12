@@ -75,9 +75,9 @@
 			"metadata": "/modules/Delusoire/stats-app/metadata.json",
 			"remoteMetadata": "https://raw.githubusercontent.com/Delusoire/bespoke-modules/main/stats-app/metadata.json"
 		},
-		"Delusoire/std": {
+		"Delusoire/stdlib": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/std/metadata.json",
+			"metadata": "/modules/Delusoire/stdlib/metadata.json",
 			"remoteMetadata": "https://raw.githubusercontent.com/Delusoire/bespoke-modules/main/std/metadata.json"
 		},
 		"Delusoire/vaultify": {
