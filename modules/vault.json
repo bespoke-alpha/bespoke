@@ -1,3 +1,9 @@
 {
-	"modules": {}
+	"modules": {
+		"Delusoire/marketplace": {
+			"enabled": true,
+			"metadata": "modules/Delusoire/marketplace/metadata.json",
+			"remoteMetadata": "https://raw.githubusercontent.com/Delusoire/bespoke-marketplace/main/metadata.json"
+		}
+	}
 }

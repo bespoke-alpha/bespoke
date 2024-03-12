@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"slices"
@@ -110,9 +111,12 @@ func fetchMetadata(metadataURL MetadataURL) (Metadata, error) {
 	return parseMetadata(res.Body)
 }
 
-func fetchLocalMetadata(identifier Identifier) (Metadata, error) {
-	moduleFolder := filepath.Join(modulesFolder, identifier)
-	metadataFile := filepath.Join(moduleFolder, "metadata.json")
+func getLocalMetadataFile(identifier Identifier) string {
+	return filepath.Join("modules", identifier, "metadata.json")
+}
+
+func fetchLocalMetadata(localMetadataFile string) (Metadata, error) {
+	metadataFile := path.Join(paths.ConfigPath, localMetadataFile)
 
 	file, err := os.Open(metadataFile)
 	if err != nil {
@@ -231,7 +235,9 @@ func AddModuleMURL(metadataURL MetadataURL) error {
 
 	identifier := metadata.getIdentifier()
 
-	localMetadata, err := fetchLocalMetadata(identifier)
+	localMetadataFile := getLocalMetadataFile(identifier)
+
+	localMetadata, err := fetchLocalMetadata(localMetadataFile)
 	if err == nil {
 		if metadata.Version == localMetadata.Version {
 			return nil
@@ -255,12 +261,12 @@ func AddModuleMURL(metadataURL MetadataURL) error {
 		return err
 	}
 
-	return SetModule(identifier, MinimalModule{MetadataURL: metadataURL, Enabled: true})
+	return SetModule(identifier, MinimalModule{Enabled: true, MetadataURL: localMetadataFile, RemoteMetadataURL: metadataURL})
 }
 
 func RemoveModule(identifier Identifier) error {
 	moduleFolder := filepath.Join(modulesFolder, identifier)
-	err := ToggleModule(identifier, false)
+	err := SetModule(identifier, MinimalModule{})
 	if err != nil {
 		return err
 	}
