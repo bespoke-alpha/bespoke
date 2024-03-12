@@ -11,7 +11,7 @@ internalRegisterTransform({
 		) => {
 			if (!executionContext) return name;
 
-			const className = /(?:\w+__)?(\w+)-[\w-]+/.exec(componentStyle.componentId)?.[1];
+			const className = /(?:\w+__)?(\w+)-[\w-]+/.exec(componentStyle.componentId)[1];
 
 			const isValidString = (v: unknown) => typeof v === "string" && v.length > 0;
 			const isValidNumber = (v: unknown) => typeof v === "number";
@@ -34,13 +34,16 @@ internalRegisterTransform({
 
 			const boolCastedKeys = ["iconLeading", "iconTrailing", "iconOnly"];
 
-			const stringCastedKeys = [/.*padding.*/, /.*blocksize.*/];
+			const stringCastedKeys = [/padding/, /blocksize/];
 
-			const restrictedBoolKeys = [/^aria-.*/, /^children$/, /^className$/, /^\$autoMirror$/];
+			const restrictedBoolKeys = [/^aria-/, /^className$/, /^style$/, /^dir$/, /^key$/, /^ref$/, /^as$/, /^$autoMirror$/, /^$/];
 
 			const parsePair = ([k, v]: [string, any]) => {
 				if (!includedKeys.includes(v)) {
-					if ((v && boolCastedKeys.includes(k)) || (v === true && restrictedBoolKeys.every(r => !r.test(k)))) {
+					if (v && boolCastedKeys.includes(k)) {
+						return k;
+					}
+					if (v === true && restrictedBoolKeys.every(r => !r.test(k))) {
 						return k;
 					}
 					if (isValidString(v) && stringCastedKeys.some(r => r.test(k))) {
@@ -60,7 +63,8 @@ internalRegisterTransform({
 					.sort()
 					.join("-")
 					.replaceAll("$", "")
-					.replace(/[^\w-]/g, "_")
+					.replace(/[^\w-]/g, "_") +
+				name
 			);
 		};
 		emit();
