@@ -22,9 +22,12 @@ var fixCmd = &cobra.Command{
 		} else {
 			spaBakGlob := filepath.Join(paths.GetSpotifyAppsPath(spotifyDataPath), "*.spa.bak")
 			spaBaks, err := filepath.Glob(spaBakGlob)
-
 			if err != nil {
 				log.Fatalln(err.Error())
+			}
+			if len(spaBaks) == 0 {
+				log.Println("Spotify is already in stock state!")
+				return
 			}
 
 			for _, spaBak := range spaBaks {

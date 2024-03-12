@@ -1,11 +1,16 @@
 import { internalRegisterTransform } from "./index.js";
 internalRegisterTransform({
     transform: emit => str => {
-        str = str.replace(/(\w+ [\w$_]+)=[\w$_]+\([\w$_]+>>>0\)/, "$1=__getStyledClassName(arguments,this)");
-        globalThis.__getStyledClassName = ([executionContext], componentStyle) => {
+        // https://github.com/styled-components/styled-components/blob/22e8b7f233e12500a68be4268b1d79c5d7f2a661/packages/styled-components/src/models/ComponentStyle.ts#L88
+        str = str.replace(/(\w+ [\w$_]+)=([\w$_]+\([\w$_]+>>>0\))/, "$1=__getStyledClassName(arguments,this,$2)");
+        globalThis.__getStyledClassName = ([executionContext], componentStyle, // ComponentStyle from styled-components
+        name) => {
             if (!executionContext)
-                return;
-            let className = /(?:\w+__)?(\w+)-[\w-]+/.exec(componentStyle.componentId)?.[1];
+                return name;
+            const className = /(?:\w+__)?(\w+)-[\w-]+/.exec(componentStyle.componentId)?.[1];
+            const isValidString = (v) => typeof v === "string" && v.length > 0;
+            const isValidNumber = (v) => typeof v === "number";
+            const parseProp = ([k, v]) => ((isValidString(v) || isValidNumber(v)) && `${k}_${v}`) || (v && k);
             const includedKeys = [
                 "role",
                 "variant",
@@ -20,39 +25,30 @@ internalRegisterTransform({
                 "$size",
                 "$iconColor",
             ];
-            for (const key of includedKeys) {
-                const value = executionContext[key];
-                if ((typeof value === "string" && value !== "") || typeof value === "number") {
-                    className += `-${value}`;
+            const boolCastedKeys = ["iconLeading", "iconTrailing", "iconOnly"];
+            const stringCastedKeys = [/.*padding.*/, /.*blocksize.*/];
+            const restrictedBoolKeys = [/^aria-.*/, /^children$/, /^className$/, /^\$autoMirror$/];
+            const parsePair = ([k, v]) => {
+                if (!includedKeys.includes(v)) {
+                    if ((v && boolCastedKeys.includes(k)) || (v === true && restrictedBoolKeys.every(r => !r.test(k)))) {
+                        return k;
+                    }
+                    if (isValidString(v) && stringCastedKeys.some(r => r.test(k))) {
+                        return `${k}_${v}`;
+                    }
+                    return;
                 }
-            }
-            {
-                const childrenProps = ["iconLeading", "iconTrailing", "iconOnly"];
-                for (const key of childrenProps) {
-                    if (executionContext[key])
-                        className += `-${key}`;
-                }
-            }
-            {
-                const excludedPrefix = ["aria-"];
-                const excludedKeys = ["children", "className", "style", "dir", "key", "ref", "as", "$autoMirror", ""];
-                const booleanKeys = Object.keys(executionContext).filter(key => typeof executionContext[key] === "boolean" && executionContext[key]);
-                for (const key of booleanKeys) {
-                    if (excludedKeys.includes(key))
-                        continue;
-                    if (excludedPrefix.some(prefix => key.startsWith(prefix)))
-                        continue;
-                    className += `-${key}`;
-                }
-            }
-            {
-                const customKeys = ["padding", "blocksize"];
-                const customEntries = Object.entries(executionContext).filter(([key, value]) => customKeys.some(k => key.toLowerCase().includes(k)) && typeof value === "string" && value.length);
-                for (const [key, value] of customEntries) {
-                    className += `-${key}_${value.replace(/[^a-z0-9]/gi, "_")}`;
-                }
-            }
-            return className;
+                return parseProp([k, v]);
+            };
+            return (className +
+                "-" +
+                Object.entries(executionContext)
+                    .map(parsePair)
+                    .filter(Boolean)
+                    .sort()
+                    .join("-")
+                    .replaceAll("$", "")
+                    .replace(/[^\w-]/g, "_"));
         };
         emit();
         return str;

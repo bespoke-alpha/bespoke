@@ -3,7 +3,6 @@
     "compilerOptions": {
         "baseUrl": "../",
         "outDir": "../hooks-out/",
-        "declarationDir": "../hooks-out/types/",
         "resolveJsonModule": false
     }
 }
