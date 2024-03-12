@@ -7,7 +7,7 @@
     "build": "conc -n build-cli,build-hooks,build-modules \"bun.exe run build:cli\" \"bun.exe run build:hooks\" \"bun.exe run build:modules\"",
     "run": "bespoke run --",
     "dev": "bespoke dev && bun run run --remote-debugging-port=9222 --remote-allow-origins=*",
-	"proxy": "bun run scripts/proxy.ts"
+    "proxy": "bun run scripts/proxy.ts"
   },
   "dependencies": {},
   "devDependencies": {
