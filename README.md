@@ -45,4 +45,3 @@ $spotifyPackage = Get-AppxPackage | Where-Object -Property Name -Eq "SpotifyAB.S
 ### Credits
 
 [spicetify-cli](https://github.com/spicetify/spicetify-cli)
-[hazy](https://github.com/Astromations/Hazy)
