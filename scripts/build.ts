@@ -73,7 +73,6 @@ function applyClassMap(content: string) {
 import { Glob } from "bun";
 
 import type { Metadata } from "/hooks/module";
-import { sendReloadDocument } from "./devtools-ws";
 
 const vault = await import("/modules/vault.json");
 
@@ -103,6 +102,8 @@ await Promise.all(
 
 console.log(`Build finished in ${(Date.now() - timeStart) / 1000}s!`);
 console.log("Watching for further changes");
+
+const { sendReloadDocument } = await import("./devtools-ws");
 
 const watcher = fs.watch("modules", { recursive: true });
 for await (const event of watcher) {
