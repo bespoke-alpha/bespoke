@@ -12,10 +12,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	modules bool
-)
-
 var syncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "Update bespoke from GitHub",
@@ -34,7 +30,7 @@ func execSync() {
 			SingleBranch:      true,
 			NoCheckout:        false,
 			Depth:             1,
-			RecurseSubmodules: 10,
+			RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
 			Progress:          os.Stdout,
 		})
 		if err != nil {
@@ -56,11 +52,17 @@ func pull(localRepo string) error {
 	}
 
 	log.Println("Pulling from origin in", paths.ConfigPath)
-	return w.Pull(&git.PullOptions{RemoteName: "origin"})
+	return w.Pull(&git.PullOptions{
+		RemoteName:        "origin",
+		ReferenceName:     "HEAD",
+		SingleBranch:      true,
+		Depth:             1,
+		RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
+		Progress:          os.Stdout,
+		Force:             true,
+	})
 }
 
 func init() {
 	rootCmd.AddCommand(syncCmd)
-
-	syncCmd.Flags().BoolVar(&modules, "modules", false, "Update modules too")
 }

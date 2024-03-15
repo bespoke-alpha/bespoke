@@ -17,6 +17,7 @@ var fixCmd = &cobra.Command{
 	Use:   "fix",
 	Short: "Fix your spotify installation",
 	Run: func(cmd *cobra.Command, args []string) {
+		log.Println("Restoring Spotify to stock state")
 		if mirror {
 			os.RemoveAll(filepath.Join(paths.ConfigPath, "apps"))
 		} else {
