@@ -51,5 +51,4 @@ $spotifyPackage = Get-AppxPackage | Where-Object -Property Name -Eq "SpotifyAB.S
 -   Fix marketplace styles
 -   Improve platform specific spotify paths recognition
 -   Add linux desktop entry (for custom url scheme)
--   Implement propper module lifetimes
 -   Create cli command for module project scaffolding
