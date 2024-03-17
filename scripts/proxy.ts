@@ -1,12 +1,16 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 
-new Elysia()
-	.use(cors())
-	.get("/", async context => {
-		const xSetUrl = "X-Set-Url";
-		const xSetHeaders = "X-Set-Headers";
+const xSetUrl = "X-Set-Url";
+const xSetHeaders = "X-Set-Headers";
 
+new Elysia()
+	.use(
+		cors({
+			allowedHeaders: [xSetUrl, xSetHeaders],
+		}),
+	)
+	.all("/", async context => {
 		// return new Response(undefined, { status: 418 })
 		try {
 			const req = context.request;
@@ -17,16 +21,25 @@ new Elysia()
 
 			req.headers.delete("host");
 			for (const [k, v] of Object.entries(headers ?? {})) {
-				if (v === null) {
+				if (v === "undefined") {
 					req.headers.delete(k);
 				} else {
 					req.headers.set(k, v);
 				}
 			}
 
-			const res = await fetch(url, req);
+			const res = await fetch(url, new Request(req, { body: context.body }));
 
-			for (const k of ["Access-Control-Allow-Origin", "Content-Encoding", "Date"]) {
+			for (const k of [
+				"Access-Control-Allow-Origin",
+				"Access-Control-Allow-Methods",
+				"Access-Control-Allow-Headers",
+				"Access-Control-Expose-Headers",
+				"Access-Control-Allow-Credentials",
+				"Access-Control-Max-Age",
+				"Content-Encoding",
+				"Date",
+			]) {
 				res.headers.delete(k);
 			}
 
