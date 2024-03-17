@@ -1,28 +1,33 @@
-### Installation
+## Setup
 
-Install the latest release for your platform and run it (double-click it or execute it from the terminal with no arguments).
+Note: On windows, use `pwsh` and not `cmd` as shell!
 
-### Setup
+### Part 1: Installation
 
-Note: All windows commands are to be run inside a windows' `Terminal` app (powershell) and not `cmd`!
-
-1. First and foremost add the bespoke executable to your PATH variable for ease of access:
+0. First and foremost install the build dependencies: [Git](https://git-scm.com/downloads) and [Go](https://go.dev/doc/install)
+1. Then clone this repo in the appropriate folder:
+    - On Windows, `git clone --depth 1 --recurse-submodules $env:LOCALAPPDATA/bespoke`
+    - On Linux, `git clone --depth 1 --recurse-submodules $XDG_CONFIG_HOME/bespoke` (if $XDG_CONFIG_HOME is not set, use `~/.config`)
+    - On macOS, `git clone --depth 1 --recurse-submodules ~/Library/Application Support/bespoke`
+2. Change directory to `bespoke/cli/` and execute `go build .`, this will create a new `bespoke` executable in the working directory
+3. [optional] Add the `bespoke` executable to your PATH variable for ease of access
     - On Windows, run the following in pwsh:
-        ```
+        ```pwsh
         $user = [EnvironmentVariableTarget]::User
         $path = [Environment]::GetEnvironmentVariable('PATH', $user)
         $path = "$path;$env:LOCALAPPDATA\bespoke\cli"
         [Environment]::SetEnvironmentVariable('PATH', $path, $user)
         ```
-    - On Linux, the executable should be located at $XDG_CONFIG_HOME/bespoke/cli/
-2. Then simply run `bespoke init` to patch the Spotify desktop client, this needs only be done
+    - On other platforms you can perform a simple search on how to set the PATH environment variable
+
+### Part 2: Patching
+
+4. Run `bespoke init` to patch the Spotify desktop client, this needs only be done
    when using bespoke for the first time or when the Spotify client updates (and reverts all the patches).
-   If you get a permission error, then you can try running the command in a privileged environment,
-   either by opening the terminal as administrator or by using sudo.
 
-You can always restore your Spotify installation by running `bespoke fix`.
+You can always revert this by running `bespoke fix`.
 
-### Caveats
+## Caveats
 
 If your Spotify installation is somewhat unusual, then you have to specify the paths to the Spotify data and Spotify config folders manually.
 You can do that by creating a `config.yaml` file and adding a `spotify-data: path/to/spotify/data/`
@@ -38,11 +43,11 @@ $spotifyPackage = Get-AppxPackage | Where-Object -Property Name -Eq "SpotifyAB.S
 "spotify-config: $env:LOCALAPPDATA\Packages\$($spotifyPackage.PackageFamilyName)\LocalState\Spotify\" >> $configPath
 ```
 
-### Advanced Usage
+## Advanced Usage
 
 // TODO
 
-### Credits
+## Credits
 
 [spicetify-cli](https://github.com/spicetify/spicetify-cli)
 
