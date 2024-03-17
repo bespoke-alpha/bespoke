@@ -49,6 +49,7 @@ new Elysia()
 			throw e;
 		}
 	})
+	.get("/ping/", () => new Response("pong", { status: 200 })) // TODO: can be used to track launches
 	.get("/protocol/*", async context => {
 		const strippedPath = context.path.slice("/protocol/".length);
 		const html = `
