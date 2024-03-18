@@ -49,11 +49,13 @@ $spotifyPackage = Get-AppxPackage | Where-Object -Property Name -Eq "SpotifyAB.S
 
 ## Credits
 
-[spicetify-cli](https://github.com/spicetify/spicetify-cli)
+Predecessor:
+
+-   [spicetify-cli](https://github.com/spicetify/spicetify-cli)
 
 ### Todos
 
--   Fix marketplace styles
--   Improve platform specific spotify paths recognition
+-   Improve marketplace sort options
+-   Improve spotify paths recognition on Linux
 -   Add linux desktop entry (for custom url scheme)
 -   Create cli command for module project scaffolding
