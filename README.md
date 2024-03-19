@@ -55,7 +55,6 @@ Predecessor:
 
 ### Todos
 
--   Improve marketplace sort options
 -   Improve spotify paths recognition on Linux
 -   Add linux desktop entry (for custom url scheme)
 -   Create cli command for module project scaffolding
