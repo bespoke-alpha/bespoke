@@ -8,7 +8,7 @@ Note: On windows, use `pwsh` and not `cmd` as shell!
 1. Then clone this repo in the appropriate folder:
     - On Windows, `git clone --depth 1 --recurse-submodules $env:LOCALAPPDATA/bespoke`
     - On Linux, `git clone --depth 1 --recurse-submodules $XDG_CONFIG_HOME/bespoke` (if $XDG_CONFIG_HOME is not set, use `~/.config`)
-    - On macOS, `git clone --depth 1 --recurse-submodules ~/Library/Application Support/bespoke`
+    - On macOS, `git clone --depth 1 --recurse-submodules "~/Library/Application Support/bespoke"`
 2. Change directory to `bespoke/cli/` and execute `go build .`, this will create a new `bespoke` executable in the working directory
 3. [optional] Add the `bespoke` executable to your PATH variable for ease of access
     - On Windows, run the following in pwsh:
