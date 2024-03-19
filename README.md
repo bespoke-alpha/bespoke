@@ -18,6 +18,10 @@ Note: On windows, use `pwsh` and not `cmd` as shell!
         $path = "$path;$env:LOCALAPPDATA\bespoke\cli"
         [Environment]::SetEnvironmentVariable('PATH', $path, $user)
         ```
+    - On a default macOS installation, run the following:
+        ```zsh
+        echo "$HOME/Library/Application Support/bespoke/cli" >> /etc/paths
+        ```
     - On other platforms you can perform a simple search on how to set the PATH environment variable
 
 ### Part 2: Patching
