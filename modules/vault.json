@@ -20,10 +20,10 @@
 			"metadata": "/modules/Delusoire/filter-duplicates/metadata.json",
 			"remoteMetadata": "https://raw.githubusercontent.com/Delusoire/bespoke-modules/main/filter-duplicates/metadata.json"
 		},
-		"Delusoire/hazy-theme": {
+		"Delusoire/hazy": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/hazy-theme/metadata.json",
-			"remoteMetadata": "https://raw.githubusercontent.com/Delusoire/bespoke-modules/main/hazy-theme/metadata.json"
+			"metadata": "/modules/Delusoire/hazy/metadata.json",
+			"remoteMetadata": "https://raw.githubusercontent.com/Delusoire/bespoke-modules/main/hazy/metadata.json"
 		},
 		"Delusoire/keyboard-shortcuts": {
 			"enabled": true,
@@ -70,10 +70,10 @@
 			"metadata": "/modules/Delusoire/star-ratings/metadata.json",
 			"remoteMetadata": "https://raw.githubusercontent.com/Delusoire/bespoke-modules/main/star-ratings/metadata.json"
 		},
-		"Delusoire/stats-app": {
+		"Delusoire/statistics": {
 			"enabled": true,
-			"metadata": "/modules/Delusoire/stats-app/metadata.json",
-			"remoteMetadata": "https://raw.githubusercontent.com/Delusoire/bespoke-modules/main/stats-app/metadata.json"
+			"metadata": "/modules/Delusoire/statistics/metadata.json",
+			"remoteMetadata": "https://raw.githubusercontent.com/Delusoire/bespoke-modules/main/statistics/metadata.json"
 		},
 		"Delusoire/stdlib": {
 			"enabled": true,
