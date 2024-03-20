@@ -3,6 +3,8 @@
 tmp/
 node_modules/
 bun.lockb
+
+cli/bespoke*
 config.yaml
 
 apps/
