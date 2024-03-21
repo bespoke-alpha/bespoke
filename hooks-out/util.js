@@ -14,6 +14,7 @@ export function findBy(...tests) {
 }
 export const fetchText = (path) => fetch(path).then(res => res.text());
 export const fetchJSON = (path) => fetch(path).then(res => res.json());
+// str[start] === pair[0]
 export const findMatchingPos = (str, start, direction, pair, scopes) => {
     let l = scopes;
     let i = start + direction;

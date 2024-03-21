@@ -26,7 +26,7 @@ internalRegisterTransform({
 export const applyTransforms = (path) => {
     const i = Paths.indexOf(path);
     const source = sources[i];
-    console.info(source, path);
+    console.info("loadResource", { path, source });
     if (!source)
         return path;
     return source.getObjectURL();

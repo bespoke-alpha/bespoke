@@ -25,15 +25,19 @@ export class Module {
             module.incPriority();
         }
     }
-    static onSpotifyPreInit() {
+    static async onSpotifyPreInit() {
+        console.time("onSpotifyPreInit");
         const modules = Module.getModules();
-        return modules.reduce((p, module) => p.then(() => module.loadMixin()), Promise.resolve());
+        await modules.reduce((p, module) => p.then(() => module.loadMixin()), Promise.resolve());
+        console.timeEnd("onSpotifyPreInit");
     }
-    static onSpotifyPostInit() {
+    static async onSpotifyPostInit() {
+        console.time("onSpotifyPostInit");
         const modules = Module.getModules();
         for (const module of modules)
             module.loadCSS();
-        return modules.reduce((p, module) => p.then(() => module.loadJS()), Promise.resolve());
+        await modules.reduce((p, module) => p.then(() => module.loadJS()), Promise.resolve()).catch(e => console.error(e));
+        console.timeEnd("onSpotifyPostInit");
     }
     constructor(metadata, metadataURL, remoteMetadataURL, enabled = true) {
         this.metadata = metadata;
@@ -69,28 +73,46 @@ export class Module {
     getRelPath(rel) {
         return `${this.metadataURL}/../${rel}`;
     }
-    loadMixin() {
+    async loadMixin() {
         if (!this.enabled)
             return;
         const entry = this.metadata.entries.mixin;
-        return entry && import(this.getRelPath(entry)).then(m => m.default(this.registerTransform));
+        if (!entry) {
+            return;
+        }
+        console.time(`${this.getIdentifier()}#loadMixin`);
+        const mixin = await import(this.getRelPath(entry));
+        await mixin.default(this.registerTransform);
+        console.timeEnd(`${this.getIdentifier()}#loadMixin`);
+        console.groupCollapsed(`${this.getIdentifier()}#awaitMixins`);
+        console.info(...this.awaitedMixins);
+        console.groupEnd();
+        console.time(`${this.getIdentifier()}#awaitMixins`);
+        Promise.all(this.awaitedMixins).then(() => console.timeEnd(`${this.getIdentifier()}#awaitMixins`));
     }
     async loadJS() {
         if (!this.enabled)
             return;
         this.unloadJS?.();
         const entry = this.metadata.entries.js;
-        if (entry) {
-            const fullPath = this.getRelPath(entry);
-            console.info(this.awaitedMixins, fullPath);
-            await Promise.all(this.awaitedMixins);
+        if (!entry) {
+            return;
+        }
+        const fullPath = this.getRelPath(entry);
+        await Promise.all(this.awaitedMixins);
+        console.time(`${this.getIdentifier()}#loadJS`);
+        try {
             const module = await import(fullPath);
-            module.default?.(this);
+            await module.default?.(this);
             this.unloadJS = () => {
                 this.unloadJS = undefined;
                 return module.dispose?.();
             };
         }
+        catch (e) {
+            console.error(`Error loading ${this.getIdentifier()}:`, e);
+        }
+        console.timeEnd(`${this.getIdentifier()}#loadJS`);
     }
     loadCSS() {
         if (!this.enabled)
