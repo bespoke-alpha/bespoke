@@ -120,8 +120,8 @@ func getLocalMetadataFile(identifier Identifier) string {
 }
 
 func fetchLocalMetadata(identifier string) (Metadata, error) {
-	moduleFolder := path.Join(modulesFolder, identifier)
-	metadataFile := path.Join(moduleFolder, "metadata.json")
+	moduleFolder := filepath.Join(modulesFolder, identifier)
+	metadataFile := filepath.Join(moduleFolder, "metadata.json")
 
 	file, err := os.Open(metadataFile)
 	if err != nil {
@@ -238,8 +238,6 @@ func AddModuleMURL(metadataURL MetadataURL) error {
 
 	fileIdentifier := metadata.getFileIdentifier()
 
-	localMetadataFile := getLocalMetadataFile(fileIdentifier)
-
 	localMetadata, err := fetchLocalMetadata(fileIdentifier)
 	if err == nil {
 		if metadata.Version == localMetadata.Version {
@@ -264,7 +262,13 @@ func AddModuleMURL(metadataURL MetadataURL) error {
 		return err
 	}
 
-	return AddModuleInVault(metadata.getIdentifier(), MinimalModule{Enabled: true, MetadataURL: localMetadataFile, RemoteMetadataURL: metadataURL})
+	identifier := metadata.getIdentifier()
+
+	return AddModuleInVault(identifier, MinimalModule{
+		Enabled:           true,
+		MetadataURL:       getLocalMetadataFile(identifier),
+		RemoteMetadataURL: metadataURL,
+	})
 }
 
 func RemoveModule(identifier Identifier) error {
