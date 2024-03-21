@@ -149,18 +149,18 @@ export class Module {
     enable(send = true) {
         if (this.enabled)
             return;
+        this.enabled = true;
         this.loadMixin();
         this.loadCSS();
         this.loadJS();
-        this.enabled = true;
         send && ModuleManager.enable(this.getIdentifier());
     }
     disable(send = true) {
         if (!this.enabled)
             return;
+        this.enabled = false;
         this.unloadCSS?.();
         this.unloadJS?.();
-        this.enabled = false;
         send && ModuleManager.disable(this.getIdentifier());
     }
     dispose(send = true) {

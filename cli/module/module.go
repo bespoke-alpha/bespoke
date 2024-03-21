@@ -39,6 +39,10 @@ type Metadata struct {
 }
 
 func (m Metadata) getIdentifier() string {
+	return path.Join(m.Authors[0], m.Name)
+}
+
+func (m Metadata) getFileIdentifier() string {
 	return filepath.Join(m.Authors[0], m.Name)
 }
 
@@ -221,7 +225,7 @@ func downloadModule(module Module) error {
 	}
 	defer res.Body.Close()
 
-	moduleFolder := filepath.Join(modulesFolder, module.metadata.getIdentifier())
+	moduleFolder := filepath.Join(modulesFolder, module.metadata.getFileIdentifier())
 
 	return archive.UnTarGZ(res.Body, module.githubPath.path, moduleFolder)
 }
@@ -232,17 +236,17 @@ func AddModuleMURL(metadataURL MetadataURL) error {
 		return err
 	}
 
-	identifier := metadata.getIdentifier()
+	fileIdentifier := metadata.getFileIdentifier()
 
-	localMetadataFile := getLocalMetadataFile(identifier)
+	localMetadataFile := getLocalMetadataFile(fileIdentifier)
 
-	localMetadata, err := fetchLocalMetadata(identifier)
+	localMetadata, err := fetchLocalMetadata(fileIdentifier)
 	if err == nil {
 		if metadata.Version == localMetadata.Version {
 			return nil
 		}
 
-		if err := RemoveModule(identifier); err != nil {
+		if err := RemoveModule(fileIdentifier); err != nil {
 			return err
 		}
 	}
@@ -260,7 +264,7 @@ func AddModuleMURL(metadataURL MetadataURL) error {
 		return err
 	}
 
-	return AddModuleInVault(identifier, MinimalModule{Enabled: true, MetadataURL: localMetadataFile, RemoteMetadataURL: metadataURL})
+	return AddModuleInVault(metadata.getIdentifier(), MinimalModule{Enabled: true, MetadataURL: localMetadataFile, RemoteMetadataURL: metadataURL})
 }
 
 func RemoveModule(identifier Identifier) error {
