@@ -260,25 +260,25 @@ func AddModuleMURL(metadataURL MetadataURL) error {
 		return err
 	}
 
-	return SetModule(identifier, MinimalModule{Enabled: true, MetadataURL: localMetadataFile, RemoteMetadataURL: metadataURL})
+	return AddModuleInVault(identifier, MinimalModule{Enabled: true, MetadataURL: localMetadataFile, RemoteMetadataURL: metadataURL})
 }
 
 func RemoveModule(identifier Identifier) error {
 	moduleFolder := filepath.Join(modulesFolder, identifier)
-	err := SetModule(identifier, MinimalModule{})
+	err := RemoveModuleInVault(identifier)
 	if err != nil {
 		return err
 	}
 	return os.RemoveAll(moduleFolder)
 }
 
-func SetModule(identifier Identifier, module MinimalModule) error {
+func mutateVault(mutate func(*Vault)) error {
 	vault, err := GetVault()
 	if err != nil {
 		return err
 	}
 
-	vault.Modules[identifier] = module
+	mutate(&vault)
 
 	vaultJson, err := json.Marshal(vault)
 	if err != nil {
@@ -288,7 +288,13 @@ func SetModule(identifier Identifier, module MinimalModule) error {
 	return os.WriteFile(vaultPath, vaultJson, 0700)
 }
 
-func ToggleModule(identifier Identifier, enabled bool) error {
+func AddModuleInVault(identifier Identifier, module MinimalModule) error {
+	return mutateVault(func(vault *Vault) {
+		(*vault).Modules[identifier] = module
+	})
+}
+
+func ToggleModuleInVault(identifier Identifier, enabled bool) error {
 	vault, err := GetVault()
 	if err != nil {
 		return err
@@ -297,7 +303,13 @@ func ToggleModule(identifier Identifier, enabled bool) error {
 	module := vault.Modules[identifier]
 	module.Enabled = enabled
 
-	return SetModule(identifier, module)
+	return AddModuleInVault(identifier, module)
+}
+
+func RemoveModuleInVault(identifier Identifier) error {
+	return mutateVault(func(vault *Vault) {
+		delete((*vault).Modules, identifier)
+	})
 }
 
 func getVaultMURLFromIdentifier(identifier Identifier) (MetadataURL, error) {

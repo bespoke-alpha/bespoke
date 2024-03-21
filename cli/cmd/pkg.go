@@ -47,7 +47,7 @@ var enableCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		identifier := args[0]
-		if err := module.ToggleModule(identifier, true); err != nil {
+		if err := module.ToggleModuleInVault(identifier, true); err != nil {
 			log.Fatalln(err.Error())
 		}
 	},
@@ -59,7 +59,7 @@ var disableCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		identifier := args[0]
-		if err := module.ToggleModule(identifier, false); err != nil {
+		if err := module.ToggleModuleInVault(identifier, false); err != nil {
 			log.Fatalln(err.Error())
 		}
 	},
