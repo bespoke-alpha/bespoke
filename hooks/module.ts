@@ -20,9 +20,9 @@ export interface Metadata {
 	description: string;
 	readme: string;
 	entries: {
-		js?: string | false;
-		css?: string | false;
-		mixin?: string | false;
+		js?: string;
+		css?: string;
+		mixin?: string;
 	};
 	dependencies: string[];
 	spotifyVersions?: string;
@@ -45,11 +45,7 @@ export class Module {
 			version: "dev",
 			authors: ["internal"],
 			readme: "",
-			entries: {
-				js: false,
-				css: false,
-				mixin: false,
-			},
+			entries: {},
 			description: "internal",
 			dependencies: [],
 		},
@@ -186,18 +182,6 @@ export class Module {
 
 	static async fromVault({ enabled, metadata: metadataURL, remoteMetadata: remoteMetadataURL }: VaultModule) {
 		const metadata: Metadata = await fetchJSON(metadataURL);
-
-		const statDefaultOrUndefined = (def: string) =>
-			fetch(`${metadata}/../${def}`)
-				.then(() => def)
-				.catch(() => undefined);
-
-		Object.assign(metadata.entries, {
-			js: metadata.entries.js ?? statDefaultOrUndefined("index.js"),
-			css: metadata.entries.css ?? statDefaultOrUndefined("index.css"),
-			mixin: metadata.entries.mixin ?? statDefaultOrUndefined("mixin.js"),
-		});
-
 		return new Module(metadata, metadataURL, remoteMetadataURL, enabled);
 	}
 
