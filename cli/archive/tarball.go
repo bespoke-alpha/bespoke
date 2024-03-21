@@ -9,7 +9,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
+	"regexp"
 )
 
 func UnTarGZ(r io.Reader, src string, dest string) error {
@@ -21,6 +21,8 @@ func UnTarGZ(r io.Reader, src string, dest string) error {
 
 	tarReader := tar.NewReader(gzipReader)
 
+	re := regexp.MustCompile(`^[^/]+/` + src + "(.*)")
+
 	for {
 		header, err := tarReader.Next()
 		if err == io.EOF {
@@ -30,12 +32,13 @@ func UnTarGZ(r io.Reader, src string, dest string) error {
 			return err
 		}
 
-		nameRelToSrc, found := strings.CutPrefix(header.Name, src)
-		if !found {
+		nameRelToSrc := re.FindStringSubmatch(header.Name)
+
+		if nameRelToSrc == nil {
 			continue
 		}
 
-		tarEntryDest := filepath.Join(dest, nameRelToSrc)
+		tarEntryDest := filepath.Join(dest, nameRelToSrc[1])
 
 		switch header.Typeflag {
 		case tar.TypeDir:

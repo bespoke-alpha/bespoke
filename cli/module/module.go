@@ -129,16 +129,16 @@ func fetchLocalMetadata(identifier string) (Metadata, error) {
 }
 
 func parseGithubPath(metadataURL MetadataURL) (GithubPath, error) {
-	re := regexp.MustCompile(`(?<owner>.+?)/(?<repo>.+?)/(?<version>.+?)/(?<path>.*?)/?metadata\.json$`)
+	re := regexp.MustCompile(`https://raw.githubusercontent.com/(?<owner>[^/]+)/(?<repo>[^/]+)/(?<version>[^/]+)/(?<path>.*?)/?metadata\.json$`)
 	submatches := re.FindStringSubmatch(metadataURL)
-	if len(submatches) < 4 {
+	if submatches == nil {
 		return GithubPath{}, errors.New("URL cannot be parsed")
 	}
 
-	owner := submatches[0]
-	repo := submatches[1]
-	v := submatches[2]
-	path := submatches[3]
+	owner := submatches[1]
+	repo := submatches[2]
+	v := submatches[3]
+	path := submatches[4]
 
 	branches, _, err := client.Repositories.ListBranches(context.Background(), owner, repo, &github.ListOptions{})
 	if err != nil {
@@ -209,7 +209,7 @@ func downloadModule(module Module) error {
 		url += "refs/tags/" + module.githubPath.version.tag
 
 	case "branch":
-		url += "regs/heads/" + module.githubPath.version.branch
+		url += "refs/heads/" + module.githubPath.version.branch
 
 	}
 
@@ -223,9 +223,7 @@ func downloadModule(module Module) error {
 
 	moduleFolder := filepath.Join(modulesFolder, module.metadata.getIdentifier())
 
-	archive.UnTarGZ(res.Body, module.githubPath.path, moduleFolder)
-
-	return nil
+	return archive.UnTarGZ(res.Body, module.githubPath.path, moduleFolder)
 }
 
 func AddModuleMURL(metadataURL MetadataURL) error {
