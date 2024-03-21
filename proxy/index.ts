@@ -4,7 +4,7 @@ import { cors } from "@elysiajs/cors";
 const xSetUrl = "X-Set-Url";
 const xSetHeaders = "X-Set-Headers";
 
-new Elysia()
+export default new Elysia({ aot: false })
 	.use(
 		cors({
 			allowedHeaders: [xSetUrl, xSetHeaders],
@@ -13,7 +13,7 @@ new Elysia()
 	.all("/", async context => {
 		// return new Response(undefined, { status: 418 })
 		try {
-			const req = context.request;
+			const req = new Request(context.request, { body: context.body });
 			const url = req.headers.get(xSetUrl)!;
 			const headers = JSON.parse(req.headers.get(xSetHeaders));
 			req.headers.delete(xSetUrl);
@@ -28,7 +28,8 @@ new Elysia()
 				}
 			}
 
-			const res = await fetch(url, new Request(req, { body: context.body }));
+			const res = await fetch(url, req);
+			const resClone = new Response(res.body, res);
 
 			for (const k of [
 				"Access-Control-Allow-Origin",
@@ -40,10 +41,10 @@ new Elysia()
 				"Content-Encoding",
 				"Date",
 			]) {
-				res.headers.delete(k);
+				resClone.headers.delete(k);
 			}
 
-			return res;
+			return resClone;
 		} catch (e) {
 			console.error(e);
 			throw e;
@@ -66,5 +67,5 @@ new Elysia()
 </html>
 `;
 		return new Blob([html], { type: "text/html" });
-	})
-	.listen(3000);
+	});
+// .listen(8787);

@@ -247,7 +247,7 @@ export class Module {
 	}
 }
 
-const bespokeProtocol = "http://localhost:3000/protocol/";
+const bespokeProtocol = "https://bespoke-proxy.delusoire.workers.dev/protocol/";
 const bespokeScheme = "bespoke:";
 
 export const ModuleManager = {
