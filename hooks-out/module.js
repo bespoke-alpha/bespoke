@@ -99,10 +99,10 @@ export class Module {
         console.time(`${this.getIdentifier()}#loadJS`);
         try {
             const module = await import(fullPath);
-            await module.default?.(this);
+            const dispose = await module.default?.(this);
             this.unloadJS = () => {
                 this.unloadJS = undefined;
-                return module.dispose?.();
+                return dispose?.();
             };
         }
         catch (e) {

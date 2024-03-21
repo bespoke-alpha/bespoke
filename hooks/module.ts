@@ -148,10 +148,10 @@ export class Module {
 
 		try {
 			const module = await import(fullPath);
-			await module.default?.(this);
+			const dispose = await module.default?.(this);
 			this.unloadJS = () => {
 				this.unloadJS = undefined;
-				return module.dispose?.() as Promise<void>;
+				return dispose?.() as Promise<void>;
 			};
 		} catch (e) {
 			console.error(`Error loading ${this.getIdentifier()}:`, e);
