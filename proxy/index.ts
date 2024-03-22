@@ -62,5 +62,5 @@ export default new Elysia({ aot: false })
 </html>
 `;
 		return new Blob([html], { type: "text/html" });
-	})
-	.listen(8787);
+	});
+// .listen(8787);
