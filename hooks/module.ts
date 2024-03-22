@@ -197,9 +197,13 @@ export class Module {
 
 	private async enableMixinsRecur() {
 		if (this.mixinsEnabled) {
-			return; // this.loadingMixins
+			return this.loading;
 		}
 		this.mixinsEnabled = true;
+		let finishLoading: () => void;
+		this.loading = new Promise(res => {
+			finishLoading = res;
+		});
 
 		await Promise.all(
 			this.metadata.dependencies.map(dependency => {
@@ -209,6 +213,9 @@ export class Module {
 		);
 
 		await this.loadMixins();
+
+		finishLoading();
+		this.loading = undefined;
 	}
 
 	private async enableRecur(send = false) {
@@ -230,6 +237,7 @@ export class Module {
 
 		send && ModuleManager.enable(this.getIdentifier());
 		await this.loadCSS();
+		await Promise.all(this.awaitedMixins);
 		await this.loadJS();
 
 		finishLoading();

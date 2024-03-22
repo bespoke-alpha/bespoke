@@ -140,14 +140,20 @@ export class Module {
     }
     async enableMixinsRecur() {
         if (this.mixinsEnabled) {
-            return; // this.loadingMixins
+            return this.loading;
         }
         this.mixinsEnabled = true;
+        let finishLoading;
+        this.loading = new Promise(res => {
+            finishLoading = res;
+        });
         await Promise.all(this.metadata.dependencies.map(dependency => {
             const module = Module.registry.get(dependency);
             return module.enableMixinsRecur();
         }));
         await this.loadMixins();
+        finishLoading();
+        this.loading = undefined;
     }
     async enableRecur(send = false) {
         if (this.enabled) {
@@ -164,6 +170,7 @@ export class Module {
         }));
         send && ModuleManager.enable(this.getIdentifier());
         await this.loadCSS();
+        await Promise.all(this.awaitedMixins);
         await this.loadJS();
         finishLoading();
         this.loading = undefined;
@@ -234,7 +241,7 @@ export class Module {
         return this.enabled;
     }
 }
-const bespokeProtocol = "https://bespoke-proxy.delusoire.workers.dev/protocol/";
+const bespokeProtocol = "http://127.0.0.1:8787/protocol/";
 const bespokeScheme = "bespoke:";
 export const ModuleManager = {
     add: (murl) => {
