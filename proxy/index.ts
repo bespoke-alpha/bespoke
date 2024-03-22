@@ -5,9 +5,12 @@ const xSetUrl = "X-Set-Url";
 const xSetHeaders = "X-Set-Headers";
 
 export default new Elysia({ aot: false })
+	.onAfterHandle(({ set }) => {
+		set.headers["Access-Control-Allow-Credentials"] = "true";
+	})
 	.use(
 		cors({
-			allowedHeaders: [xSetUrl, xSetHeaders],
+			allowedHeaders: [xSetUrl, xSetHeaders, "Access-Control-Allow-Credentials"],
 			origin: "xpui.app.spotify.com",
 		}),
 	)
@@ -32,16 +35,7 @@ export default new Elysia({ aot: false })
 			const res = await fetch(url, req);
 			const resClone = new Response(res.body, res);
 
-			for (const k of [
-				"Access-Control-Allow-Origin",
-				"Access-Control-Allow-Methods",
-				"Access-Control-Allow-Headers",
-				"Access-Control-Expose-Headers",
-				"Access-Control-Allow-Credentials",
-				"Access-Control-Max-Age",
-				"Content-Encoding",
-				"Date",
-			]) {
+			for (const k of ["Content-Encoding", "Date"]) {
 				resClone.headers.delete(k);
 			}
 
@@ -68,5 +62,5 @@ export default new Elysia({ aot: false })
 </html>
 `;
 		return new Blob([html], { type: "text/html" });
-	});
-// .listen(8787);
+	})
+	.listen(8787);
