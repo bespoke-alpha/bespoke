@@ -14,64 +14,42 @@ export class Module {
         dependencies: [],
     }, undefined, undefined, false); }
     static getModules() {
-        return Array.from(Module.registry.values()).sort((a, b) => b.priority - a.priority);
+        return Array.from(Module.registry.values());
     }
-    static onModulesRegistered() {
-        for (const module of Module.registry.values()) {
-            module.incPriority();
-        }
-    }
-    static async onSpotifyPreInit() {
+    static async enableAllLoadableMixins() {
         console.time("onSpotifyPreInit");
         const modules = Module.getModules();
-        await modules.reduce((p, module) => p.then(() => module.loadMixin()), Promise.resolve());
+        await Promise.all(modules.map(module => module.shouldBeEnabled && module.enableMixins()));
         console.timeEnd("onSpotifyPreInit");
     }
-    static async onSpotifyPostInit() {
+    static async enableAllLoadable() {
         console.time("onSpotifyPostInit");
         const modules = Module.getModules();
-        for (const module of modules)
-            module.loadCSS();
-        await modules.reduce((p, module) => p.then(() => module.loadJS()), Promise.resolve()).catch(e => console.error(e));
+        await Promise.all(modules.map(module => module.shouldBeEnabled && module.enable()));
         console.timeEnd("onSpotifyPostInit");
     }
-    constructor(metadata, metadataURL, remoteMetadataURL, enabled = true) {
+    constructor(metadata, metadataURL, remoteMetadataURL, shouldBeEnabled = true) {
         this.metadata = metadata;
         this.metadataURL = metadataURL;
         this.remoteMetadataURL = remoteMetadataURL;
-        this.enabled = enabled;
-        this.unloadJS = undefined;
-        this.unloadCSS = undefined;
+        this.shouldBeEnabled = shouldBeEnabled;
+        this.unloadJS = null;
+        this.unloadCSS = null;
         this.awaitedMixins = new Array();
         this.registerTransform = createRegisterTransform(this);
-        this.priority = 0;
+        this.dependants = new Set();
+        this.mixinsEnabled = false;
+        this.enabled = false;
         const identifier = this.getIdentifier();
         if (Module.registry.has(identifier)) {
             throw new Error(`A module with the same identifier "${identifier}" is already registered`);
         }
-        const registry = new Map(Module.registry);
-        registry.set(identifier, this);
-        Module.registry = registry;
-    }
-    incPriority() {
-        this.priority++;
-        this.metadata.dependencies.map(dep => {
-            const module = Module.registry.get(dep);
-            if (module) {
-                module.incPriority();
-            }
-            else {
-                console.info("Disabling", this.getIdentifier(), "for lack of dependency:", dep);
-                this.enabled = false;
-            }
-        });
+        Module.registry.set(identifier, this);
     }
     getRelPath(rel) {
         return `${this.metadataURL}/../${rel}`;
     }
-    async loadMixin() {
-        if (!this.enabled)
-            return;
+    async loadMixins() {
         const entry = this.metadata.entries.mixin;
         if (!entry) {
             return;
@@ -87,21 +65,17 @@ export class Module {
         Promise.all(this.awaitedMixins).then(() => console.timeEnd(`${this.getIdentifier()}#awaitMixins`));
     }
     async loadJS() {
-        if (!this.enabled)
-            return;
-        this.unloadJS?.();
         const entry = this.metadata.entries.js;
         if (!entry) {
             return;
         }
-        const fullPath = this.getRelPath(entry);
-        await Promise.all(this.awaitedMixins);
         console.time(`${this.getIdentifier()}#loadJS`);
         try {
+            const fullPath = this.getRelPath(entry);
             const module = await import(fullPath);
             const dispose = await module.default?.(this);
             this.unloadJS = () => {
-                this.unloadJS = undefined;
+                this.unloadJS = null;
                 return dispose?.();
             };
         }
@@ -111,9 +85,6 @@ export class Module {
         console.timeEnd(`${this.getIdentifier()}#loadJS`);
     }
     loadCSS() {
-        if (!this.enabled)
-            return;
-        this.unloadCSS?.();
         const entry = this.metadata.entries.css;
         if (entry) {
             const id = `${this.getIdentifier()}-styles`;
@@ -125,7 +96,7 @@ export class Module {
             link.href = fullPath;
             document.head.append(link);
             this.unloadCSS = () => {
-                this.unloadCSS = undefined;
+                this.unloadCSS = null;
                 document.getElementById(id)?.remove();
             };
         }
@@ -146,28 +117,117 @@ export class Module {
     getIdentifier() {
         return `${this.getAuthor()}/${this.getName()}`;
     }
-    enable(send = true) {
-        if (this.enabled)
-            return;
+    canEnable(mustToggle, mixinPhase = false) {
+        if (!this.shouldBeEnabled) {
+            return false;
+        }
+        if (!mixinPhase && !this.mixinsEnabled && this.metadata.entries.mixin) {
+            return false;
+        }
+        if (!this.enabled) {
+            // !this.enabling
+            for (const dependency of this.metadata.dependencies) {
+                const module = Module.registry.get(dependency);
+                if (!module?.canEnable(false, mixinPhase)) {
+                    return false;
+                }
+            }
+        }
+        else if (mustToggle) {
+            return false;
+        }
+        return true;
+    }
+    async enableMixinsRecur() {
+        if (this.mixinsEnabled) {
+            return; // this.loadingMixins
+        }
+        this.mixinsEnabled = true;
+        await Promise.all(this.metadata.dependencies.map(dependency => {
+            const module = Module.registry.get(dependency);
+            return module.enableMixinsRecur();
+        }));
+        await this.loadMixins();
+    }
+    async enableRecur(send = false) {
+        if (this.enabled) {
+            return this.loading;
+        }
         this.enabled = true;
-        this.loadMixin();
-        this.loadCSS();
-        this.loadJS();
+        let finishLoading;
+        this.loading = new Promise(res => {
+            finishLoading = res;
+        });
+        await Promise.all(this.metadata.dependencies.map(dependency => {
+            const module = Module.registry.get(dependency);
+            return module.enableRecur(send);
+        }));
         send && ModuleManager.enable(this.getIdentifier());
+        await this.loadCSS();
+        await this.loadJS();
+        finishLoading();
+        this.loading = undefined;
     }
-    disable(send = true) {
-        if (!this.enabled)
-            return;
+    canDisable(mustToggle = false) {
+        if (this.enabled) {
+            for (const dependant of this.dependants) {
+                if (!dependant.canDisable()) {
+                    return false;
+                }
+            }
+        }
+        else if (mustToggle) {
+            return false;
+        }
+        return true;
+    }
+    async disableRecur(send = false) {
+        if (!this.enabled) {
+            return this.loading;
+        }
         this.enabled = false;
-        this.unloadCSS?.();
-        this.unloadJS?.();
+        let finishLoading;
+        this.loading = new Promise(res => {
+            finishLoading = res;
+        });
+        await Promise.all(Array.from(this.dependants).map(dependant => dependant.disableRecur()));
         send && ModuleManager.disable(this.getIdentifier());
+        await this.unloadCSS?.();
+        await this.unloadJS?.();
+        finishLoading();
+        this.loading = undefined;
     }
-    dispose(send = true) {
-        this.disable(false);
-        const registry = new Map(Module.registry);
-        registry.delete(this.getIdentifier());
-        Module.registry = registry;
+    async enableMixins() {
+        if (this.canEnable(true, true)) {
+            await this.enableMixinsRecur();
+            return true;
+        }
+        console.warn("Can't enable mixins for", this.getIdentifier(), ", reason: Dependencies not met");
+        return false;
+    }
+    async enable(send = false) {
+        if (this.canEnable(true)) {
+            await this.enableRecur(send);
+            return true;
+        }
+        console.warn("Can't enable", this.getIdentifier(), ", reason: Dependencies not met");
+        return false;
+    }
+    async disable(send = false) {
+        if (this.canDisable(true)) {
+            await this.disableRecur(send);
+            return true;
+        }
+        console.warn("Can't disable", this.getIdentifier(), ", reason: Module required by enabled dependencies");
+        return false;
+    }
+    async dispose(send = false) {
+        await this.disable();
+        for (const dependency of this.metadata.dependencies) {
+            const module = Module.registry.get(dependency);
+            module.dependants.delete(this);
+        }
+        Module.registry.delete(this.getIdentifier());
         send && ModuleManager.remove(this.getIdentifier());
     }
     isEnabled() {
@@ -192,4 +252,3 @@ export const ModuleManager = {
 };
 const lock = await fetchJSON("/modules/vault.json");
 await Promise.all(Object.values(lock.modules).map(Module.fromVault));
-Module.onModulesRegistered();
