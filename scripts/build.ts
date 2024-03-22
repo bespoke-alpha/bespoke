@@ -24,7 +24,7 @@ async function transpileToJs(file: string) {
 				dynamicImport: true,
 			},
 			transform: {
-				legacyDecorator: true,
+				decoratorVersion: "2022-03",
 				react: {
 					pragma: "S.React.createElement",
 					pragmaFrag: "S.React.Fragment",
