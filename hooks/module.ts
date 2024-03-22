@@ -180,7 +180,7 @@ export class Module {
 		return `${this.getAuthor()}/${this.getName()}`;
 	}
 
-	private canEnable(mustToggle, mixinPhase = false) {
+	private canEnable(mixinPhase = false) {
 		if (!this.shouldBeEnabled) {
 			return false;
 		}
@@ -191,12 +191,10 @@ export class Module {
 			// !this.enabling
 			for (const dependency of this.metadata.dependencies) {
 				const module = Module.registry.get(dependency);
-				if (!module?.canEnable(false, mixinPhase)) {
+				if (!module?.canEnable(mixinPhase)) {
 					return false;
 				}
 			}
-		} else if (mustToggle) {
-			return false;
 		}
 		return true;
 	}
@@ -251,15 +249,13 @@ export class Module {
 		this.loading = undefined;
 	}
 
-	private canDisable(mustToggle = false) {
+	private canDisable() {
 		if (this.enabled) {
 			for (const dependant of this.dependants) {
 				if (!dependant.canDisable()) {
 					return false;
 				}
 			}
-		} else if (mustToggle) {
-			return false;
 		}
 		return true;
 	}
@@ -284,7 +280,11 @@ export class Module {
 	}
 
 	async enableMixins() {
-		if (this.canEnable(true, true)) {
+		if (this.mixinsEnabled) {
+			await this.loading;
+			return false;
+		}
+		if (this.canEnable(true)) {
 			await this.enableMixinsRecur();
 			return true;
 		}
@@ -294,7 +294,11 @@ export class Module {
 	}
 
 	async enable(send = false) {
-		if (this.canEnable(true)) {
+		if (this.enabled) {
+			await this.loading;
+			return false;
+		}
+		if (this.canEnable()) {
 			await this.enableRecur(send);
 			return true;
 		}
@@ -304,7 +308,11 @@ export class Module {
 	}
 
 	async disable(send = false) {
-		if (this.canDisable(true)) {
+		if (!this.enabled) {
+			await this.loading;
+			return false;
+		}
+		if (this.canDisable()) {
 			await this.disableRecur(send);
 			return true;
 		}
