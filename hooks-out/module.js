@@ -69,17 +69,22 @@ export class Module {
         if (!entry) {
             return;
         }
+        this.unloadJS = async () => {
+            this.unloadJS = null;
+        };
         console.time(`${this.getIdentifier()}#loadJS`);
         try {
             const fullPath = this.getRelPath(entry);
             const module = await import(fullPath);
             const dispose = await module.default?.(this);
-            this.unloadJS = () => {
-                this.unloadJS = null;
-                return dispose?.();
+            const unloadJS = this.unloadJS;
+            this.unloadJS = async () => {
+                await dispose?.();
+                await unloadJS();
             };
         }
         catch (e) {
+            this.unloadJS();
             console.error(`Error loading ${this.getIdentifier()}:`, e);
         }
         console.timeEnd(`${this.getIdentifier()}#loadJS`);
