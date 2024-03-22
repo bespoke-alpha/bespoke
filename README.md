@@ -51,12 +51,6 @@ $spotifyPackage = Get-AppxPackage | Where-Object -Property Name -Eq "SpotifyAB.S
 
 // TODO
 
-## Credits
-
-Predecessor:
-
--   [spicetify-cli](https://github.com/spicetify/spicetify-cli)
-
 ### Todos
 
 -   Improve spotify paths recognition on Linux
