@@ -241,7 +241,7 @@ export class Module {
         return this.enabled;
     }
 }
-const bespokeProtocol = "http://127.0.0.1:8787/protocol/";
+const bespokeProtocol = "https://bespoke-proxy.delusoire.workers.dev/protocol/";
 const bespokeScheme = "bespoke:";
 export const ModuleManager = {
     add: (murl) => {
