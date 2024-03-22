@@ -214,6 +214,7 @@ export class Module {
 		await Promise.all(
 			this.metadata.dependencies.map(dependency => {
 				const module = Module.registry.get(dependency);
+				module.dependants.add(this);
 				return module.enableMixinsRecur();
 			}),
 		);
