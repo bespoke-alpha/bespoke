@@ -8,7 +8,7 @@ export default new Elysia({ aot: false })
 	.use(
 		cors({
 			allowedHeaders: [xSetUrl, xSetHeaders],
-			origin: "https://xpui.app.spotify.com",
+			origin: "xpui.app.spotify.com",
 		}),
 	)
 	.all("/", async context => {
