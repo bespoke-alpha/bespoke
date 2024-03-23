@@ -31,6 +31,10 @@ Note: On windows, use `pwsh` and not `cmd` as shell!
 
 You can always revert this by running `bespoke fix`.
 
+### Part 3: Updating
+
+To update bespoke, all you need to run is `git pull --recurse-submodules`
+
 ## Caveats
 
 If your Spotify installation is somewhat unusual, then you have to specify the paths to the Spotify data and Spotify config folders manually.
