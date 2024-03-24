@@ -180,8 +180,8 @@ export class Module {
 		return `${this.getAuthor()}/${this.getName()}`;
 	}
 
-	private canEnable(mixinPhase = false) {
-		if (!this.shouldBeEnabled) {
+	private canEnable(mixinPhase = false, forceEnable = false) {
+		if (!forceEnable && !this.shouldBeEnabled) {
 			return false;
 		}
 		if (!mixinPhase && !this.mixinsEnabled && this.metadata.entries.mixin) {
@@ -289,21 +289,21 @@ export class Module {
 			return true;
 		}
 
-		console.warn("Can't enable mixins for", this.getIdentifier(), ", reason: Dependencies not met");
+		console.warn("Can't enable mixins for", this.getIdentifier(), " reason: Dependencies not met");
 		return false;
 	}
 
-	async enable(send = false) {
+	async enable(send = false, forceEnable = false) {
 		if (this.enabled) {
 			await this.loading;
 			return false;
 		}
-		if (this.canEnable()) {
+		if (this.canEnable(false, forceEnable)) {
 			await this.enableRecur(send);
 			return true;
 		}
 
-		console.warn("Can't enable", this.getIdentifier(), ", reason: Dependencies not met");
+		console.warn("Can't enable", this.getIdentifier(), " reason: Dependencies not met");
 		return false;
 	}
 
@@ -317,7 +317,7 @@ export class Module {
 			return true;
 		}
 
-		console.warn("Can't disable", this.getIdentifier(), ", reason: Module required by enabled dependencies");
+		console.warn("Can't disable", this.getIdentifier(), " reason: Module required by enabled dependencies");
 		return false;
 	}
 

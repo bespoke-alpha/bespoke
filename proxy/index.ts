@@ -1,7 +1,6 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 
-const xSetUrl = "X-Set-Url";
 const xSetHeaders = "X-Set-Headers";
 
 export default new Elysia({ aot: false })
@@ -10,17 +9,17 @@ export default new Elysia({ aot: false })
 	})
 	.use(
 		cors({
-			allowedHeaders: [xSetUrl, xSetHeaders, "Access-Control-Allow-Credentials"],
+			allowedHeaders: [xSetHeaders, "Access-Control-Allow-Credentials"],
 			origin: "xpui.app.spotify.com",
 		}),
 	)
-	.all("/", async context => {
+	.all("*", async context => {
 		// return new Response(undefined, { status: 418 })
 		try {
 			const req = new Request(context.request, { body: context.body });
-			const url = req.headers.get(xSetUrl)!;
+			const urlObj = new URL(context.request.url);
+			const url = urlObj.pathname.slice(1) + urlObj.search;
 			const headers = JSON.parse(req.headers.get(xSetHeaders));
-			req.headers.delete(xSetUrl);
 			req.headers.delete(xSetHeaders);
 
 			req.headers.delete("host");
@@ -35,7 +34,7 @@ export default new Elysia({ aot: false })
 			const res = await fetch(url, req);
 			const resClone = new Response(res.body, res);
 
-			for (const k of ["Content-Encoding", "Date"]) {
+			for (const k of ["Access-Control-Allow-Origin", "Content-Encoding", "Date"]) {
 				resClone.headers.delete(k);
 			}
 
