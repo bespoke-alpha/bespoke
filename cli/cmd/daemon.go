@@ -4,8 +4,8 @@ Copyright © 2024 Delusoire <deluso7re@outlook.com>
 package cmd
 
 import (
+	"bespoke/paths"
 	"log"
-	"path/filepath"
 	"strings"
 
 	"github.com/fsnotify/fsnotify"
@@ -99,10 +99,44 @@ func startDaemon() {
 		}
 	}()
 
-	err = watcher.Add(filepath.Join(spotifyConfigPath, "Apps"))
+	err = watcher.Add(paths.GetSpotifyAppsPath(spotifyDataPath))
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	<-c
 }
+
+/*
+func startDaemon() {
+	viper.OnConfigChange(func(in fsnotify.Event) {
+		daemon = viper.GetBool("daemon")
+	})
+	go viper.WatchConfig()
+
+	ticker := time.NewTicker(5 * time.Minute)
+	stop := make(chan bool)
+
+	_, apps := getApps()
+	xpuiIndex := filepath.Join(apps, "xpui", "index.html")
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				if _, err := os.Stat(xpuiIndex); err == nil {
+					continue
+				}
+				execInit()
+			default:
+				if !daemon {
+					stop <- true
+					return
+				}
+			}
+		}
+	}()
+
+	<-stop
+}
+*/
