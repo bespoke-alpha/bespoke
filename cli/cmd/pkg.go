@@ -13,11 +13,10 @@ import (
 var pkgCmd = &cobra.Command{
 	Use:   "pkg [action]",
 	Short: "Manage modules",
-	Run: func(cmd *cobra.Command, args []string) {
-	},
+	Run:   func(cmd *cobra.Command, args []string) {},
 }
 
-var addCmd = &cobra.Command{
+var pkgAddCmd = &cobra.Command{
 	Use:   "add [murl]",
 	Short: "Install module",
 	Args:  cobra.ExactArgs(1),
@@ -29,7 +28,7 @@ var addCmd = &cobra.Command{
 	},
 }
 
-var remCmd = &cobra.Command{
+var pkgRemCmd = &cobra.Command{
 	Use:   "rem [id]",
 	Short: "Uninstall module",
 	Args:  cobra.ExactArgs(1),
@@ -41,7 +40,7 @@ var remCmd = &cobra.Command{
 	},
 }
 
-var enableCmd = &cobra.Command{
+var pkgEnableCmd = &cobra.Command{
 	Use:   "enable [id]",
 	Short: "Enable installed module",
 	Args:  cobra.ExactArgs(1),
@@ -53,7 +52,7 @@ var enableCmd = &cobra.Command{
 	},
 }
 
-var disableCmd = &cobra.Command{
+var pkgDisableCmd = &cobra.Command{
 	Use:   "disable [id]",
 	Short: "Disable installed module",
 	Args:  cobra.ExactArgs(1),
@@ -68,5 +67,5 @@ var disableCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(pkgCmd)
 
-	pkgCmd.AddCommand(addCmd, remCmd, enableCmd, disableCmd)
+	pkgCmd.AddCommand(pkgAddCmd, pkgRemCmd, pkgEnableCmd, pkgDisableCmd)
 }

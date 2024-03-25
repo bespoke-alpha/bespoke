@@ -68,16 +68,13 @@ func init() {
 	viper.BindPFlag("spotify-data", rootCmd.PersistentFlags().Lookup("spotify-data"))
 	viper.BindPFlag("spotify-config", rootCmd.PersistentFlags().Lookup("spotify-config"))
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $XDG_CONFIG_HOME/bespoke/config.yaml)")
+	defaultcfgFile := filepath.Join(paths.ConfigPath, "config.yaml")
+
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", defaultcfgFile, "config file (default is "+defaultcfgFile+")")
 }
 
 func initConfig() {
-	if cfgFile != "" {
-		viper.SetConfigFile(cfgFile)
-	} else {
-		viper.AddConfigPath(paths.ConfigPath)
-	}
-
+	viper.SetConfigFile(cfgFile)
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err == nil {

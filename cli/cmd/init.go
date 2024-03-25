@@ -20,14 +20,14 @@ var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "initialize bespoke for Spotify",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := uri.RegisterURIScheme(); err != nil {
-			log.Println(err.Error())
-		}
 		execInit()
 	},
 }
 
 func execInit() {
+	if err := uri.RegisterURIScheme(); err != nil {
+		log.Println(err.Error())
+	}
 	fmt.Println("Initializing bespoke")
 	src := paths.GetSpotifyAppsPath(spotifyDataPath)
 	var dest string
