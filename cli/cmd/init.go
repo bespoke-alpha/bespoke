@@ -85,18 +85,23 @@ func execInit() {
 	for src, dest := range links {
 		folderSrcPath := filepath.Join(paths.ConfigPath, src)
 		folderDestPath := filepath.Join(destXpuiPath, dest)
+
+		linkType := "symbolic link"
 		if runtime.GOOS == "windows" {
-			log.Println("Creating junction", folderSrcPath, "->", folderDestPath)
-			err := junction.Create(folderSrcPath, folderDestPath)
-			if err != nil {
-				log.Fatalf("Failed to create junction: %v", err)
-			}
+			linkType = "junction"
+		}
+
+		log.Printf("Creating %s %s -> %s", linkType, folderSrcPath, folderDestPath)
+
+		var err error
+		if runtime.GOOS == "windows" {
+			err = junction.Create(folderSrcPath, folderDestPath)
 		} else {
-			log.Println("Creating symbolic link", folderSrcPath, "->", folderDestPath)
-			err := os.Symlink(folderSrcPath, folderDestPath)
-			if err != nil {
-				log.Fatalf("Error creating symbolic link: %v", err)
-			}
+			err = os.Symlink(folderSrcPath, folderDestPath)
+		}
+
+		if err != nil {
+			log.Fatalf("Error creating %s: %v", linkType, err)
 		}
 	}
 
