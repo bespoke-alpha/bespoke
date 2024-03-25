@@ -93,7 +93,6 @@ func execInit() {
 
 		log.Printf("%s %s to %s", linkType, folderSrcPath, folderDestPath)
 
-		var err error
 		if runtime.GOOS == "windows" {
 			err = junction.Create(folderSrcPath, folderDestPath)
 		} else {
@@ -101,10 +100,9 @@ func execInit() {
 		}
 
 		if err != nil {
-			log.Fatalf("Error %s: %v", linkType, err)
+			log.Fatalln(err.Error())
 		}
 	}
-
 }
 
 func init() {
