@@ -86,12 +86,12 @@ func execInit() {
 		folderSrcPath := filepath.Join(paths.ConfigPath, src)
 		folderDestPath := filepath.Join(destXpuiPath, dest)
 
-		linkType := "symbolic link"
+		linkType := "Symlinking"
 		if runtime.GOOS == "windows" {
-			linkType = "junction"
+			linkType = "Junctioning"
 		}
 
-		log.Printf("Creating %s %s -> %s", linkType, folderSrcPath, folderDestPath)
+		log.Printf("%s %s to %s", linkType, folderSrcPath, folderDestPath)
 
 		var err error
 		if runtime.GOOS == "windows" {
@@ -101,7 +101,7 @@ func execInit() {
 		}
 
 		if err != nil {
-			log.Fatalf("Error creating %s: %v", linkType, err)
+			log.Fatalf("Error %s: %v", linkType, err)
 		}
 	}
 
