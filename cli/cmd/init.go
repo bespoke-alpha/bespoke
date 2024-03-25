@@ -24,18 +24,22 @@ var initCmd = &cobra.Command{
 	},
 }
 
-func execInit() {
-	if err := uri.RegisterURIScheme(); err != nil {
-		log.Println(err.Error())
-	}
-	fmt.Println("Initializing bespoke")
-	src := paths.GetSpotifyAppsPath(spotifyDataPath)
-	var dest string
+func getApps() (src string, dest string) {
+	src = paths.GetSpotifyAppsPath(spotifyDataPath)
 	if mirror {
 		dest = filepath.Join(paths.ConfigPath, "apps")
 	} else {
 		dest = src
 	}
+	return src, dest
+}
+
+func execInit() {
+	if err := uri.RegisterURIScheme(); err != nil {
+		log.Println(err.Error())
+	}
+	fmt.Println("Initializing bespoke")
+	src, dest := getApps()
 	spaGlob := filepath.Join(src, "*.spa")
 	spas, err := filepath.Glob(spaGlob)
 	if err != nil {

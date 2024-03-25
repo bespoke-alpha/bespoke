@@ -5,10 +5,8 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"bespoke/paths"
 
@@ -29,24 +27,7 @@ var rootCmd = &cobra.Command{
 	Use:   "bespoke",
 	Short: "Make Spotify your own",
 	Long:  `Bespoke is a CLI utility that empowers the desktop Spotify client with custom themes and extensions`,
-	Run: func(cmd *cobra.Command, args []string) {
-		if _, err := os.Stat(paths.ConfigPath); err != nil || autoUpdate {
-			execSync()
-		}
-		execInit()
-		if isRanAsSpotify() {
-			execRun(args)
-		}
-	},
-}
-
-func isRanAsSpotify() bool {
-	execPath, err := os.Executable()
-	if err != nil {
-		log.Fatalln(err.Error())
-	}
-	execName := strings.ToLower(filepath.Base(execPath))
-	return strings.HasPrefix(strings.ToLower(execName), "spotify")
+	Run:   func(cmd *cobra.Command, args []string) {},
 }
 
 func Execute() {
