@@ -11,8 +11,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
+	junction "github.com/nyaosorg/go-windows-junction"
 	"github.com/spf13/cobra"
 )
 
@@ -83,12 +85,21 @@ func execInit() {
 	for src, dest := range links {
 		folderSrcPath := filepath.Join(paths.ConfigPath, src)
 		folderDestPath := filepath.Join(destXpuiPath, dest)
-		log.Println("Symlinking", folderSrcPath, "to", folderDestPath)
-		err = os.Symlink(folderSrcPath, folderDestPath)
-		if err != nil {
-			log.Fatalln(err.Error())
+		if runtime.GOOS == "windows" {
+			log.Println("Creating junction", folderSrcPath, "->", folderDestPath)
+			err := junction.Create(folderSrcPath, folderDestPath)
+			if err != nil {
+				log.Fatalf("Failed to create junction: %v", err)
+			}
+		} else {
+			log.Println("Creating symbolic link", folderSrcPath, "->", folderDestPath)
+			err := os.Symlink(folderSrcPath, folderDestPath)
+			if err != nil {
+				log.Fatalf("Error creating symbolic link: %v", err)
+			}
 		}
 	}
+
 }
 
 func init() {
