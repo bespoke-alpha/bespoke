@@ -23,10 +23,11 @@ Note: On windows, use `pwsh` and not `cmd` as shell!
         echo "$HOME/Library/Application Support/bespoke/cli" >> /etc/paths
         ```
     - On other platforms you can perform a simple search on how to set the PATH environment variable
+4. Run `bespoke init` to initialize the bespoke setup, this only needs to be done once. If the command files, try running it in an elevated shell (as Administrator)
 
 ### Part 2: Patching
 
-4. Run `bespoke init` to patch the Spotify desktop client, this needs only be done
+4. Run `bespoke apply` to patch the Spotify desktop client, this needs only be done
    when using bespoke for the first time or when the Spotify client updates (and reverts all the patches).
 
 You can always revert this by running `bespoke fix`.
@@ -52,6 +53,8 @@ $spotifyPackage = Get-AppxPackage | Where-Object -Property Name -Eq "SpotifyAB.S
 ```
 
 ## Advanced Usage
+
+`bespoke daemon enable`
 
 // TODO
 
