@@ -33,8 +33,6 @@ func enableDeveloperModeOnWindows() error {
 		return nil
 	}
 
-	// TODO: Check for privileged execution
-
 	access := uint32(registry.QUERY_VALUE | registry.SET_VALUE)
 	key := registry.LOCAL_MACHINE
 

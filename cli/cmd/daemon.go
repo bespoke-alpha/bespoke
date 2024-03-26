@@ -5,11 +5,14 @@ package cmd
 
 import (
 	"log"
+	"net/http"
 	"strings"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/gorilla/websocket"
 )
 
 var (
@@ -21,6 +24,7 @@ var daemonCmd = &cobra.Command{
 	Short: "Run daemon",
 	Run: func(cmd *cobra.Command, args []string) {
 		if daemon {
+			log.Println("Starting daemon")
 			startDaemon()
 		}
 	},
@@ -30,6 +34,10 @@ var daemonEnableCmd = &cobra.Command{
 	Use:   "enable",
 	Short: "Enable daemon",
 	Run: func(cmd *cobra.Command, args []string) {
+		if daemon {
+			log.Panicln("Daemon already enabled")
+		}
+		log.Println("Enabling daemon")
 		daemon = true
 		viper.Set("daemon", daemon)
 		viper.WriteConfig()
@@ -41,6 +49,7 @@ var daemonDisableCmd = &cobra.Command{
 	Use:   "disable",
 	Short: "Disable daemon",
 	Run: func(cmd *cobra.Command, args []string) {
+		log.Println("Disabling daemon")
 		daemon = false
 		viper.Set("daeeon", daemon)
 		viper.WriteConfig()
@@ -107,7 +116,40 @@ func startDaemon() {
 
 	// TODO: start ws
 
+	http.HandleFunc("/protocol", handleWebSocketProtocol)
+	log.Panicln(http.ListenAndServe(":7967", nil))
+
 	<-c
+}
+
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		// TODO: improve security
+		return true
+	},
+}
+
+func handleWebSocketProtocol(w http.ResponseWriter, r *http.Request) {
+	c, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println("upgrade:", err)
+		return
+	}
+	defer c.Close()
+
+	for {
+		messageType, p, err := c.ReadMessage()
+		if err != nil {
+			log.Println("!read:", err)
+			break
+		}
+
+		log.Printf("recv: %s", p)
+		if err = c.WriteMessage(messageType, p); err != nil {
+			log.Println("!write:", err)
+			break
+		}
+	}
 }
 
 /*
