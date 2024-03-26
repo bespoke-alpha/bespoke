@@ -138,16 +138,16 @@ func handleWebSocketProtocol(w http.ResponseWriter, r *http.Request) {
 	defer c.Close()
 
 	for {
-		messageType, p, err := c.ReadMessage()
+		_, p, err := c.ReadMessage()
 		if err != nil {
 			log.Println("!read:", err)
 			break
 		}
 
-		log.Printf("recv: %s", p)
-		if err = c.WriteMessage(messageType, p); err != nil {
-			log.Println("!write:", err)
-			break
+		incoming := string(p)
+		log.Println("recv:", incoming)
+		if err = HandleProtocol(incoming); err != nil {
+			log.Println("!handle:", err)
 		}
 	}
 }

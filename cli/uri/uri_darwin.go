@@ -5,9 +5,9 @@ Copyright © 2024 Delusoire <deluso7re@outlook.com>
 */
 package uri
 
-import "errors"
+import e "bespoke/errors"
 
 // TODO
 func RegisterURIScheme() error {
-	return errors.ErrUnsupported
+	return e.ErrUnsupportedOperation
 }

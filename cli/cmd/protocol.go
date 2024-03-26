@@ -5,8 +5,11 @@ package cmd
 
 import (
 	"bespoke/module"
+	"errors"
 	"log"
 	"regexp"
+
+	e "bespoke/errors"
 
 	"github.com/spf13/cobra"
 )
@@ -16,36 +19,38 @@ var protocolCmd = &cobra.Command{
 	Short: "Internal protocol handler",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		re := regexp.MustCompile(`bespoke:(?<action>[^:]+)(:(?<args>.*))?`)
-		submatches := re.FindStringSubmatch(args[0])
-		if len(submatches) == 0 {
-			log.Fatalln("Unsupported URI")
-		}
-		action := submatches[1]
-		arguments := submatches[3]
-		var err error
-		switch action {
-		case "add":
-			metadataURL := arguments
-			err = module.AddModuleMURL(metadataURL)
-
-		case "remove":
-			identifier := arguments
-			err = module.RemoveModule(identifier)
-
-		case "enable":
-			identifier := arguments
-			err = module.ToggleModuleInVault(identifier, true)
-
-		case "disable":
-			identifier := arguments
-			err = module.ToggleModuleInVault(identifier, false)
-
-		}
-		if err != nil {
-			log.Fatalln(err.Error())
+		if err := HandleProtocol(args[0]); err != nil {
+			log.Panicln(err.Error())
 		}
 	},
+}
+
+func HandleProtocol(message string) error {
+	re := regexp.MustCompile(`bespoke:(?<action>[^:]+)(:(?<args>.*))?`)
+	submatches := re.FindStringSubmatch(message)
+	if len(submatches) == 0 {
+		return errors.New("malformed uri")
+	}
+	action := submatches[1]
+	arguments := submatches[3]
+	switch action {
+	case "add":
+		metadataURL := arguments
+		return module.AddModuleMURL(metadataURL)
+
+	case "remove":
+		identifier := arguments
+		return module.RemoveModule(identifier)
+
+	case "enable":
+		identifier := arguments
+		return module.ToggleModuleInVault(identifier, true)
+
+	case "disable":
+		identifier := arguments
+		return module.ToggleModuleInVault(identifier, false)
+	}
+	return e.ErrUnsupportedOperation
 }
 
 func init() {
