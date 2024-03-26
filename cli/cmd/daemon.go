@@ -4,7 +4,6 @@ Copyright © 2024 Delusoire <deluso7re@outlook.com>
 package cmd
 
 import (
-	"bespoke/paths"
 	"log"
 	"strings"
 
@@ -81,8 +80,10 @@ func startDaemon() {
 				if event.Has(fsnotify.Write) {
 					// TODO: learn how spotify does the update
 					// ? Does it delete & replace Apps/ or its contents?
-					if strings.HasSuffix(event.Name, ".spa") {
-						execInit()
+					if strings.HasSuffix(event.Name, "xpui.spa") {
+						if err := execApply(); err != nil {
+							log.Println(err.Error())
+						}
 					}
 				}
 			case err, ok := <-watcher.Errors:
@@ -99,10 +100,12 @@ func startDaemon() {
 		}
 	}()
 
-	err = watcher.Add(paths.GetSpotifyAppsPath(spotifyDataPath))
+	err = watcher.Add(spotifyDataPath)
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	// TODO: start ws
 
 	<-c
 }
@@ -127,7 +130,7 @@ func startDaemon() {
 				if _, err := os.Stat(xpuiIndex); err == nil {
 					continue
 				}
-				execInit()
+				execApply()
 			default:
 				if !daemon {
 					stop <- true

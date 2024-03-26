@@ -4,104 +4,56 @@ Copyright © 2024 Delusoire <deluso7re@outlook.com>
 package cmd
 
 import (
-	"bespoke/archive"
-	"bespoke/paths"
 	"bespoke/uri"
-	"fmt"
 	"log"
-	"os"
-	"path/filepath"
-	"strings"
+	"runtime"
 
 	"github.com/spf13/cobra"
+	"golang.org/x/sys/windows/registry"
 )
 
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "initialize bespoke for Spotify",
+	Short: "initialize bespoke",
+	Long:  "required to be ran at least once per installation",
 	Run: func(cmd *cobra.Command, args []string) {
-		execInit()
+		if err := execInit(); err != nil {
+			log.Println("Error occurred! Try running this command (and only this command) in an elevated shell:")
+			log.Panicln(err.Error())
+		}
 	},
-}
-
-func getApps() (src string, dest string) {
-	src = paths.GetSpotifyAppsPath(spotifyDataPath)
-	if mirror {
-		dest = filepath.Join(paths.ConfigPath, "apps")
-	} else {
-		dest = src
-	}
-	return src, dest
-}
-
-func execInit() {
-	if err := uri.RegisterURIScheme(); err != nil {
-		log.Println(err.Error())
-	}
-	fmt.Println("Initializing bespoke")
-	src, dest := getApps()
-	spaGlob := filepath.Join(src, "*.spa")
-	spas, err := filepath.Glob(spaGlob)
-	if err != nil {
-		log.Fatalln(err.Error())
-	}
-	if len(spas) == 0 {
-		log.Println("bespoke is already initialized or Spotify data path is wrong!")
-		return
-	}
-
-	for _, spa := range spas {
-		basename := filepath.Base(spa)
-		extractDest := filepath.Join(dest, strings.TrimSuffix(basename, ".spa"))
-		log.Println("Extracting", spa, "to", extractDest)
-		err = archive.Unzip(spa, extractDest)
-		if err != nil {
-			log.Fatalln(err.Error())
-		}
-	}
-
-	if !mirror {
-		for _, spa := range spas {
-			spaBak := spa + ".bak"
-			log.Println("Moving", spa, "to", spaBak)
-			err = os.Rename(spa, spaBak)
-			if err != nil {
-				log.Println(err.Error())
-			}
-		}
-	}
-
-	destXpuiPath := filepath.Join(dest, "xpui")
-	err = PatchFile(filepath.Join(destXpuiPath, "index.html"), func(s string) string {
-		return strings.Replace(s, `<script defer="defer" src="/vendor~xpui.js"></script><script defer="defer" src="/xpui.js"></script>`, `<script type="module" src="/hooks/index.js"></script>`, 1)
-	})
-	if err != nil {
-		log.Fatalln(err.Error())
-	}
-
-	links := map[string]string{"hooks-out": "hooks", "modules": "modules"}
-	for src, dest := range links {
-		folderSrcPath := filepath.Join(paths.ConfigPath, src)
-		folderDestPath := filepath.Join(destXpuiPath, dest)
-		log.Println("Symlinking", folderSrcPath, "to", folderDestPath)
-		err = os.Symlink(folderSrcPath, folderDestPath)
-		if err != nil {
-			log.Fatalln(err.Error())
-		}
-	}
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
 }
 
-func PatchFile(path string, patch func(string) string) error {
-	raw, err := os.ReadFile(path)
+func enableDeveloperModeOnWindows() error {
+	if runtime.GOOS != "windows" {
+		return nil
+	}
+
+	// TODO: Check for privileged execution
+
+	access := uint32(registry.QUERY_VALUE | registry.SET_VALUE)
+	key := registry.LOCAL_MACHINE
+
+	key, err := registry.OpenKey(key, `Software\Microsoft\Windows\CurrentVersion\AppModelUnlock`, access)
 	if err != nil {
 		return err
 	}
 
-	content := patch(string(raw))
+	return key.SetDWordValue("AllowDevelopmentWithoutDevLicense", 1)
+}
 
-	return os.WriteFile(path, []byte(content), 0700)
+func execInit() error {
+	if err := enableDeveloperModeOnWindows(); err != nil {
+		return err
+	}
+
+	if err := uri.RegisterURIScheme(); err != nil {
+		log.Println(err.Error())
+	}
+
+	return nil
 }
