@@ -339,18 +339,33 @@ export class Module {
 const bespokeProtocol = "https://bespoke-proxy.delusoire.workers.dev/protocol/";
 const bespokeScheme = "bespoke:";
 
+let fallback = false;
+
+const ws = new WebSocket("ws://localhost:7967/protocol");
+ws.onclose = () => {
+	fallback = true;
+};
+
+const sendProtocolMessage = (message: string) => {
+	if (fallback) {
+		open(bespokeProtocol + message);
+	} else {
+		ws.send(message);
+	}
+};
+
 export const ModuleManager = {
 	add: (murl: string) => {
-		open(`${bespokeProtocol}${bespokeScheme}add:${murl}`);
+		sendProtocolMessage(`${bespokeScheme}add:${murl}`);
 	},
 	remove: (identifier: string) => {
-		open(`${bespokeProtocol}${bespokeScheme}remove:${identifier}`);
+		sendProtocolMessage(`${bespokeScheme}remove:${identifier}`);
 	},
 	enable: (identifier: string) => {
-		open(`${bespokeProtocol}${bespokeScheme}enable:${identifier}`);
+		sendProtocolMessage(`${bespokeScheme}enable:${identifier}`);
 	},
-	disable: (identifier: string) => {
-		open(`${bespokeProtocol}${bespokeScheme}disable:${identifier}`);
+	disablsendProtocolMessagee: (identifier: string) => {
+		open(`${bespokeScheme}disable:${identifier}`);
 	},
 };
 
