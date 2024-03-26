@@ -114,10 +114,8 @@ func startDaemon() {
 		log.Fatalln(err)
 	}
 
-	// TODO: start ws
-
 	http.HandleFunc("/protocol", handleWebSocketProtocol)
-	log.Panicln(http.ListenAndServe(":7967", nil))
+	log.Panicln(http.ListenAndServe("localhost:7967", nil))
 
 	<-c
 }
