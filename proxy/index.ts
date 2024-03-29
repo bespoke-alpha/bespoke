@@ -13,8 +13,9 @@ export default new Elysia({ aot: false })
 			origin: "xpui.app.spotify.com",
 		}),
 	)
+	.get("/", () => new Response(undefined, { status: 418 }))
+	.get("/ping/", () => new Response("pong", { status: 200 })) // TODO: can be used to track launches
 	.all("/mitm/*", async context => {
-		// return new Response(undefined, { status: 418 })
 		let res: Response;
 
 		const logs = [];
@@ -37,7 +38,6 @@ export default new Elysia({ aot: false })
 
 		return res;
 	})
-	.get("/ping/", () => new Response("pong", { status: 200 })) // TODO: can be used to track launches
 	.get("/protocol/*", async context => {
 		const strippedPath = context.path.slice("/protocol/".length);
 		const html = `
@@ -54,8 +54,8 @@ export default new Elysia({ aot: false })
 </html>
 `;
 		return new Blob([html], { type: "text/html" });
-	})
-	.listen(8787);
+	});
+// .listen(8787);
 
 const handleMitm = async (req: Request, urlPath: string, logs: any[]) => {
 	const reqUrlObj = new URL(req.url);
