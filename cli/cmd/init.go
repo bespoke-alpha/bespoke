@@ -14,11 +14,11 @@ import (
 
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "initialize bespoke",
+	Short: "Perform one-time bespoke initization",
 	Long:  "required to be ran at least once per installation",
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := execInit(); err != nil {
-			log.Println("Error occurred! Try running this command (and only this command) in an elevated shell:")
+			log.Println("Error occurred! Try running this command (and only this command) in an elevated shell; error:")
 			log.Panicln(err.Error())
 		}
 	},

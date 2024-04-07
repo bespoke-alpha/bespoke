@@ -15,8 +15,8 @@ import (
 )
 
 var applyCmd = &cobra.Command{
-	Use:   "init",
-	Short: "initialize bespoke for Spotify",
+	Use:   "apply",
+	Short: "Apply bespoke patch on Spotify",
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := execApply(); err != nil {
 			log.Panicln(err.Error())

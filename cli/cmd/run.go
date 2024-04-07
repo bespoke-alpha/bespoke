@@ -15,7 +15,7 @@ import (
 
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "launch Spotify with your favorite addons",
+	Short: "Launch Spotify with your favorite addons",
 	Run: func(cmd *cobra.Command, args []string) {
 		execRun(args)
 	},
