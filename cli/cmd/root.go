@@ -58,8 +58,13 @@ func initConfig() {
 	viper.SetConfigFile(cfgFile)
 	viper.AutomaticEnv()
 
+	viper.SetDefault("mirror", mirror)
+	viper.SetDefault("spotify-data", spotifyDataPath)
+	viper.SetDefault("spotify-config", spotifyConfigPath)
+
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+
 		mirror = viper.GetBool("mirror")
 		spotifyDataPath = viper.GetString("spotify-data")
 		spotifyConfigPath = viper.GetString("spotify-config")

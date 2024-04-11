@@ -4,6 +4,7 @@ Copyright © 2024 Delusoire <deluso7re@outlook.com>
 package cmd
 
 import (
+	"bespoke/paths"
 	"log"
 	"net/http"
 	"strings"
@@ -16,7 +17,7 @@ import (
 )
 
 var (
-	daemon = viper.GetBool("daemon")
+	daemon bool
 )
 
 var daemonCmd = &cobra.Command{
@@ -27,6 +28,15 @@ var daemonCmd = &cobra.Command{
 			log.Println("Starting daemon")
 			startDaemon()
 		}
+	},
+}
+
+var daemonStartCmd = &cobra.Command{
+	Use:   "start",
+	Short: "Start daemon",
+	Run: func(cmd *cobra.Command, args []string) {
+		log.Println("Starting daemon")
+		startDaemon()
 	},
 }
 
@@ -41,7 +51,6 @@ var daemonEnableCmd = &cobra.Command{
 		daemon = true
 		viper.Set("daemon", daemon)
 		viper.WriteConfig()
-		startDaemon()
 	},
 }
 
@@ -51,15 +60,20 @@ var daemonDisableCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Println("Disabling daemon")
 		daemon = false
-		viper.Set("daeeon", daemon)
+		viper.Set("daemon", daemon)
 		viper.WriteConfig()
 	},
 }
 
 func init() {
+	cobra.OnInitialize(func() {
+		viper.SetDefault("daemon", true)
+		daemon = viper.GetBool("daemon")
+	})
+
 	rootCmd.AddCommand(daemonCmd)
 
-	daemonCmd.AddCommand(daemonEnableCmd, daemonDisableCmd)
+	daemonCmd.AddCommand(daemonStartCmd, daemonEnableCmd, daemonDisableCmd)
 
 	viper.SetDefault("daemon", false)
 }
@@ -86,9 +100,7 @@ func startDaemon() {
 					continue
 				}
 				log.Println("event:", event)
-				if event.Has(fsnotify.Write) {
-					// TODO: learn how spotify does the update
-					// ? Does it delete & replace Apps/ or its contents?
+				if event.Has(fsnotify.Create) {
 					if strings.HasSuffix(event.Name, "xpui.spa") {
 						if err := execApply(); err != nil {
 							log.Println(err.Error())
@@ -109,7 +121,7 @@ func startDaemon() {
 		}
 	}()
 
-	err = watcher.Add(spotifyDataPath)
+	err = watcher.Add(paths.GetSpotifyAppsPath(spotifyDataPath))
 	if err != nil {
 		log.Fatalln(err)
 	}
