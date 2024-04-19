@@ -104,7 +104,7 @@ a {
 
 /* Modal Styles */
 
-.schemer-container {
+.palette-modal-container {
     --input-bg: hsla(0,0%,100%,.1);
     --input-bg2: #121212;
     --secondary-bg: #242424;
@@ -121,29 +121,29 @@ a {
     width: 2px;
 }
 
-.scheme-list-container {
+.palette-list-container {
     width: 12rem;
 }
 
-.scheme-list-container > ul {
+.palette-list-container > ul {
         height: 45vh;
         display: flex;
         flex-direction: column;
     }
 
-.scheme-list-container > ul > li {
+.palette-list-container > ul > li {
             margin-top: 4px;
         }
 
-.scheme-list-container .scheme-list {
+.palette-list-container .palette-list {
         overflow-y: scroll;
     }
 
-.scheme-list-container .QZhV0hWVKlExlKr266jo {
+.palette-list-container .QZhV0hWVKlExlKr266jo {
         width: 100%;
     }
 
-.scheme-fields-container {
+.palette-fields-container {
     flex-grow: 1;
     height: 45vh;
     gap: var(--gap-primary);
@@ -152,7 +152,7 @@ a {
     font-size: 14px;
 }
 
-.scheme-fields-container .scheme-fields {
+.palette-fields-container .palette-fields {
         background-color: var(--secondary-bg);
         border-radius: var(--border-radius);
         padding: var(--gap-secondary);
@@ -165,13 +165,13 @@ a {
              column-gap: var(--gap-secondary);
     }
 
-.scheme-fields-container .scheme-fields .input-row {
+.palette-fields-container .palette-fields .input-row {
             display: flex;
             align-items: center;
             gap: var(--gap-primary);
         }
 
-.scheme-fields-container .scheme-fields .text-input {
+.palette-fields-container .palette-fields .text-input {
             background-color: var(--input-bg2);
             padding: 8px;
             border: none;
@@ -180,7 +180,7 @@ a {
             width: 80px;
         }
 
-.scheme-fields-container .scheme-fields .color-input {
+.palette-fields-container .palette-fields .color-input {
             border: none;
             height: 30px;
             width: 30px;
@@ -190,22 +190,22 @@ a {
             margin-left: auto;
         }
 
-.scheme-fields-container .scheme-fields .color-input::-webkit-color-swatch-wrapper {
+.palette-fields-container .palette-fields .color-input::-webkit-color-swatch-wrapper {
                 padding: 0;
             }
 
-.scheme-fields-container .scheme-fields .color-input::-webkit-color-swatch {
+.palette-fields-container .palette-fields .color-input::-webkit-color-swatch {
                 border: none;
                 border-radius: 50%;
             }
 
-.scheme-fields-container .scheme-info {
+.palette-fields-container .palette-info {
         display: flex;
         gap: var(--gap-primary);
         align-items: center;
     }
 
-.scheme-fields-container .scheme-info > button {
+.palette-fields-container .palette-info > button {
             background-color: white;
             border: none;
             height: 32px;
@@ -216,7 +216,7 @@ a {
             cursor: pointer;
         }
 
-.scheme-fields-container .scheme-info .scheme-name {
+.palette-fields-container .palette-info .palette-name {
             background-color: var(--input-bg);
             padding: 8px;
             border: none;

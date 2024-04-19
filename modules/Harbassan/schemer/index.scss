@@ -33,7 +33,7 @@
 
 /* Modal Styles */
 
-.schemer-container {
+.palette-modal-container {
     --input-bg: hsla(0,0%,100%,.1);
     --input-bg2: #121212;
     --secondary-bg: #242424;
@@ -50,7 +50,7 @@
     width: 2px;
 }
 
-.scheme-list-container {
+.palette-list-container {
     width: 12rem;
 
     > ul {
@@ -63,7 +63,7 @@
         }
     }
 
-    .scheme-list {
+    .palette-list {
         overflow-y: scroll;
     }
 
@@ -72,7 +72,7 @@
     }
 }
 
-.scheme-fields-container {
+.palette-fields-container {
     flex-grow: 1;
     height: 45vh;
     gap: var(--gap-primary);
@@ -80,8 +80,7 @@
     flex-direction: column;
     font-size: 14px;
 
-
-    .scheme-fields {
+    .palette-fields {
         background-color: var(--secondary-bg);
         border-radius: var(--border-radius);
         padding: var(--gap-secondary);
@@ -127,7 +126,7 @@
         }
     }
 
-    .scheme-info {
+    .palette-info {
         display: flex;
         gap: var(--gap-primary);
         align-items: center;
@@ -143,7 +142,7 @@
             cursor: pointer;
         }
 
-        .scheme-name {
+        .palette-name {
             background-color: var(--input-bg);
             padding: 8px;
             border: none;

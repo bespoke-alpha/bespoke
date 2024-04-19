@@ -4,18 +4,18 @@ import { SVGIcons, createRegistrar } from "/modules/Delusoire/stdlib/index.js";
 import { display } from "/modules/Delusoire/stdlib/lib/modal.js";
 import { Button } from "/modules/Delusoire/stdlib/src/registers/topbarLeftButton.js";
 
-import SchemerModal from "./modal.js";
-import schemeManager from "./schemes.js";
+import Modal from "./modal.js";
+import paletteManager from "./paletteManager.js";
 
 import type { Module } from "/hooks/module.js";
 
-const SchemeEdit = () => {
+const EditButton = () => {
 	return (
 		<Button
-			label="playlist-stats"
+			label="Palette Manager"
 			icon={SVGIcons.edit}
 			onClick={() => {
-				display({ title: "Schemer", content: <SchemerModal />, isLarge: true });
+				display({ title: "Palette Manager", content: <Modal />, isLarge: true });
 			}}
 		/>
 	);
@@ -23,13 +23,13 @@ const SchemeEdit = () => {
 
 export default function (mod: Module) {
 	const registrar = createRegistrar(mod);
-	registrar.register("topbarLeftButton", SchemeEdit);
+	registrar.register("topbarLeftButton", EditButton);
 
 	createSchemes();
 }
 
 function createSchemes() {
-	schemeManager.createStatics(
+	paletteManager.createStatics(
 		[
 			{
 				name: "Spicetify",
@@ -72,6 +72,6 @@ function createSchemes() {
 				},
 			},
 		],
-		"schemer",
+		"inbuilt",
 	);
 }

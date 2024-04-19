@@ -2,16 +2,16 @@ import { S } from "/modules/Delusoire/stdlib/index.js";
 import { SVGIcons, createRegistrar } from "/modules/Delusoire/stdlib/index.js";
 import { display } from "/modules/Delusoire/stdlib/lib/modal.js";
 import { Button } from "/modules/Delusoire/stdlib/src/registers/topbarLeftButton.js";
-import SchemerModal from "./modal.js";
-import schemeManager from "./schemes.js";
-const SchemeEdit = ()=>{
+import Modal from "./modal.js";
+import paletteManager from "./paletteManager.js";
+const EditButton = ()=>{
     return /*#__PURE__*/ S.React.createElement(Button, {
-        label: "playlist-stats",
+        label: "Palette Manager",
         icon: SVGIcons.edit,
         onClick: ()=>{
             display({
-                title: "Schemer",
-                content: /*#__PURE__*/ S.React.createElement(SchemerModal, null),
+                title: "Palette Manager",
+                content: /*#__PURE__*/ S.React.createElement(Modal, null),
                 isLarge: true
             });
         }
@@ -19,11 +19,11 @@ const SchemeEdit = ()=>{
 };
 export default function(mod) {
     const registrar = createRegistrar(mod);
-    registrar.register("topbarLeftButton", SchemeEdit);
+    registrar.register("topbarLeftButton", EditButton);
     createSchemes();
 }
 function createSchemes() {
-    schemeManager.createStatics([
+    paletteManager.createStatics([
         {
             name: "Spicetify",
             fields: {
@@ -64,5 +64,5 @@ function createSchemes() {
                 playbar_active: "#8fbcbb"
             }
         }
-    ], "schemer");
+    ], "inbuilt");
 }

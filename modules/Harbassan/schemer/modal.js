@@ -1,98 +1,98 @@
 import { S, SVGIcons } from "/modules/Delusoire/stdlib/index.js";
 import { useSearchBar } from "/modules/Delusoire/stdlib/lib/components/index.js";
-import schemeManager from "./schemes.js";
+import paletteManager from "./paletteManager.js";
 import { createIconComponent } from "/modules/Delusoire/stdlib/lib/createIconComponent.js";
 function isValidHex(hex) {
     const regex = /^#[0-9A-Fa-f]{6}$/;
     return regex.test(hex);
 }
-const SchemerModal = ()=>{
-    const [modalScheme, setModalScheme] = S.React.useState(schemeManager.getCurrScheme());
-    const [schemes, setSchemes] = S.React.useState(schemeManager.getSchemes());
+const Modal = ()=>{
+    const [modalPalette, setModalPalette] = S.React.useState(paletteManager.getCurrPalette());
+    const [palettes, setPalettes] = S.React.useState(paletteManager.getPalettes());
     const [searchbar, search] = useSearchBar({
-        placeholder: "Search Schemes",
+        placeholder: "Search Palettes",
         expanded: true
     });
-    function setScheme(scheme) {
-        setModalScheme(scheme);
-        schemeManager.toggleScheme(scheme.name);
+    function setPalette(palette) {
+        setModalPalette(palette);
+        paletteManager.togglePalette(palette.name);
     }
     function updateField(name, value) {
         const newFields = {
-            ...modalScheme.fields,
+            ...modalPalette.fields,
             [name]: value
         };
-        setModalScheme({
-            ...modalScheme,
+        setModalPalette({
+            ...modalPalette,
             fields: newFields
         });
         if (!isValidHex(value)) return;
-        schemeManager.updateLocal(modalScheme.name, newFields);
+        paletteManager.updateLocal(modalPalette.name, newFields);
     }
-    function addScheme() {
-        setScheme(schemeManager.createLocal({
+    function addPalette() {
+        setPalette(paletteManager.createLocal({
             name: "New Custom",
-            fields: modalScheme.fields
+            fields: modalPalette.fields
         }));
-        setSchemes(schemeManager.getSchemes());
+        setPalettes(paletteManager.getPalettes());
     }
-    function remScheme(scheme) {
-        schemeManager.deleteLocal(scheme.name);
-        setSchemes(schemeManager.getSchemes());
-        setScheme(schemeManager.getScheme("def"));
+    function remPalette(palette) {
+        paletteManager.deleteLocal(palette.name);
+        setPalettes(paletteManager.getPalettes());
+        setPalette(paletteManager.getPalette("def"));
     }
-    function renameScheme(scheme, newName) {
-        schemeManager.renameLocal(scheme.name, newName);
-        setSchemes(schemeManager.getSchemes());
+    function renamePalette(palette, newName) {
+        paletteManager.renameLocal(palette.name, newName);
+        setPalettes(paletteManager.getPalettes());
     }
     function copyObj() {
-        const css = JSON.stringify(modalScheme);
+        const css = JSON.stringify(modalPalette);
         // @ts-ignore
         S.Platform.getClipboardAPI().copy(css);
     }
     const LocalInfo = ()=>{
-        const [name, setName] = S.React.useState(modalScheme.name);
+        const [name, setName] = S.React.useState(modalPalette.name);
         return /*#__PURE__*/ S.React.createElement("div", {
-            className: "scheme-info"
+            className: "palette-info"
         }, /*#__PURE__*/ S.React.createElement("input", {
-            className: "scheme-name",
-            readOnly: !modalScheme.local,
-            placeholder: "Custom Scheme",
-            value: modalScheme.local ? name : `${name} (static)`,
+            className: "palette-name",
+            readOnly: !modalPalette.local,
+            placeholder: "Custom Palette",
+            value: modalPalette.local ? name : `${name} (static)`,
             onChange: (e)=>setName(e.target.value)
-        }), modalScheme.local && [
+        }), modalPalette.local && [
             /*#__PURE__*/ S.React.createElement("button", {
-                onClick: ()=>remScheme(modalScheme)
+                onClick: ()=>remPalette(modalPalette)
             }, "Delete"),
             /*#__PURE__*/ S.React.createElement("button", {
-                onClick: (e)=>renameScheme(modalScheme, name)
+                onClick: (e)=>renamePalette(modalPalette, name)
             }, "Rename")
         ], /*#__PURE__*/ S.React.createElement("button", {
             onClick: copyObj
         }, "Copy Object"));
     };
-    const filteredSchemes = schemes.filter((scheme)=>scheme.name.toLowerCase().includes(search.toLowerCase()));
+    const filteredPalettes = palettes.filter((palette)=>palette.name.toLowerCase().includes(search.toLowerCase()));
     return /*#__PURE__*/ S.React.createElement("div", {
-        className: "schemer-container"
+        className: "palette-modal-container"
     }, /*#__PURE__*/ S.React.createElement("div", {
-        className: "scheme-list-container"
+        className: "palette-list-container"
     }, /*#__PURE__*/ S.React.createElement("ul", null, searchbar, /*#__PURE__*/ S.React.createElement(S.ReactComponents.MenuItem, {
         leadingIcon: createIconComponent({
             icon: SVGIcons.plus2px
         }),
         divider: "after",
-        onClick: addScheme
-    }, "Create New Local"), /*#__PURE__*/ S.React.createElement("ul", {
-        className: "scheme-list"
-    }, filteredSchemes.map((scheme)=>/*#__PURE__*/ S.React.createElement(S.ReactComponents.MenuItem, {
-            onClick: ()=>setScheme(scheme)
-        }, scheme.name))))), /*#__PURE__*/ S.React.createElement("div", {
+        onClick: addPalette
+    }, "Create New Palette"), /*#__PURE__*/ S.React.createElement("ul", {
+        className: "palette-list"
+    }, filteredPalettes.map((palette)=>/*#__PURE__*/ S.React.createElement(S.ReactComponents.MenuItem, {
+            onClick: ()=>setPalette(palette)
+        }, palette.name))))), /*#__PURE__*/ S.React.createElement("div", {
         className: "splitter"
     }), /*#__PURE__*/ S.React.createElement("div", {
-        className: "scheme-fields-container"
+        className: "palette-fields-container"
     }, /*#__PURE__*/ S.React.createElement(LocalInfo, null), /*#__PURE__*/ S.React.createElement("div", {
-        className: "scheme-fields"
-    }, Object.entries(modalScheme.fields).map(([name, value])=>/*#__PURE__*/ S.React.createElement("div", {
+        className: "palette-fields"
+    }, Object.entries(modalPalette.fields).map(([name, value])=>/*#__PURE__*/ S.React.createElement("div", {
             className: "input-row"
         }, /*#__PURE__*/ S.React.createElement("label", null, name), /*#__PURE__*/ S.React.createElement("input", {
             className: "color-input",
@@ -106,4 +106,4 @@ const SchemerModal = ()=>{
             onChange: (e)=>updateField(name, e.target.value)
         }))))));
 };
-export default SchemerModal;
+export default Modal;
