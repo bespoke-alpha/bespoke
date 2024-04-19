@@ -1,0 +1,14 @@
+{
+	"name": "schemer",
+	"tags": ["extension", "theming", "scheming"],
+	"preview": "./assets/PREVIEW.png",
+	"version": "beta",
+	"authors": ["harbassan"],
+	"description": "Manager for theme color schemes",
+	"readme": "./assets/README.md",
+	"entries": {
+		"js": "index.js",
+		"css": "index.css"
+	},
+	"dependencies": ["Delusoire/stdlib"]
+}
