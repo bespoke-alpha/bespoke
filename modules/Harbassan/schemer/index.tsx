@@ -5,7 +5,7 @@ import { display } from "/modules/Delusoire/stdlib/lib/modal.js";
 import { Button } from "/modules/Delusoire/stdlib/src/registers/topbarLeftButton.js";
 
 import SchemerModal from "./modal.js";
-import * as sm from "./schemes.js";
+import schemeManager from "./schemes.js";
 
 import type { Module } from "/hooks/module.js";
 
@@ -29,7 +29,7 @@ export default function (mod: Module) {
 }
 
 function create_schemes() {
-	sm.create_statics(
+	schemeManager.createStatics(
 		[
 			{
 				name: "Spicetify",

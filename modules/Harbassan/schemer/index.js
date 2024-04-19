@@ -3,7 +3,7 @@ import { SVGIcons, createRegistrar } from "/modules/Delusoire/stdlib/index.js";
 import { display } from "/modules/Delusoire/stdlib/lib/modal.js";
 import { Button } from "/modules/Delusoire/stdlib/src/registers/topbarLeftButton.js";
 import SchemerModal from "./modal.js";
-import * as sm from "./schemes.js";
+import schemeManager from "./schemes.js";
 const SchemeEdit = ()=>{
     return /*#__PURE__*/ S.React.createElement(Button, {
         label: "playlist-stats",
@@ -23,7 +23,7 @@ export default function(mod) {
     create_schemes();
 }
 function create_schemes() {
-    sm.create_statics([
+    schemeManager.createStatics([
         {
             name: "Spicetify",
             fields: {

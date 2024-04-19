@@ -1,21 +1,21 @@
 import { S, SVGIcons } from "/modules/Delusoire/stdlib/index.js";
 import { useSearchBar } from "/modules/Delusoire/stdlib/lib/components/index.js";
-import * as sm from "./schemes.js";
+import schemeManager from "./schemes.js";
 import { createIconComponent } from "/modules/Delusoire/stdlib/lib/createIconComponent.js";
 function isValidHex(hex) {
     const regex = /^#[0-9A-Fa-f]{6}$/;
     return regex.test(hex);
 }
 const SchemerModal = ()=>{
-    const [modal_scheme, set_modal_scheme] = S.React.useState(sm.curr_scheme);
-    const [schemes, set_schemes] = S.React.useState(sm.get_schemes());
+    const [modal_scheme, set_modal_scheme] = S.React.useState(schemeManager.getCurrScheme);
+    const [schemes, set_schemes] = S.React.useState(schemeManager.getSchemes());
     const [searchbar, search] = useSearchBar({
         placeholder: "Search Schemes",
         expanded: true
     });
     function set_scheme(scheme) {
         set_modal_scheme(scheme);
-        sm.toggle_scheme(scheme.name);
+        schemeManager.toggleScheme(scheme.name);
     }
     function update_field(name, value) {
         const new_fields = {
@@ -27,24 +27,24 @@ const SchemerModal = ()=>{
             fields: new_fields
         });
         if (!isValidHex(value)) return;
-        sm.update_local(modal_scheme.name, new_fields);
+        schemeManager.updateLocal(modal_scheme.name, new_fields);
     }
     function add_scheme() {
-        sm.create_local({
+        schemeManager.createLocal({
             name: "New Custom",
             fields: modal_scheme.fields
         });
-        set_schemes(sm.get_schemes());
-        set_scheme(sm.get_scheme("New Custom"));
+        set_schemes(schemeManager.getSchemes());
+        set_scheme(schemeManager.getScheme("New Custom"));
     }
     function rem_scheme(scheme) {
-        sm.delete_local(scheme.name);
-        set_schemes(sm.get_schemes());
-        set_scheme(sm.get_scheme("def"));
+        schemeManager.deleteLocal(scheme.name);
+        set_schemes(schemeManager.getSchemes());
+        set_scheme(schemeManager.getScheme("def"));
     }
     function rename_scheme(scheme, new_name) {
-        sm.rename_local(scheme.name, new_name);
-        set_schemes(sm.get_schemes());
+        schemeManager.renameLocal(scheme.name, new_name);
+        set_schemes(schemeManager.getSchemes());
     }
     function copy_obj() {
         const css = JSON.stringify(modal_scheme);
