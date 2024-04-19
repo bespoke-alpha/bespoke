@@ -10,68 +10,67 @@ function isValidHex(hex: string) {
 }
 
 const SchemerModal = () => {
-	const [modal_scheme, set_modal_scheme] = S.React.useState(schemeManager.getCurrScheme);
-	const [schemes, set_schemes] = S.React.useState(schemeManager.getSchemes());
+	const [modalScheme, setModalScheme] = S.React.useState(schemeManager.getCurrScheme());
+	const [schemes, setSchemes] = S.React.useState(schemeManager.getSchemes());
 	const [searchbar, search] = useSearchBar({ placeholder: "Search Schemes", expanded: true });
 
-	function set_scheme(scheme) {
-		set_modal_scheme(scheme);
+	function setScheme(scheme) {
+		setModalScheme(scheme);
 		schemeManager.toggleScheme(scheme.name);
 	}
 
-	function update_field(name, value) {
-		const new_fields = { ...modal_scheme.fields, [name]: value };
-		set_modal_scheme({ ...modal_scheme, fields: new_fields });
+	function updateField(name, value) {
+		const newFields = { ...modalScheme.fields, [name]: value };
+		setModalScheme({ ...modalScheme, fields: newFields });
 
 		if (!isValidHex(value)) return;
-		schemeManager.updateLocal(modal_scheme.name, new_fields);
+		schemeManager.updateLocal(modalScheme.name, newFields);
 	}
 
-	function add_scheme() {
-		schemeManager.createLocal({ name: "New Custom", fields: modal_scheme.fields });
-		set_schemes(schemeManager.getSchemes());
-
-		set_scheme(schemeManager.getScheme("New Custom"));
+	function addScheme() {
+		setScheme(schemeManager.createLocal({ name: "New Custom", fields: modalScheme.fields }));
+		setSchemes(schemeManager.getSchemes());
 	}
 
-	function rem_scheme(scheme) {
+	function remScheme(scheme) {
 		schemeManager.deleteLocal(scheme.name);
-		set_schemes(schemeManager.getSchemes());
-		set_scheme(schemeManager.getScheme("def"));
+		setSchemes(schemeManager.getSchemes());
+		setScheme(schemeManager.getScheme("def"));
 	}
 
-	function rename_scheme(scheme, new_name) {
-		schemeManager.renameLocal(scheme.name, new_name);
-		set_schemes(schemeManager.getSchemes());
+	function renameScheme(scheme, newName) {
+		schemeManager.renameLocal(scheme.name, newName);
+		setSchemes(schemeManager.getSchemes());
 	}
 
-	function copy_obj() {
-		const css = JSON.stringify(modal_scheme);
+	function copyObj() {
+		const css = JSON.stringify(modalScheme);
+		// @ts-ignore
 		S.Platform.getClipboardAPI().copy(css);
 	}
 
 	const LocalInfo = () => {
-		const [name, set_name] = S.React.useState(modal_scheme.name);
+		const [name, setName] = S.React.useState(modalScheme.name);
 
 		return (
 			<div className="scheme-info">
 				<input
 					className="scheme-name"
-					readOnly={!modal_scheme.local}
+					readOnly={!modalScheme.local}
 					placeholder="Custom Scheme"
-					value={modal_scheme.local ? name : `${name} (static)`}
-					onChange={e => set_name(e.target.value)}
+					value={modalScheme.local ? name : `${name} (static)`}
+					onChange={(e) => setName(e.target.value)}
 				/>
-				{modal_scheme.local && [
-					<button onClick={() => rem_scheme(modal_scheme)}>Delete</button>,
-					<button onClick={e => rename_scheme(modal_scheme, name)}>Rename</button>,
+				{modalScheme.local && [
+					<button onClick={() => remScheme(modalScheme)}>Delete</button>,
+					<button onClick={(e) => renameScheme(modalScheme, name)}>Rename</button>,
 				]}
-				<button onClick={copy_obj}>Copy Object</button>
+				<button onClick={copyObj}>Copy Object</button>
 			</div>
 		);
 	};
 
-	const filtered_schemes = schemes.filter(scheme => scheme.name.toLowerCase().includes(search.toLowerCase()));
+	const filteredSchemes = schemes.filter((scheme) => scheme.name.toLowerCase().includes(search.toLowerCase()));
 
 	return (
 		<div className="schemer-container">
@@ -83,13 +82,13 @@ const SchemerModal = () => {
 							icon: SVGIcons.plus2px,
 						})}
 						divider="after"
-						onClick={add_scheme}
+						onClick={addScheme}
 					>
 						Create New Local
 					</S.ReactComponents.MenuItem>
 					<ul className="scheme-list">
-						{filtered_schemes.map(scheme => (
-							<S.ReactComponents.MenuItem onClick={() => set_scheme(scheme)}>{scheme.name}</S.ReactComponents.MenuItem>
+						{filteredSchemes.map(scheme => (
+							<S.ReactComponents.MenuItem onClick={() => setScheme(scheme)}>{scheme.name}</S.ReactComponents.MenuItem>
 						))}
 					</ul>
 				</ul>
@@ -98,11 +97,11 @@ const SchemerModal = () => {
 			<div className="scheme-fields-container">
 				<LocalInfo />
 				<div className="scheme-fields">
-					{Object.entries(modal_scheme.fields).map(([name, value]) => (
+					{Object.entries(modalScheme.fields).map(([name, value]) => (
 						<div className="input-row">
 							<label>{name}</label>
-							<input className="color-input" type="color" value={value} onChange={e => update_field(name, e.target.value)} />
-							<input className="text-input" type="text" value={value} onChange={e => update_field(name, e.target.value)} />
+							<input className="color-input" type="color" value={value} onChange={e => updateField(name, e.target.value)} />
+							<input className="text-input" type="text" value={value} onChange={e => updateField(name, e.target.value)} />
 						</div>
 					))}
 				</div>

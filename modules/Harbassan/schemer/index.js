@@ -20,9 +20,9 @@ const SchemeEdit = ()=>{
 export default function(mod) {
     const registrar = createRegistrar(mod);
     registrar.register("topbarLeftButton", SchemeEdit);
-    create_schemes();
+    createSchemes();
 }
-function create_schemes() {
+function createSchemes() {
     schemeManager.createStatics([
         {
             name: "Spicetify",

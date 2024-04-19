@@ -90,9 +90,11 @@ class SchemeManager {
 	}
 
 	// local schemes
-	public createLocal(partial_scheme: PartialScheme): void {
-		this.local_schemes.push(this.fromPartial(partial_scheme));
+	public createLocal(partial_scheme: PartialScheme): Scheme {
+		const scheme = this.fromPartial(partial_scheme);
+		this.local_schemes.push(scheme);
 		localStorage.setItem("schemes", JSON.stringify(this.local_schemes));
+		return scheme;
 	}
 
 	public updateLocal(name: string, new_fields: SchemeFields): void {

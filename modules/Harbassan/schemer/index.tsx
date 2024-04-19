@@ -25,10 +25,10 @@ export default function (mod: Module) {
 	const registrar = createRegistrar(mod);
 	registrar.register("topbarLeftButton", SchemeEdit);
 
-	create_schemes();
+	createSchemes();
 }
 
-function create_schemes() {
+function createSchemes() {
 	schemeManager.createStatics(
 		[
 			{

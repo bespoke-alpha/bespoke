@@ -7,71 +7,71 @@ function isValidHex(hex) {
     return regex.test(hex);
 }
 const SchemerModal = ()=>{
-    const [modal_scheme, set_modal_scheme] = S.React.useState(schemeManager.getCurrScheme);
-    const [schemes, set_schemes] = S.React.useState(schemeManager.getSchemes());
+    const [modalScheme, setModalScheme] = S.React.useState(schemeManager.getCurrScheme());
+    const [schemes, setSchemes] = S.React.useState(schemeManager.getSchemes());
     const [searchbar, search] = useSearchBar({
         placeholder: "Search Schemes",
         expanded: true
     });
-    function set_scheme(scheme) {
-        set_modal_scheme(scheme);
+    function setScheme(scheme) {
+        setModalScheme(scheme);
         schemeManager.toggleScheme(scheme.name);
     }
-    function update_field(name, value) {
-        const new_fields = {
-            ...modal_scheme.fields,
+    function updateField(name, value) {
+        const newFields = {
+            ...modalScheme.fields,
             [name]: value
         };
-        set_modal_scheme({
-            ...modal_scheme,
-            fields: new_fields
+        setModalScheme({
+            ...modalScheme,
+            fields: newFields
         });
         if (!isValidHex(value)) return;
-        schemeManager.updateLocal(modal_scheme.name, new_fields);
+        schemeManager.updateLocal(modalScheme.name, newFields);
     }
-    function add_scheme() {
-        schemeManager.createLocal({
+    function addScheme() {
+        setScheme(schemeManager.createLocal({
             name: "New Custom",
-            fields: modal_scheme.fields
-        });
-        set_schemes(schemeManager.getSchemes());
-        set_scheme(schemeManager.getScheme("New Custom"));
+            fields: modalScheme.fields
+        }));
+        setSchemes(schemeManager.getSchemes());
     }
-    function rem_scheme(scheme) {
+    function remScheme(scheme) {
         schemeManager.deleteLocal(scheme.name);
-        set_schemes(schemeManager.getSchemes());
-        set_scheme(schemeManager.getScheme("def"));
+        setSchemes(schemeManager.getSchemes());
+        setScheme(schemeManager.getScheme("def"));
     }
-    function rename_scheme(scheme, new_name) {
-        schemeManager.renameLocal(scheme.name, new_name);
-        set_schemes(schemeManager.getSchemes());
+    function renameScheme(scheme, newName) {
+        schemeManager.renameLocal(scheme.name, newName);
+        setSchemes(schemeManager.getSchemes());
     }
-    function copy_obj() {
-        const css = JSON.stringify(modal_scheme);
+    function copyObj() {
+        const css = JSON.stringify(modalScheme);
+        // @ts-ignore
         S.Platform.getClipboardAPI().copy(css);
     }
     const LocalInfo = ()=>{
-        const [name, set_name] = S.React.useState(modal_scheme.name);
+        const [name, setName] = S.React.useState(modalScheme.name);
         return /*#__PURE__*/ S.React.createElement("div", {
             className: "scheme-info"
         }, /*#__PURE__*/ S.React.createElement("input", {
             className: "scheme-name",
-            readOnly: !modal_scheme.local,
+            readOnly: !modalScheme.local,
             placeholder: "Custom Scheme",
-            value: modal_scheme.local ? name : `${name} (static)`,
-            onChange: (e)=>set_name(e.target.value)
-        }), modal_scheme.local && [
+            value: modalScheme.local ? name : `${name} (static)`,
+            onChange: (e)=>setName(e.target.value)
+        }), modalScheme.local && [
             /*#__PURE__*/ S.React.createElement("button", {
-                onClick: ()=>rem_scheme(modal_scheme)
+                onClick: ()=>remScheme(modalScheme)
             }, "Delete"),
             /*#__PURE__*/ S.React.createElement("button", {
-                onClick: (e)=>rename_scheme(modal_scheme, name)
+                onClick: (e)=>renameScheme(modalScheme, name)
             }, "Rename")
         ], /*#__PURE__*/ S.React.createElement("button", {
-            onClick: copy_obj
+            onClick: copyObj
         }, "Copy Object"));
     };
-    const filtered_schemes = schemes.filter((scheme)=>scheme.name.toLowerCase().includes(search.toLowerCase()));
+    const filteredSchemes = schemes.filter((scheme)=>scheme.name.toLowerCase().includes(search.toLowerCase()));
     return /*#__PURE__*/ S.React.createElement("div", {
         className: "schemer-container"
     }, /*#__PURE__*/ S.React.createElement("div", {
@@ -81,29 +81,29 @@ const SchemerModal = ()=>{
             icon: SVGIcons.plus2px
         }),
         divider: "after",
-        onClick: add_scheme
+        onClick: addScheme
     }, "Create New Local"), /*#__PURE__*/ S.React.createElement("ul", {
         className: "scheme-list"
-    }, filtered_schemes.map((scheme)=>/*#__PURE__*/ S.React.createElement(S.ReactComponents.MenuItem, {
-            onClick: ()=>set_scheme(scheme)
+    }, filteredSchemes.map((scheme)=>/*#__PURE__*/ S.React.createElement(S.ReactComponents.MenuItem, {
+            onClick: ()=>setScheme(scheme)
         }, scheme.name))))), /*#__PURE__*/ S.React.createElement("div", {
         className: "splitter"
     }), /*#__PURE__*/ S.React.createElement("div", {
         className: "scheme-fields-container"
     }, /*#__PURE__*/ S.React.createElement(LocalInfo, null), /*#__PURE__*/ S.React.createElement("div", {
         className: "scheme-fields"
-    }, Object.entries(modal_scheme.fields).map(([name, value])=>/*#__PURE__*/ S.React.createElement("div", {
+    }, Object.entries(modalScheme.fields).map(([name, value])=>/*#__PURE__*/ S.React.createElement("div", {
             className: "input-row"
         }, /*#__PURE__*/ S.React.createElement("label", null, name), /*#__PURE__*/ S.React.createElement("input", {
             className: "color-input",
             type: "color",
             value: value,
-            onChange: (e)=>update_field(name, e.target.value)
+            onChange: (e)=>updateField(name, e.target.value)
         }), /*#__PURE__*/ S.React.createElement("input", {
             className: "text-input",
             type: "text",
             value: value,
-            onChange: (e)=>update_field(name, e.target.value)
+            onChange: (e)=>updateField(name, e.target.value)
         }))))));
 };
 export default SchemerModal;
