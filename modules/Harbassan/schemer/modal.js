@@ -87,8 +87,6 @@ const Modal = ()=>{
     }, filteredPalettes.map((palette)=>/*#__PURE__*/ S.React.createElement(S.ReactComponents.MenuItem, {
             onClick: ()=>setPalette(palette)
         }, palette.name))))), /*#__PURE__*/ S.React.createElement("div", {
-        className: "splitter"
-    }), /*#__PURE__*/ S.React.createElement("div", {
         className: "palette-fields-container"
     }, /*#__PURE__*/ S.React.createElement(LocalInfo, null), /*#__PURE__*/ S.React.createElement("div", {
         className: "palette-fields"

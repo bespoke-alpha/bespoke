@@ -33,8 +33,12 @@
 
 /* Modal Styles */
 
+.uUYNnjSt8m3EqVjsnHgh {
+    overflow: auto !important;
+}
+
 .palette-modal-container {
-    --input-bg: hsla(0,0%,100%,.1);
+    --input-bg: #242424;
     --input-bg2: #121212;
     --secondary-bg: #242424;
     --border-radius: 4px;
@@ -52,9 +56,10 @@
 
 .palette-list-container {
     width: 12rem;
+    background-color: #101010;
+    padding: 8px;
 
     > ul {
-        height: 45vh;
         display: flex;
         flex-direction: column;
 
@@ -64,7 +69,7 @@
     }
 
     .palette-list {
-        overflow-y: scroll;
+        overflow-y: auto;
     }
 
     .QZhV0hWVKlExlKr266jo {
@@ -79,15 +84,17 @@
     display: flex;
     flex-direction: column;
     font-size: 14px;
+    background-color: #121212;
+    padding: 8px;
 
     .palette-fields {
         background-color: var(--secondary-bg);
         border-radius: var(--border-radius);
-        padding: var(--gap-secondary);
+        padding: var(--gap-primary);
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
-        height: calc(100% - 34px);
+        height: calc(100% - 40px);
         row-gap: 4px;
         column-gap: var(--gap-secondary);
 
@@ -150,6 +157,7 @@
             height: 32px;
             flex-grow: 1;
             font-size: 1rem;
+            color: white;
         }
     }
 }

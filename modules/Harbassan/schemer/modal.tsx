@@ -93,7 +93,6 @@ const Modal = () => {
 					</ul>
 				</ul>
 			</div>
-			<div className="splitter" />
 			<div className="palette-fields-container">
 				<LocalInfo />
 				<div className="palette-fields">
