@@ -2,6 +2,7 @@ import { S, SVGIcons } from "/modules/Delusoire/stdlib/index.js";
 import { useSearchBar } from "/modules/Delusoire/stdlib/lib/components/index.js";
 import paletteManager from "./paletteManager.js";
 import { createIconComponent } from "/modules/Delusoire/stdlib/lib/createIconComponent.js";
+import { startCase } from "/modules/Delusoire/stdlib/deps.js";
 function isValidHex(hex) {
     const regex = /^#[0-9A-Fa-f]{6}$/;
     return regex.test(hex);
@@ -85,6 +86,9 @@ const Modal = ()=>{
     }, "Create New Palette"), /*#__PURE__*/ S.React.createElement("ul", {
         className: "palette-list"
     }, filteredPalettes.map((palette)=>/*#__PURE__*/ S.React.createElement(S.ReactComponents.MenuItem, {
+            trailingIcon: palette.name == modalPalette.name && createIconComponent({
+                icon: SVGIcons.check
+            }),
             onClick: ()=>setPalette(palette)
         }, palette.name))))), /*#__PURE__*/ S.React.createElement("div", {
         className: "palette-fields-container"
@@ -92,7 +96,7 @@ const Modal = ()=>{
         className: "palette-fields"
     }, Object.entries(modalPalette.fields).map(([name, value])=>/*#__PURE__*/ S.React.createElement("div", {
             className: "input-row"
-        }, /*#__PURE__*/ S.React.createElement("label", null, name), /*#__PURE__*/ S.React.createElement("input", {
+        }, /*#__PURE__*/ S.React.createElement("label", null, startCase(name)), /*#__PURE__*/ S.React.createElement("input", {
             className: "color-input",
             type: "color",
             value: value,

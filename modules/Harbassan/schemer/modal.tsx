@@ -3,6 +3,7 @@ import { S, SVGIcons } from "/modules/Delusoire/stdlib/index.js";
 import { useSearchBar } from "/modules/Delusoire/stdlib/lib/components/index.js";
 import paletteManager from "./paletteManager.js";
 import { createIconComponent } from "/modules/Delusoire/stdlib/lib/createIconComponent.js";
+import { startCase } from "/modules/Delusoire/stdlib/deps.js";
 
 function isValidHex(hex: string) {
 	const regex = /^#[0-9A-Fa-f]{6}$/;
@@ -59,18 +60,18 @@ const Modal = () => {
 					readOnly={!modalPalette.local}
 					placeholder="Custom Palette"
 					value={modalPalette.local ? name : `${name} (static)`}
-					onChange={(e) => setName(e.target.value)}
+					onChange={e => setName(e.target.value)}
 				/>
 				{modalPalette.local && [
 					<button onClick={() => remPalette(modalPalette)}>Delete</button>,
-					<button onClick={(e) => renamePalette(modalPalette, name)}>Rename</button>,
+					<button onClick={e => renamePalette(modalPalette, name)}>Rename</button>,
 				]}
 				<button onClick={copyObj}>Copy Object</button>
 			</div>
 		);
 	};
 
-	const filteredPalettes = palettes.filter((palette) => palette.name.toLowerCase().includes(search.toLowerCase()));
+	const filteredPalettes = palettes.filter(palette => palette.name.toLowerCase().includes(search.toLowerCase()));
 
 	return (
 		<div className="palette-modal-container">
@@ -88,7 +89,17 @@ const Modal = () => {
 					</S.ReactComponents.MenuItem>
 					<ul className="palette-list">
 						{filteredPalettes.map(palette => (
-							<S.ReactComponents.MenuItem onClick={() => setPalette(palette)}>{palette.name}</S.ReactComponents.MenuItem>
+							<S.ReactComponents.MenuItem
+								trailingIcon={
+									palette.name == modalPalette.name &&
+									createIconComponent({
+										icon: SVGIcons.check,
+									})
+								}
+								onClick={() => setPalette(palette)}
+							>
+								{palette.name}
+							</S.ReactComponents.MenuItem>
 						))}
 					</ul>
 				</ul>
@@ -98,7 +109,7 @@ const Modal = () => {
 				<div className="palette-fields">
 					{Object.entries(modalPalette.fields).map(([name, value]) => (
 						<div className="input-row">
-							<label>{name}</label>
+							<label>{startCase(name)}</label>
 							<input className="color-input" type="color" value={value} onChange={e => updateField(name, e.target.value)} />
 							<input className="text-input" type="text" value={value} onChange={e => updateField(name, e.target.value)} />
 						</div>
