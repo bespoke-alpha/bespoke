@@ -63,10 +63,16 @@ const Modal = () => {
 					onChange={e => setName(e.target.value)}
 				/>
 				{modalPalette.local && [
-					<button onClick={() => remPalette(modalPalette)}>Delete</button>,
-					<button onClick={e => renamePalette(modalPalette, name)}>Rename</button>,
+					<button type="button" key="delete" onClick={() => remPalette(modalPalette)}>
+						Delete
+					</button>,
+					<button type="button" key="rename" onClick={e => renamePalette(modalPalette, name)}>
+						Rename
+					</button>,
 				]}
-				<button onClick={copyObj}>Copy Object</button>
+				<button type="button" onClick={copyObj}>
+					Copy Object
+				</button>
 			</div>
 		);
 	};
@@ -89,9 +95,10 @@ const Modal = () => {
 					</S.ReactComponents.MenuItem>
 					<ul className="palette-list">
 						{filteredPalettes.map(palette => (
+							// biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
 							<S.ReactComponents.MenuItem
 								trailingIcon={
-									palette.name == modalPalette.name &&
+									palette.name === modalPalette.name &&
 									createIconComponent({
 										icon: SVGIcons.check,
 									})
@@ -108,7 +115,7 @@ const Modal = () => {
 				<LocalInfo />
 				<div className="palette-fields">
 					{Object.entries(modalPalette.fields).map(([name, value]) => (
-						<div className="input-row">
+						<div key={name} className="input-row">
 							<label>{startCase(name)}</label>
 							<input className="color-input" type="color" value={value} onChange={e => updateField(name, e.target.value)} />
 							<input className="text-input" type="text" value={value} onChange={e => updateField(name, e.target.value)} />

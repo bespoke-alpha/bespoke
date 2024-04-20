@@ -63,12 +63,17 @@ const Modal = ()=>{
             onChange: (e)=>setName(e.target.value)
         }), modalPalette.local && [
             /*#__PURE__*/ S.React.createElement("button", {
+                type: "button",
+                key: "delete",
                 onClick: ()=>remPalette(modalPalette)
             }, "Delete"),
             /*#__PURE__*/ S.React.createElement("button", {
+                type: "button",
+                key: "rename",
                 onClick: (e)=>renamePalette(modalPalette, name)
             }, "Rename")
         ], /*#__PURE__*/ S.React.createElement("button", {
+            type: "button",
             onClick: copyObj
         }, "Copy Object"));
     };
@@ -85,8 +90,9 @@ const Modal = ()=>{
         onClick: addPalette
     }, "Create New Palette"), /*#__PURE__*/ S.React.createElement("ul", {
         className: "palette-list"
-    }, filteredPalettes.map((palette)=>/*#__PURE__*/ S.React.createElement(S.ReactComponents.MenuItem, {
-            trailingIcon: palette.name == modalPalette.name && createIconComponent({
+    }, filteredPalettes.map((palette)=>// biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
+        /*#__PURE__*/ S.React.createElement(S.ReactComponents.MenuItem, {
+            trailingIcon: palette.name === modalPalette.name && createIconComponent({
                 icon: SVGIcons.check
             }),
             onClick: ()=>setPalette(palette)
@@ -95,6 +101,7 @@ const Modal = ()=>{
     }, /*#__PURE__*/ S.React.createElement(LocalInfo, null), /*#__PURE__*/ S.React.createElement("div", {
         className: "palette-fields"
     }, Object.entries(modalPalette.fields).map(([name, value])=>/*#__PURE__*/ S.React.createElement("div", {
+            key: name,
             className: "input-row"
         }, /*#__PURE__*/ S.React.createElement("label", null, startCase(name)), /*#__PURE__*/ S.React.createElement("input", {
             className: "color-input",

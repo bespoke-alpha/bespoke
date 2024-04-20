@@ -38,9 +38,9 @@
 }
 
 .palette-modal-container {
-    --input-bg: #242424;
+    --input-bg: #202020;
     --input-bg2: #121212;
-    --secondary-bg: #242424;
+    --secondary-bg: #202020;
     --border-radius: 4px;
     --gap-primary: 8px;
     --gap-secondary: 12px;
@@ -57,7 +57,8 @@
 .palette-list-container {
     width: 12rem;
     background-color: #101010;
-    padding: 8px;
+    padding: var(--gap-primary);
+    border-radius: var(--border-radius);
 
     > ul {
         display: flex;
@@ -86,6 +87,7 @@
     font-size: 14px;
     background-color: #121212;
     padding: 8px;
+    border-radius: var(--border-radius);
 
     .palette-fields {
         background-color: var(--secondary-bg);
