@@ -1,0 +1,165 @@
+@import './theme.scss';
+
+/* Color Mapping */
+
+.encore-dark-theme {
+    --background-base: var(--spice-main);
+    --background-highlight: var(--spice-highlight);
+    --background-press: var(--spice-highlight);
+    --background-elevated-base: var(--spice-main_elevated);
+    --background-elevated-highlight: var(--spice-highlight_elevated);
+    --background-elevated-press: var(--spice-highlight_elevated);
+    --background-tinted-base: rgba(255, 255, 255, 0.07);
+    --background-tinted-highlight: rgba(255, 255, 255, 0.1);
+    --background-tinted-press: rgba(255, 255, 255, 0.04);
+    --text-base: var(--spice-text);
+    --text-subdued: var(--spice-subtext);
+    --text-bright-accent: var(--spice-button);
+    --text-positive: var(--spice-button_active);
+    --text-announcement: var(--spice-notification);
+    --essential-base: var(--spice-button);
+    --essential-bright-accent: var(--spice-button_active);
+    --essential-positive: var(--spice-button_active);
+    --essential-announcement: var(--spice-notification);
+    --decorative-subdued: var(--spice-card);
+}
+
+.encore-dark-theme .encore-bright-accent-set {
+    --background-base: var(--spice-button);
+    --background-highlight: var(--spice-button_active);
+    --background-press: var(--spice-button_active);
+    --text-base: var(--spice-main);
+}
+
+/* Modal Styles */
+
+.uUYNnjSt8m3EqVjsnHgh {
+    overflow: auto !important;
+}
+
+.palette-modal-container {
+    --input-bg: #202020;
+    --input-bg2: #121212;
+    --secondary-bg: #202020;
+    --border-radius: 4px;
+    --gap-primary: 8px;
+    --gap-secondary: 12px;
+
+    display: flex;
+    gap: var(--gap-primary);
+}
+
+.splitter {
+    background: var(--input-bg);
+    width: 2px;
+}
+
+.palette-list-container {
+    width: 12rem;
+    background-color: #101010;
+    padding: var(--gap-primary);
+    border-radius: var(--border-radius);
+
+    > ul {
+        display: flex;
+        flex-direction: column;
+
+        > li {
+            margin-top: 4px;
+        }
+    }
+
+    .palette-list {
+        overflow-y: auto;
+    }
+
+    .QZhV0hWVKlExlKr266jo {
+        width: 100%;
+    }
+}
+
+.palette-fields-container {
+    flex-grow: 1;
+    height: 45vh;
+    gap: var(--gap-primary);
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    background-color: #121212;
+    padding: 8px;
+    border-radius: var(--border-radius);
+
+    .palette-fields {
+        background-color: var(--secondary-bg);
+        border-radius: var(--border-radius);
+        padding: var(--gap-primary);
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        height: calc(100% - 40px);
+        row-gap: 4px;
+        column-gap: var(--gap-secondary);
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: var(--gap-primary);
+        }
+    
+        .text-input {
+            background-color: var(--input-bg2);
+            padding: 8px;
+            border: none;
+            border-radius: var(--border-radius);
+            height: 30px;
+            width: 80px;
+        }
+    
+        .color-input {
+            border: none;
+            height: 30px;
+            width: 30px;
+            background-color: var(--input-bg2);
+            border-radius: 6px;
+            padding: 6px;
+            margin-left: auto;
+    
+            &::-webkit-color-swatch-wrapper {
+                padding: 0;
+            }
+    
+            &::-webkit-color-swatch {
+                border: none;
+                border-radius: 50%;
+            }
+        }
+    }
+
+    .palette-info {
+        display: flex;
+        gap: var(--gap-primary);
+        align-items: center;
+
+        > button {
+            background-color: white;
+            border: none;
+            height: 32px;
+            border-radius: var(--border-radius);
+            padding: 0px 12px;
+            color: black;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .palette-name {
+            background-color: var(--input-bg);
+            padding: 8px;
+            border: none;
+            border-radius: var(--border-radius);
+            height: 32px;
+            flex-grow: 1;
+            font-size: 1rem;
+            color: white;
+        }
+    }
+}
