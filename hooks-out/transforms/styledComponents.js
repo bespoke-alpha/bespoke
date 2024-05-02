@@ -7,7 +7,7 @@ internalRegisterTransform({
         name) => {
             if (!executionContext)
                 return name;
-            const className = /(?:\w+__)?(\w+)-[\w-]+/.exec(componentStyle.componentId)[1];
+            const truncatedClassName = /(?:\w+__)?(\w+)(?:-\w+)+/.exec(componentStyle.componentId)[1];
             const isValidString = (v) => typeof v === "string" && v.length > 0;
             const isValidNumber = (v) => typeof v === "number";
             const parseProp = ([k, v]) => ((isValidString(v) || isValidNumber(v)) && `${k}_${v}`) || (v && k);
@@ -43,16 +43,13 @@ internalRegisterTransform({
                 }
                 return parseProp([k, v]);
             };
-            return (className +
-                "-" +
-                Object.entries(executionContext)
-                    .map(parsePair)
-                    .filter(Boolean)
-                    .sort()
-                    .join("-")
-                    .replaceAll("$", "")
-                    .replace(/[^\w-]/g, "_") +
-                name);
+            return `${truncatedClassName}-${Object.entries(executionContext)
+                .map(parsePair)
+                .filter(Boolean)
+                .sort()
+                .join("-")
+                .replaceAll("$", "")
+                .replace(/[^\w-]/g, "_")}${name}`;
         };
         emit();
         return str;

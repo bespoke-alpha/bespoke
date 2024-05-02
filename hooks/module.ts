@@ -364,8 +364,8 @@ export const ModuleManager = {
 	enable: (identifier: string) => {
 		sendProtocolMessage(`${bespokeScheme}enable:${identifier}`);
 	},
-	disablsendProtocolMessagee: (identifier: string) => {
-		open(`${bespokeScheme}disable:${identifier}`);
+	disable: (identifier: string) => {
+		sendProtocolMessage(`${bespokeScheme}disable:${identifier}`);
 	},
 };
 
