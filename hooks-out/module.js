@@ -278,8 +278,8 @@ export const ModuleManager = {
     enable: (identifier) => {
         sendProtocolMessage(`${bespokeScheme}enable:${identifier}`);
     },
-    disablsendProtocolMessagee: (identifier) => {
-        open(`${bespokeScheme}disable:${identifier}`);
+    disable: (identifier) => {
+        sendProtocolMessage(`${bespokeScheme}disable:${identifier}`);
     },
 };
 const lock = await fetchJSON("/modules/vault.json");
