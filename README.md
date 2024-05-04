@@ -60,9 +60,15 @@ $spotifyPackage = Get-AppxPackage | Where-Object -Property Name -Eq "SpotifyAB.S
 
 ### Todos
 
+- Add a "spotify.version" semver prop to Metadata.json that will be used to disable non-conforming modules
+- Improve classname remapping:
+  - Hook into postcss & swc transpiration
+  - Maintain classname maps on a per version basis
+---
+- Add TUI for when bespoke is executed without arguments
+---
 - Improve spotify paths recognition on Linux
 - Add linux desktop entry (for custom url scheme)
-- Improve classname remapping:
-  - Hook into postcss & swc transpilation
-  - Maintain classname maps on a per version basis
-- Add a "spotify.version" semver prop to Metadata.json that will be used to disable non-conforming modules
+- Package the executable into a `.app` for MacOS
+
+
