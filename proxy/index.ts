@@ -49,6 +49,7 @@ function processResHeaders(res: Response, reqUrl: string) {
 		res.headers.delete(k);
 	}
 
+	// TODO: how do we handle Set-Cookie's Domain?
 	if (res.headers.has("Location")) {
 		const locationHeader = res.headers.get("Location");
 		const fixedLocationHeader = fixUrl(locationHeader, reqUrl);
