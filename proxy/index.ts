@@ -1,11 +1,78 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 
+const SEP = "-20";
 const HOST = ".delusoire.top";
-
-const CCC = "-20";
-
 const xSetHeaders = "X-Set-Headers";
+
+function extractReqUrl(req: Request) {
+	const reqUrl = new URL(req.url);
+	reqUrl.host = reqUrl.host.slice(0, -HOST.length).replaceAll(SEP, ".");
+	return reqUrl.toString();
+}
+
+function processReqHeaders(req: Request) {
+	const headers = JSON.parse(req.headers.get(xSetHeaders)) as Record<string, string>;
+
+	req.headers.delete("host");
+	req.headers.delete(xSetHeaders);
+	for (const [k, v] of Object.entries(headers ?? {})) {
+		if (v === "undefined") {
+			req.headers.delete(k);
+		} else {
+			req.headers.set(k, v);
+		}
+	}
+}
+
+function fixUrl(url: string, reqUrl: string) {
+	let urlObj: URL;
+	try {
+		urlObj = new URL(url);
+		urlObj.host = urlObj.host.replaceAll(".", SEP) + HOST;
+	} catch (_) {
+		urlObj = new URL(reqUrl);
+		urlObj.search = "";
+		if (!urlObj.href.endsWith("/")) {
+			urlObj.href += "/";
+		}
+		urlObj.href += url;
+	}
+
+	return urlObj.href;
+}
+
+function processResHeaders(res: Response, reqUrl: string) {
+	const blacklistedHeaders = ["Access-Control-Allow-Origin", "Content-Encoding", "Date"];
+
+	for (const k of blacklistedHeaders) {
+		res.headers.delete(k);
+	}
+
+	if (res.headers.has("Location")) {
+		const locationHeader = res.headers.get("Location");
+		const fixedLocationHeader = fixUrl(locationHeader, reqUrl);
+		res.headers.set("Location", fixedLocationHeader);
+	}
+}
+
+const handleMitm = async (req: Request, logs: any[]) => {
+	const url = extractReqUrl(req);
+	processReqHeaders(req);
+
+	logs.push(new Date());
+	logs.push(url);
+	logs.push(...Array.from(req.headers.entries()).map(([k, v]) => `${k}: ${v}`));
+
+	// Thanks Bun for not accepting Request.redirect = "manual"
+	const res = await fetch(new Request(url, req), { redirect: "manual" });
+	const resCopy = new Response(res.body, res);
+
+	logs.push(await resCopy.clone().text());
+
+	processResHeaders(resCopy, req.url);
+	return resCopy;
+};
 
 export default new Elysia({ aot: false })
 	.onAfterHandle(({ set }) => {
@@ -18,13 +85,12 @@ export default new Elysia({ aot: false })
 		}),
 	)
 	.all("*", async context => {
-		let res: Response;
-
 		const logs = [];
-		let err: any;
+
+		let res: Response, err: any;
 		try {
-			const req = new Request(context.request, { body: context.body });
-			res = await handleMitm(req, logs);
+			const reqCopy = new Request(context.request, { body: context.body });
+			res = await handleMitm(reqCopy, logs);
 		} catch (e) {
 			err = e;
 		}
@@ -40,52 +106,3 @@ export default new Elysia({ aot: false })
 		return res;
 	});
 // .listen(7878);
-
-const handleMitm = async (req: Request, logs: any[]) => {
-	console.log(req.mode);
-	const reqUrlObj = new URL(req.url);
-	reqUrlObj.host = reqUrlObj.host.slice(0, -HOST.length).replaceAll(CCC, ".");
-	const url = reqUrlObj.toString();
-	const headers = JSON.parse(req.headers.get(xSetHeaders));
-	req.headers.delete(xSetHeaders);
-
-	req.headers.delete("host");
-	for (const [k, v] of Object.entries(headers ?? {})) {
-		if (v === "undefined") {
-			req.headers.delete(k);
-		} else {
-			req.headers.set(k, v);
-		}
-	}
-
-	logs.push(new Date());
-	logs.push(url);
-	logs.push(...Array.from(req.headers.entries()).map(([k, v]) => `${k}: ${v}`));
-	const res = await fetch(new Request(url, req), { redirect: "manual" }); // Thanks Bun for not accepting Request.redirect = "manual"
-	const resClone = new Response(res.body, res);
-	logs.push(await resClone.clone().text());
-
-	for (const k of ["Access-Control-Allow-Origin", "Content-Encoding", "Date"]) {
-		resClone.headers.delete(k);
-	}
-
-	if (resClone.headers.has("Location")) {
-		const locationHeader = resClone.headers.get("Location");
-
-		let locationUrlObj: URL;
-		try {
-			locationUrlObj = new URL(locationHeader);
-			locationUrlObj.host = locationUrlObj.host.replaceAll(".", CCC) + HOST;
-		} catch (_) {
-			locationUrlObj = new URL(req.url);
-			locationUrlObj.search = "";
-			if (!locationUrlObj.href.endsWith("/")) {
-				locationUrlObj.href += "/";
-			}
-			locationUrlObj.href += locationHeader;
-		}
-
-		resClone.headers.set("Location", locationUrlObj.href);
-	}
-	return resClone;
-};
