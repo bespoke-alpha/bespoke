@@ -253,7 +253,7 @@ export class Module {
         return this.enabled;
     }
 }
-const bespokeProtocol = "https://bespoke-proxy.delusoire.workers.dev/protocol/";
+const bespokeProtocol = "https://bespoke.delusoire.workers.dev/protocol/";
 const bespokeScheme = "bespoke:";
 let fallback = false;
 const ws = new WebSocket("ws://localhost:7967/protocol");

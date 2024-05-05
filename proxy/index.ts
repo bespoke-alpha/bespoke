@@ -1,7 +1,9 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 
-const HOST = ".proxy.delusoire.dev";
+const HOST = ".delusoire.top";
+
+const CCC = "-20";
 
 const xSetHeaders = "X-Set-Headers";
 
@@ -42,7 +44,7 @@ export default new Elysia({ aot: false })
 const handleMitm = async (req: Request, logs: any[]) => {
 	console.log(req.mode);
 	const reqUrlObj = new URL(req.url);
-	reqUrlObj.host = reqUrlObj.host.slice(0, -HOST.length);
+	reqUrlObj.host = reqUrlObj.host.slice(0, -HOST.length).replaceAll(CCC, ".");
 	const url = reqUrlObj.toString();
 	const headers = JSON.parse(req.headers.get(xSetHeaders));
 	req.headers.delete(xSetHeaders);
@@ -73,7 +75,7 @@ const handleMitm = async (req: Request, logs: any[]) => {
 		let locationUrlObj: URL;
 		try {
 			locationUrlObj = new URL(locationHeader);
-			locationUrlObj.host += HOST;
+			locationUrlObj.host = locationUrlObj.host.replaceAll(".", CCC) + HOST;
 		} catch (_) {
 			locationUrlObj = new URL(req.url);
 			locationUrlObj.search = "";

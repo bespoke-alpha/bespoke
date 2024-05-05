@@ -336,7 +336,7 @@ export class Module {
 	}
 }
 
-const bespokeProtocol = "https://bespoke-proxy.delusoire.workers.dev/protocol/";
+const bespokeProtocol = "https://bespoke.delusoire.workers.dev/protocol/";
 const bespokeScheme = "bespoke:";
 
 let fallback = false;
