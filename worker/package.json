@@ -1,0 +1,16 @@
+{
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy --minify"
+	},
+	"dependencies": {
+		"elysia": "latest",
+		"@elysiajs/cors": "latest"
+	},
+	"devDependencies": {
+		"bun-types": "latest",
+		"@cloudflare/workers-types": "^4.20230904.0",
+		"wrangler": "^3.6.0"
+	},
+	"module": "index.js"
+}

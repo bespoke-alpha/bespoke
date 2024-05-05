@@ -1,6 +1,8 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 
+const HOST = ".proxy.delusoire.dev";
+
 const xSetHeaders = "X-Set-Headers";
 
 export default new Elysia({ aot: false })
@@ -13,17 +15,14 @@ export default new Elysia({ aot: false })
 			origin: "xpui.app.spotify.com",
 		}),
 	)
-	.get("/", () => new Response(undefined, { status: 418 }))
-	.get("/ping/", () => new Response("pong", { status: 200 })) // TODO: can be used to track launches
-	.all("/mitm/*", async context => {
+	.all("*", async context => {
 		let res: Response;
 
 		const logs = [];
 		let err: any;
 		try {
 			const req = new Request(context.request, { body: context.body });
-			const urlPath = context.params["*"];
-			res = await handleMitm(req, urlPath, logs);
+			res = await handleMitm(req, logs);
 		} catch (e) {
 			err = e;
 		}
@@ -37,30 +36,14 @@ export default new Elysia({ aot: false })
 		}
 
 		return res;
-	})
-	.get("/protocol/*", async context => {
-		const strippedPath = context.path.slice("/protocol/".length);
-		const html = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>bespoke protocol</title>
-</head>
-<body>
-	<script>open("${strippedPath}")</script>
-</body>
-</html>
-`;
-		return new Blob([html], { type: "text/html" });
 	});
-// .listen(8787);
+// .listen(7878);
 
-const handleMitm = async (req: Request, urlPath: string, logs: any[]) => {
+const handleMitm = async (req: Request, logs: any[]) => {
+	console.log(req.mode);
 	const reqUrlObj = new URL(req.url);
-	const urlSearch = reqUrlObj.search;
-	const url = urlPath + urlSearch;
+	reqUrlObj.host = reqUrlObj.host.slice(0, -HOST.length);
+	const url = reqUrlObj.toString();
 	const headers = JSON.parse(req.headers.get(xSetHeaders));
 	req.headers.delete(xSetHeaders);
 
@@ -76,7 +59,7 @@ const handleMitm = async (req: Request, urlPath: string, logs: any[]) => {
 	logs.push(new Date());
 	logs.push(url);
 	logs.push(...Array.from(req.headers.entries()).map(([k, v]) => `${k}: ${v}`));
-	const res = await fetch(url, req);
+	const res = await fetch(new Request(url, req), { redirect: "manual" }); // Thanks Bun for not accepting Request.redirect = "manual"
 	const resClone = new Response(res.body, res);
 	logs.push(await resClone.clone().text());
 
@@ -90,9 +73,9 @@ const handleMitm = async (req: Request, urlPath: string, logs: any[]) => {
 		let locationUrlObj: URL;
 		try {
 			locationUrlObj = new URL(locationHeader);
-			locationUrlObj = new URL(`${reqUrlObj.origin}/mitm/${locationUrlObj.href}`);
+			locationUrlObj.host += HOST;
 		} catch (_) {
-			locationUrlObj = new URL(reqUrlObj);
+			locationUrlObj = new URL(req.url);
 			locationUrlObj.search = "";
 			if (!locationUrlObj.href.endsWith("/")) {
 				locationUrlObj.href += "/";
