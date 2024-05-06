@@ -1,3 +1,7 @@
+# NOTICE
+
+This project was restructured and moved into [Spicetify](https://github.com/Spicetify)
+
 ## Setup
 
 Note: On windows, use `pwsh` and not `cmd` as shell!
