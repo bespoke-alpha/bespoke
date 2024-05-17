@@ -6,12 +6,16 @@ package cmd
 import (
 	"bespoke/archive"
 	"bespoke/paths"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
+	"github.com/Microsoft/go-winio"
 	"github.com/spf13/cobra"
+	"golang.org/x/sys/windows"
 )
 
 var applyCmd = &cobra.Command{
@@ -69,14 +73,76 @@ func patchIndexHtml(destXpuiPath string) error {
 	})
 }
 
-func symlinkFiles(destXpuiPath string) error {
+func createJunction(target, mountPt string) error {
+	_target, err := filepath.Abs(target)
+	if err != nil {
+		return fmt.Errorf("failed to get absolute path of target %s: %v", target, err)
+	}
+	_mountPt, err := windows.UTF16PtrFromString(mountPt)
+	if err != nil {
+		return fmt.Errorf("failed to get UTF16 pointer of mount point %s: %v", mountPt, err)
+	}
+
+	err = os.Mkdir(mountPt, 0777)
+	if err != nil {
+		return fmt.Errorf("failed to create directory %s: %v", mountPt, err)
+	}
+	defer func() {
+		if err != nil {
+			os.Remove(mountPt)
+		}
+	}()
+
+	handle, err := windows.CreateFile(_mountPt,
+		windows.GENERIC_WRITE,
+		0,
+		nil,
+		windows.OPEN_EXISTING,
+		windows.FILE_FLAG_BACKUP_SEMANTICS,
+		0)
+	if err != nil {
+		return fmt.Errorf("failed to create file handle for %s: %v", mountPt, err)
+	}
+	defer windows.CloseHandle(handle)
+
+	rp := winio.ReparsePoint{
+		Target:       _target,
+		IsMountPoint: true,
+	}
+	data := winio.EncodeReparsePoint(&rp)
+
+	var size uint32
+	err = windows.DeviceIoControl(
+		handle,
+		windows.FSCTL_SET_REPARSE_POINT,
+		&data[0],
+		uint32(len(data)),
+		nil,
+		0,
+		&size,
+		nil)
+	if err != nil {
+		return fmt.Errorf("failed to set reparse point: %v", err)
+	}
+	return nil
+}
+
+func linkFiles(destXpuiPath string) error {
 	links := map[string]string{"hooks-out": "hooks", "modules": "modules"}
+	linkFunc := os.Symlink
+	linkType := "Symlinking"
+
+	if runtime.GOOS == "windows" {
+		linkFunc = createJunction
+		linkType = "Junctioning"
+	}
+
 	for src, dest := range links {
 		folderSrcPath := filepath.Join(paths.ConfigPath, src)
 		folderDestPath := filepath.Join(destXpuiPath, dest)
-		log.Println("Symlinking", folderSrcPath, "->", folderDestPath)
-		if err := os.Symlink(folderSrcPath, folderDestPath); err != nil {
-			return err
+		log.Println(linkType, folderSrcPath, "->", folderDestPath)
+		if err := linkFunc(folderSrcPath, folderDestPath); err != nil {
+			return fmt.Errorf("failed to link %s to %s: %v", folderSrcPath, folderDestPath, err)
 		}
 	}
 	return nil
@@ -95,7 +161,7 @@ func execApply() error {
 	if err := patchIndexHtml(destXpuiPath); err != nil {
 		return err
 	}
-	return symlinkFiles(destXpuiPath)
+	return linkFiles(destXpuiPath)
 }
 
 func init() {
